@@ -1,26 +1,21 @@
-package states;
+package states.debug;
 
-import achievements.Achievements;
-import bitdecay.flixel.debug.DebugDraw;
-import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import signals.Lifecycle;
+import flixel.FlxG;
+import bitdecay.flixel.debug.DebugDraw;
 
 using states.FlxStateExt;
 
-class PlayState extends FlxTransitionableState {
+class LoganState extends FlxTransitionableState {
 	override public function create() {
 		super.create();
 		Lifecycle.startup.dispatch();
-
 		FlxG.camera.pixelPerfectRender = true;
-
-		add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
-
 		var cam = FlxG.camera;
 		DebugDraw.ME.drawCameraRect(cam.getCenterPoint().x - 5, cam.getCenterPoint().y - 5, 10, 10);
 	}

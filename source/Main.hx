@@ -19,8 +19,15 @@ import misc.FlxTextFactory;
 import openfl.display.Sprite;
 #if play
 import states.PlayState;
-#end
-#if credits
+#elseif mike
+import states.debug.MikeState;
+#elseif jake
+import states.debug.JakeState;
+#elseif logan
+import states.debug.LoganState;
+#elseif tristan
+import states.debug.TristanState;
+#elseif credits
 import states.CreditsState;
 #end
 
@@ -35,6 +42,14 @@ class Main extends Sprite {
 		var startingState:Class<FlxState> = SplashScreenState;
 		#if play
 		startingState = PlayState;
+		#elseif mike
+		startingState = MikeState;
+		#elseif jake
+		startingState = JakeState;
+		#elseif logan
+		startingState = LoganState;
+		#elseif tristan
+		startingState = TristanState;
 		#elseif credits
 		startingState = CreditsState;
 		#else
