@@ -47,6 +47,16 @@ class Node extends FlxSprite {
 	}
 
 	/**
+	 * Get the path id at the cardinal enter
+	 * @param enter
+	 * @return Int
+	 */
+	public function pathId(enter:Cardinal):Int {
+		var enterIndex = (cardinalToIndex(enter) + rotationOffset) % 4;
+		return connectionsEnter[enterIndex];
+	}
+
+	/**
 	 * Given an input direction (when you pass North, you are saying you are COMING from
 	 * the top, not that you are heading towards the top), get the corresponding outlets
 	 * in cardinal directions.  The return array will contain 0, 1, 2, or 3 elements.

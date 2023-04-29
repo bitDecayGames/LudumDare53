@@ -38,6 +38,11 @@ class LinkedNode {
 		return n;
 	}
 
+	public function addLinkedNode(l:LinkedNode):LinkedNode {
+		exits.push(l);
+		return l;
+	}
+
 	public function leafs():Array<LinkedNode> {
 		if (exits.length == 0) {
 			return [this];
