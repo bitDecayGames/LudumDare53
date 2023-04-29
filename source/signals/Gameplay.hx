@@ -9,7 +9,11 @@ class Gameplay {
 	/**
 	 * Startup signals will be called once the game is loaded and Flixel is initialized
 	 */
-	public static var onTurn:FlxSignal = new FlxSignal();
+
+	 /**
+		* Signals when a tile is rotated
+	 */
+	public static var onRotate:FlxSignal = new FlxSignal();
 
 	/**
 	 * Signals when two tiles are swapped with each other

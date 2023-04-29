@@ -1,16 +1,13 @@
 package plugins;
 
 import signals.Gameplay;
-import entities.OutputSlot;
-import entities.InputSlot;
-import entities.Node;
 import entities.Grid;
 
 class CheckForConnectionPlugin implements Plugin {
 	public function new() {}
 
 	public function init(grid:Grid) {
-		Gameplay.onTurn.add(this.check);
+		Gameplay.onRotate.add(this.check);
 		Gameplay.onRowSlide.add(this.check);
 		Gameplay.onSwap.add(this.check);
 	}
