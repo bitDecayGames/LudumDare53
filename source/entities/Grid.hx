@@ -73,6 +73,7 @@ class Grid extends FlxSprite {
 		// TODO: MW set up animation object to handle maybe some subtle grid/background animations
 	}
 
+
 	override public function update(delta:Float) {
 		super.update(delta);
 
@@ -94,18 +95,14 @@ class Grid extends FlxSprite {
 
 	/**
 	 * Swap the tiles at the given x and y coordinates
-	 * @param x1
-	 * @param y1
-	 * @param x2
-	 * @param y2
 	 */
-	public function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int) {
+	public function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int, ?cb:()->Void):Bool {
 		// return immmediately if the coordinates are out of bounds
 		if (x1 < 0 || x1 >= numberOfColumns || x2 < 0 || x2 >= numberOfColumns) {
-			return;
+			return false;
 		}
 		if (y1 < 0 || y1 >= numberOfRows || y2 < 0 || y2 >= numberOfRows) {
-			return;
+			return false;
 		}
 
 		var firstNode = get(x1, y1);
@@ -114,28 +111,31 @@ class Grid extends FlxSprite {
 		nodes[x1][y1] = secondNode;
 		nodes[x2][y2] = firstNode;
 
-		// firstNode.setPosition(topCorner.x + x2 * 32, topCorner.y + y2 * 32);
-		// secondNode.setPosition(topCorner.x + x1 * 32, topCorner.y + y1 * 32);
-		// Like above but animated, use a tween
+		
+		tweenTileSwap(firstNode, secondNode, cb);
+		tweenTileSwap(secondNode, firstNode, cb);
+
+		return true;
+	}
+
+	public function tweenTileSwap(firstNode:Node, secondNode:Node,  ?cb:()->Void) {
 		FlxTween.linearPath(
 			firstNode, 
 			[
-				FlxPoint.weak(topCorner.x + x1 * 32, topCorner.y + y1 * 32),	
-				FlxPoint.weak(topCorner.x + x2 * 32, topCorner.y + y2 * 32)
+				FlxPoint.weak(firstNode.x, firstNode.y),	
+				FlxPoint.weak(secondNode.x, secondNode.y)
 			], 
-			0.12
+			0.12,
+			true,			
+			{
+				onComplete: (t) -> {
+					if (cb != null) {
+						cb();
+					}
+				}
+			}
 		);
-		FlxTween.linearPath(
-			secondNode,
-			[
-				FlxPoint.weak(topCorner.x + x2 * 32, topCorner.y + y2 * 32),
-				FlxPoint.weak(topCorner.x + x1 * 32, topCorner.y + y1 * 32)
-			], 
-			0.12
-		);
-
-	}
-
+	} 
 	/**
 	 * Given a start x and y (a node) and the direction you are entering that node from,
 	 * return a connection tree of all the connected nodes

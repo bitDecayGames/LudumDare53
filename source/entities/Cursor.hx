@@ -11,7 +11,7 @@ class Cursor extends FlxSprite {
     var grid:Grid;
     var gridCell = FlxPoint.get();
 
-    var allowRotate = true;
+    var allowInteraction = true;
     
     public function new(grid:Grid) {
         super();
@@ -25,13 +25,24 @@ class Cursor extends FlxSprite {
         FlxG.watch.add(this, "gridCell", 'Cursor Coord: ');
     }
 
+    private function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int) {
+        if (!allowInteraction) return;
+
+        var wasSwapped = grid.swapTiles(x1, y1, x2, y2, restoreControl);
+        if (!wasSwapped) return;
+
+        allowInteraction = false;
+        gridCell.x = x2;
+        gridCell.y = y2;
+    }
+
     override function update(elapsed:Float) {
         super.update(elapsed);
 
         if (SimpleController.just_pressed(UP)) {
             if (SimpleController.pressed(R)) {
                 // swap with the tile above if there is one
-                grid.swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x), Std.int(gridCell.y) - 1);
+                swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x), Std.int(gridCell.y) - 1);
             } else if (gridCell.y > 0) {
                 // good!
                 gridCell.y--;
@@ -43,7 +54,7 @@ class Cursor extends FlxSprite {
         if (SimpleController.just_pressed(DOWN)) {
             if (SimpleController.pressed(R)) {
                 // swap with the tile below if there is one
-                grid.swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x), Std.int(gridCell.y) + 1);
+                swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x), Std.int(gridCell.y) + 1);
             } else if (gridCell.y < grid.nodes.length - 1) {
                 // good!
                 gridCell.y++;
@@ -55,7 +66,7 @@ class Cursor extends FlxSprite {
         if (SimpleController.just_pressed(LEFT)) {
             if (SimpleController.pressed(R)) {
                 // swap with the tile to the left if there is one
-                grid.swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x) - 1, Std.int(gridCell.y));
+                swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x) - 1, Std.int(gridCell.y));
             } else if (gridCell.x > 0) {
                 // good!
                 gridCell.x--;
@@ -67,7 +78,7 @@ class Cursor extends FlxSprite {
         if (SimpleController.just_pressed(RIGHT)) {
             if (SimpleController.pressed(R)) {
                 // swap with the tile to the right if there is one
-                grid.swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x) + 1, Std.int(gridCell.y));
+                swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x) + 1, Std.int(gridCell.y));
             } else if (gridCell.x < grid.nodes[0].length - 1) {
                 // good!
                 gridCell.x++;
@@ -77,13 +88,13 @@ class Cursor extends FlxSprite {
             }
         }
 
-        if (SimpleController.just_pressed(A) && allowRotate) {
-            allowRotate = false;
+        if (SimpleController.just_pressed(A) && allowInteraction) {
+            allowInteraction = false;
             grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)].rotate(1, restoreControl);
         }
 
-        if (SimpleController.just_pressed(B) && allowRotate) {
-            allowRotate = false;
+        if (SimpleController.just_pressed(B) && allowInteraction) {
+            allowInteraction = false;
             grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)].rotate(-1, restoreControl);
         }
 
@@ -92,6 +103,6 @@ class Cursor extends FlxSprite {
     }
 
     private function restoreControl() {
-        allowRotate = true;
+        allowInteraction = true;
     }
 }
