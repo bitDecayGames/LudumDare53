@@ -69,7 +69,6 @@ class Cursor extends FlxSprite {
 		if (SimpleController.just_pressed(A) && allowRotate) {
 			allowRotate = false;
 			grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)].rotate(1, restoreControl);
-			Gameplay.onRotate.dispatch(grid);
 		}
 
 		x = grid.topCorner.x + gridCell.x * 32;
