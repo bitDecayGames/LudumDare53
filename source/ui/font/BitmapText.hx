@@ -7,17 +7,17 @@ import flixel.math.FlxPoint;
 import flixel.graphics.frames.FlxBitmapFont;
 
 @:forward
-abstract PressStart(BitmapText) to BitmapText {
+abstract CyberRed(BitmapText) to BitmapText {
 	static public var font(get, null):FlxBitmapFont = null;
 
 	inline public function new(x = 0.0, y = 0.0, text = "") {
-		this = new BitmapText(x, y, text, font);
+		this = new BitmapText(x, y, text.toLowerCase(), font);
 	}
 
 	inline static function get_font() {
 		if (font == null) {
 			@:privateAccess
-			font = BitmapText.createPressStartFont();
+			font = BitmapText.createMonospace("abcdefghijklmnopqrstuwxyz.,!?1234567890", AssetPaths.font__png, 0, 16);
 		}
 		return font;
 	}
