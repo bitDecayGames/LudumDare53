@@ -54,12 +54,15 @@ class Node extends FlxSprite {
 	 * Rotate the node/tile by 90 degrees in the given direction (positive == clockwise)
 	 * @param dir a non-zero number that represents the number of 90 degree turns to make
 	 */
-	public function rotate(dir:Int) {
+	public function rotate(dir:Int, ?cb:()->Void) {
 		rotationOffset += dir;
 		FlxTween.angle(this, angle, rotationOffset * 90, 0.12, {
 			onComplete: (t) -> {
 				rotationOffset = rotationOffset % 4;
 				angle = rotationOffset * 90;
+				if (cb != null) {
+					cb();
+				}
 			}
 		});
 	}

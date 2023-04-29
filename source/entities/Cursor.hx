@@ -1,5 +1,7 @@
 package entities;
 
+import flixel.util.FlxAxes;
+import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import input.SimpleController;
 import flixel.math.FlxPoint;
@@ -8,6 +10,8 @@ import flixel.FlxSprite;
 class Cursor extends FlxSprite {
     var grid:Grid;
     var gridCell = FlxPoint.get();
+
+    var allowRotate = true;
     
     public function new(grid:Grid) {
         super();
@@ -15,6 +19,8 @@ class Cursor extends FlxSprite {
         loadGraphic(AssetPaths.cursor_idle__png, true, 40, 40);
         animation.add('play', [0, 1, 2, 3, 4, 5], 10);
         animation.play('play');
+
+        offset.set(4, 4);
 
         FlxG.watch.add(this, "gridCell", 'Cursor Coord: ');
     }
@@ -27,6 +33,7 @@ class Cursor extends FlxSprite {
                 // good!
                 gridCell.y--;
             } else {
+                FlxTween.shake(this, 0.1, .12, FlxAxes.Y);
                 // bad! animate something maybe? SFX?
             }
         }
@@ -35,6 +42,7 @@ class Cursor extends FlxSprite {
                 // good!
                 gridCell.y++;
             } else {
+                FlxTween.shake(this, 0.1, .12, FlxAxes.Y);
                 // bad! animate something maybe? SFX?
             }
         }
@@ -43,6 +51,7 @@ class Cursor extends FlxSprite {
                 // good!
                 gridCell.x--;
             } else {
+                FlxTween.shake(this, 0.1, .12, FlxAxes.X);
                 // bad! animate something maybe? SFX?
             }
         }
@@ -51,15 +60,21 @@ class Cursor extends FlxSprite {
                 // good!
                 gridCell.x++;
             } else {
+                FlxTween.shake(this, 0.1, .12, FlxAxes.X);
                 // bad! animate something maybe? SFX?
             }
         }
 
-        if (SimpleController.just_pressed(A)) {
-            grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)].rotate(1);
+        if (SimpleController.just_pressed(A) && allowRotate) {
+            allowRotate = false;
+            grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)].rotate(1, restoreControl);
         }
 
-        x = grid.topCorner.x + gridCell.x * 32 - 4;
-        y = grid.topCorner.y + gridCell.y * 32 - 4;
+        x = grid.topCorner.x + gridCell.x * 32;
+        y = grid.topCorner.y + gridCell.y * 32;
+    }
+
+    private function restoreControl() {
+        allowRotate = true;
     }
 }
