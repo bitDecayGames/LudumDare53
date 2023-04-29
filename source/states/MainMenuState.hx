@@ -1,5 +1,6 @@
 package states;
 
+import ui.font.BitmapText;
 import bitdecay.flixel.transitions.TransitionDirection;
 import bitdecay.flixel.transitions.SwirlTransition;
 import states.AchievementsState;
@@ -65,6 +66,9 @@ class MainMenuState extends FlxUIState {
 
 		// we will handle transitions manually
 		transOut = null;
+
+		var test = new CyberRed("begin");
+		add(test);
 	}
 
 	override public function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
