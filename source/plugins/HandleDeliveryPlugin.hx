@@ -22,7 +22,7 @@ class HandleDeliveryPlugin implements Plugin {
 
 		// for each node, mark it as shouldBlowUp so that something else can blow it up when it is time
 		tree.foreach((l) -> {
-			l.node.shouldBlowUp = true;
+			l.node.startBlowupSequence();
 		});
 	}
 

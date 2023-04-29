@@ -1,5 +1,6 @@
 package entities;
 
+import signals.Gameplay;
 import flixel.util.FlxAxes;
 import flixel.tweens.FlxTween;
 import flixel.FlxG;
@@ -8,8 +9,8 @@ import flixel.math.FlxPoint;
 import flixel.FlxSprite;
 
 class Cursor extends FlxSprite {
-    var grid:Grid;
-    var gridCell = FlxPoint.get();
+	var grid:Grid;
+	var gridCell = FlxPoint.get();
 
     var allowInteraction = true;
     
@@ -20,10 +21,14 @@ class Cursor extends FlxSprite {
         animation.add('play', [0, 1, 2, 3, 4, 5], 10);
         animation.play('play');
 
-        offset.set(4, 4);
+	public function new(grid:Grid) {
+		super();
+		this.grid = grid;
+		loadGraphic(AssetPaths.cursor_idle__png, true, 40, 40);
+		animation.add('play', [0, 1, 2, 3, 4, 5], 10);
+		animation.play('play');
 
-        FlxG.watch.add(this, "gridCell", 'Cursor Coord: ');
-    }
+		offset.set(4, 4);
 
     private function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int) {
         if (!allowInteraction) return;
@@ -31,6 +36,7 @@ class Cursor extends FlxSprite {
         var wasSwapped = grid.swapTiles(x1, y1, x2, y2, restoreControl);
         if (!wasSwapped) return;
 
+        Gameplay.onSwap.dispatch(grid);
         allowInteraction = false;
         gridCell.x = x2;
         gridCell.y = y2;

@@ -1,5 +1,6 @@
 package entities;
 
+import flixel.util.FlxAxes;
 import flixel.tweens.FlxTween;
 import misc.Macros;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -14,7 +15,7 @@ class Node extends FlxSprite {
 	var rotationOffset:Int = 0;
 	var gridCellSize:Float = 0;
 
-	public var shouldBlowUp:Bool = false;
+	var blowingUp:Bool = false;
 
 	public static function create(type:NodeType):Node {
 		trace('creating node with type: ${type}');
@@ -56,7 +57,7 @@ class Node extends FlxSprite {
 	 * Rotate the node/tile by 90 degrees in the given direction (positive == clockwise)
 	 * @param dir a non-zero number that represents the number of 90 degree turns to make
 	 */
-	public function rotate(dir:Int, ?cb:()->Void) {
+	public function rotate(dir:Int, ?cb:() -> Void) {
 		rotationOffset += dir;
 		FlxTween.angle(this, angle, rotationOffset * 90, 0.12, {
 			onComplete: (t) -> {
@@ -154,6 +155,17 @@ class Node extends FlxSprite {
 				return Cardinal.W;
 			default:
 				return Cardinal.N;
+		}
+	}
+
+	public function startBlowupSequence() {
+		if (!blowingUp) {
+			blowingUp = true;
+			FlxTween.shake(this, 0.1, 0.5, FlxAxes.XY, {
+				onComplete: (t) -> {
+					kill();
+				}
+			});
 		}
 	}
 }

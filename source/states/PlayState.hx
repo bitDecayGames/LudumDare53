@@ -1,5 +1,7 @@
 package states;
 
+import plugins.HandleDeliveryPlugin;
+import plugins.CheckForConnectionPlugin;
 import flixel.math.FlxRect;
 import flixel.addons.display.FlxSliceSprite;
 import entities.Cursor;
@@ -16,7 +18,6 @@ import signals.Lifecycle;
 using states.FlxStateExt;
 
 class PlayState extends FlxTransitionableState {
-
 	var cursor:FlxSprite;
 
 	var scoreboardPos = FlxPoint.get(10 * 32, 32);
@@ -37,21 +38,25 @@ class PlayState extends FlxTransitionableState {
 		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, []);
 
 		var nineSliceBorder = 4;
-		var boardBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), 8 * 32 +  2 * nineSliceBorder, 8 * 32 + 2 * nineSliceBorder);
+		var boardBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), 8 * 32 + 2 * nineSliceBorder,
+			8 * 32 + 2 * nineSliceBorder);
 		boardBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		boardBackground.setPosition(grid.topCorner.x, grid.topCorner.y);
 
-		var scoreBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), scoreboardSize.x +  2 * nineSliceBorder, scoreboardSize.y + 2 * nineSliceBorder);
+		var scoreBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), scoreboardSize.x + 2 * nineSliceBorder,
+			scoreboardSize.y + 2 * nineSliceBorder);
 		scoreBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		scoreBackground.setPosition(scoreboardPos.x, scoreboardPos.y);
 		add(scoreBackground);
 
-		var inputsBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), inputsSize.x +  2 * nineSliceBorder, inputsSize.y + 2 * nineSliceBorder);
+		var inputsBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), inputsSize.x + 2 * nineSliceBorder,
+			inputsSize.y + 2 * nineSliceBorder);
 		inputsBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		inputsBackground.setPosition(inputsPos.x, inputsPos.y);
 		add(inputsBackground);
 
-		var outputBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), outputsSize.x +  2 * nineSliceBorder, outputsSize.y + 2 * nineSliceBorder);
+		var outputBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), outputsSize.x + 2 * nineSliceBorder,
+			outputsSize.y + 2 * nineSliceBorder);
 		outputBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		outputBackground.setPosition(outputsPos.x, outputsPos.y);
 		add(outputBackground);
@@ -68,6 +73,7 @@ class PlayState extends FlxTransitionableState {
 		var levelValue = new CyberRed(10 * 32, levelLabel.y + 16, "       1");
 		add(levelValue);
 
+		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(),]);
 		add(boardBackground);
 		add(grid);
 		for (column in grid.nodes) {
@@ -79,7 +85,7 @@ class PlayState extends FlxTransitionableState {
 		cursor = new Cursor(grid);
 		add(cursor);
 
-		add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
+		// add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
 	}
 
 	override public function update(elapsed:Float) {
