@@ -14,7 +14,9 @@ class Node extends FlxSprite {
 	var rotationOffset:Int = 0;
 	var gridCellSize:Float = 0;
 
-    public static function create(type:NodeType):Node {
+	public var shouldBlowUp:Bool = false;
+
+	public static function create(type:NodeType):Node {
 		trace('creating node with type: ${type}');
 		switch type {
 			case Corner:
@@ -36,8 +38,8 @@ class Node extends FlxSprite {
 			case Crossover:
 				return new Node(32, AssetPaths.plus_overlapping__png, [1, 2, 1, 2], [1, 2, 1, 2], FlxG.random.int(0, 3));
 		}
-        return null;
-    }
+		return null;
+	}
 
 	private function new(gridCellSize:Float, asset:FlxGraphicAsset, entrances:Array<Int>, exits:Array<Int>, rot:Int) {
 		super();
