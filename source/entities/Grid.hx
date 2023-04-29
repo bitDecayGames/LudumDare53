@@ -53,8 +53,8 @@ class Grid extends FlxSprite {
 			nodes.push([]);
 			for (y in 0...numberOfRows) {
 				var chosenType = FlxG.random.getObject(cachedProbabilityTypes, cachedProbabilityValues);
-				// var newNode = Node.create(chosenType);
-				var newNode = Node.create(NodeType.Straight);
+				var newNode = Node.create(chosenType);
+				//var newNode = Node.create(NodeType.Straight);
 				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
 				nodes[x].push(newNode);
 			}
@@ -108,6 +108,11 @@ class Grid extends FlxSprite {
 
 		var firstNode = get(x1, y1);
 		var secondNode = get(x2, y2);
+
+		// only allow swap if the node is mobile
+		if (!firstNode.isMobile() || !secondNode.isMobile()) {
+			return false;
+		}
 
 		nodes[x1][y1] = secondNode;
 		nodes[x2][y2] = firstNode;

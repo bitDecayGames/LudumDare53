@@ -20,15 +20,8 @@ class Cursor extends FlxSprite {
         loadGraphic(AssetPaths.cursor_idle__png, true, 40, 40);
         animation.add('play', [0, 1, 2, 3, 4, 5], 10);
         animation.play('play');
-
-	public function new(grid:Grid) {
-		super();
-		this.grid = grid;
-		loadGraphic(AssetPaths.cursor_idle__png, true, 40, 40);
-		animation.add('play', [0, 1, 2, 3, 4, 5], 10);
-		animation.play('play');
-
 		offset.set(4, 4);
+    }
 
     private function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int) {
         if (!allowInteraction) return;
@@ -94,14 +87,15 @@ class Cursor extends FlxSprite {
             }
         }
 
-        if (SimpleController.just_pressed(A) && allowInteraction) {
+        var currentNode = grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)];
+        if (SimpleController.just_pressed(A) && allowInteraction && currentNode.isMobile() ) {
             allowInteraction = false;
-            grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)].rotate(1, restoreControl);
+            currentNode.rotate(1, restoreControl);
         }
 
-        if (SimpleController.just_pressed(B) && allowInteraction) {
+        if (SimpleController.just_pressed(B) && allowInteraction && currentNode.isMobile()) {
             allowInteraction = false;
-            grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)].rotate(-1, restoreControl);
+            currentNode.rotate(-1, restoreControl);
         }
 
         x = grid.topCorner.x + gridCell.x * 32;
