@@ -55,7 +55,6 @@ class Grid extends FlxSprite {
 				var newNode = Node.create(chosenType);
 				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
 				nodes[x].push(newNode);
-				FlxG.state.add(newNode);
 			}
 		}
 
