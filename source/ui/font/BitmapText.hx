@@ -17,7 +17,7 @@ abstract CyberRed(BitmapText) to BitmapText {
 	inline static function get_font() {
 		if (font == null) {
 			@:privateAccess
-			font = BitmapText.createMonospace("abcdefghijklmnopqrstuwxyz.,!?1234567890", AssetPaths.font__png, 0, 16);
+			font = BitmapText.createMonospace("abcdefghijklmnopqrstuvwxyz.,!?1234567890", AssetPaths.font__png, 0, 16);
 		}
 		return font;
 	}

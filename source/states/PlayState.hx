@@ -1,5 +1,8 @@
 package states;
 
+import flixel.math.FlxPoint;
+import entities.Grid;
+import ui.font.BitmapText.CyberRed;
 import achievements.Achievements;
 import bitdecay.flixel.debug.DebugDraw;
 import flixel.FlxG;
@@ -14,6 +17,21 @@ class PlayState extends FlxTransitionableState {
 		Lifecycle.startup.dispatch();
 
 		FlxG.camera.pixelPerfectRender = true;
+
+		var scoreLabel = new CyberRed(10 * 32, 32, "score");
+		add(scoreLabel);
+
+		var scoreValue = new CyberRed(10 * 32, scoreLabel.y + 16, "00000123");
+		add(scoreValue);
+
+		var levelLabel = new CyberRed(10 * 32, scoreValue.y + 32, "network");
+		add(levelLabel);
+
+		var levelValue = new CyberRed(10 * 32, levelLabel.y + 16, "       1");
+		add(levelValue);
+
+		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, []);
+		add(grid);
 
 		add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
 	}

@@ -10,3 +10,6 @@ fmod/.cache/
 # misc
 .VSCodeCounter/
 .DS_Store
+
+# other
+dump/

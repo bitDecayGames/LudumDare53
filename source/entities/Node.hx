@@ -1,17 +1,48 @@
 package entities;
 
+import misc.Macros;
+import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.FlxG;
 import bitdecay.flixel.spacial.Cardinal;
 import flixel.FlxSprite;
 
 class Node extends FlxSprite {
+	// These arrays are in the form [top, right, bottom, left]
 	var connectionsEnter:Array<Int> = [0, 0, 0, 0];
 	var connectionsExit:Array<Int> = [0, 0, 0, 0];
 	var rotationOffset:Int = 0;
 	var gridCellSize:Float = 0;
 
-	public function new(gridCellSize:Float) {
+    public static function create(type:NodeType):Node {
+		trace('creating node with type: ${type}');
+		switch type {
+			case Corner:
+				return new Node(32, AssetPaths.bend__png, [0, 0, 1, 1], [0, 0, 1, 1], FlxG.random.int(0, 3));
+			case Tee:
+				return new Node(32, AssetPaths.tee__png, [0, 1, 1, 1], [0, 1, 1, 1], FlxG.random.int(0, 3));
+			case Straight:
+				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], FlxG.random.int(0, 3));
+			case Plus:
+				return new Node(32, AssetPaths.plus__png, [1, 1, 1, 1], [1, 1, 1, 1], FlxG.random.int(0, 3));
+			case OneWay:
+				return new Node(32, AssetPaths.straight_oneway__png, [0, 0, 1, 0], [1, 0, 0, 0], FlxG.random.int(0, 3));
+			// case Warp:
+			// 	// TODO: How do we capture this info?
+			case Dead:
+				return new Node(32, AssetPaths.blocker__png, [0, 0, 0, 0], [0, 0, 0, 0], 0);
+			case DoubleCorner:
+				return new Node(32, AssetPaths.double_bend__png, [1, 1, 2, 2], [1, 1, 2, 2], FlxG.random.int(0, 3));
+			case Crossover:
+				return new Node(32, AssetPaths.plus_overlapping__png, [1, 2, 1, 2], [1, 2, 1, 2], FlxG.random.int(0, 3));
+		}
+        return null;
+    }
+
+	private function new(gridCellSize:Float, asset:FlxGraphicAsset, entrances:Array<Int>, exits:Array<Int>, rot:Int) {
 		super();
 		this.gridCellSize = gridCellSize;
+		loadGraphic(asset);
+		rotate(rot);
 	}
 
 	override public function update(delta:Float) {

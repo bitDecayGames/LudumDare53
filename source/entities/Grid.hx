@@ -1,5 +1,7 @@
 package entities;
 
+import flixel.math.FlxPoint;
+import flixel.FlxG;
 import bitdecay.flixel.spacial.Cardinal;
 import flixel.FlxSprite;
 import plugins.Plugin;
@@ -14,16 +16,42 @@ class Grid extends FlxSprite {
 	private var numberOfColumns:Int;
 	private var numberOfRows:Int;
 
-	public function new(gridCellSize:Int, numberOfColumns:Int, numberOfRows:Int, plugins:Array<Plugin>) {
+	var probabilities:Map<NodeType, Float> = [
+		Corner => 2,
+		Tee => 2,
+		Straight => 4,
+		Plus => 2,
+		OneWay => .5,
+		// Warp;
+		Dead => .5,
+		DoubleCorner => 2,
+		Crossover => 2,
+	];
+
+	var cachedProbabilityTypes:Array<NodeType> = [];
+	var cachedProbabilityValues:Array<Float> = [];
+
+	public function new(gridCellSize:Int, topCorner:FlxPoint, numberOfColumns:Int, numberOfRows:Int, plugins:Array<Plugin>) {
 		super();
 		this.gridCellSize = gridCellSize;
 		this.numberOfColumns = numberOfColumns;
 		this.numberOfRows = numberOfRows;
 
+		if (cachedProbabilityValues.length == 0) {
+			for (key => value in probabilities) {
+				cachedProbabilityTypes.push(key);
+				cachedProbabilityValues.push(value);
+			}
+		}
+
 		for (y in 0...numberOfRows) {
 			nodes.push([]);
 			for (x in 0...numberOfColumns) {
-				nodes[y].push(new Node(gridCellSize));
+				var chosenType = FlxG.random.getObject(cachedProbabilityTypes, cachedProbabilityValues);
+				var newNode = Node.create(chosenType);
+				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
+				nodes[y].push(newNode);
+				FlxG.state.add(newNode);
 			}
 		}
 
