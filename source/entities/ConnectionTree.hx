@@ -20,6 +20,23 @@ class ConnectionTree {
 		}
 		return root.add(node, enter);
 	}
+
+	public function foreach(f:LinkedNode->Void) {
+		if (root == null || f == null)
+			return;
+		var toVisit:Array<LinkedNode> = [root];
+		var visited:Array<LinkedNode> = [];
+		while (toVisit.length > 0) {
+			var cur = toVisit.pop();
+			f(cur);
+			for (node in cur.exits) {
+				if (!visited.contains(node)) {
+					toVisit.push(node);
+				}
+			}
+			visited.push(cur);
+		}
+	}
 }
 
 class LinkedNode {

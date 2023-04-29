@@ -56,13 +56,13 @@ class Grid extends FlxSprite {
 				var newNode = Node.create(chosenType);
 				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
 				nodes[x].push(newNode);
-				FlxG.state.add(newNode);
 			}
 		}
 
+		// TODO: MW: we could move this logic into a plugin so that we could configure the inputs and outputs separately
 		for (x in 0...numberOfColumns) {
-			inputs.push(new InputSlot());
-			outputs.push(new OutputSlot());
+			inputs.push(new InputSlot(x, numberOfRows - 1, Cardinal.S));
+			outputs.push(new OutputSlot(x, 0, Cardinal.N));
 		}
 
 		this.plugins = plugins;
