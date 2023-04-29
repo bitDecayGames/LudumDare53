@@ -1,5 +1,7 @@
 package states;
 
+import plugins.HandleDeliveryPlugin;
+import plugins.CheckForConnectionPlugin;
 import entities.Cursor;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
@@ -14,7 +16,6 @@ import signals.Lifecycle;
 using states.FlxStateExt;
 
 class PlayState extends FlxTransitionableState {
-
 	var cursor:FlxSprite;
 
 	override public function create() {
@@ -35,13 +36,13 @@ class PlayState extends FlxTransitionableState {
 		var levelValue = new CyberRed(10 * 32, levelLabel.y + 16, "       1");
 		add(levelValue);
 
-		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, []);
+		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(),]);
 		add(grid);
 
 		cursor = new Cursor(grid);
 		add(cursor);
 
-		add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
+		// add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
 	}
 
 	override public function update(elapsed:Float) {

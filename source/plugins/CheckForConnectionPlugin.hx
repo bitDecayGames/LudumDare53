@@ -11,20 +11,24 @@ class CheckForConnectionPlugin implements Plugin {
 
 	public function init(grid:Grid) {
 		Gameplay.onRotate.add(this.check);
-		Gameplay.onRowSlide.add(this.check);
 		Gameplay.onSwap.add(this.check);
+		Gameplay.onRowSlide.add(this.check);
 	}
 
 	public function check(grid:Grid) {
+		// TODO: filter out inputs that don't have anything in the queue
 		var inputs = grid.inputs.map(s -> new InputNode(s, grid.get(s.gridX, s.gridY)));
 		var outputs = grid.outputs.map(s -> new OutputNode(s, grid.get(s.gridX, s.gridY)));
 
+		trace("Check for connection");
+
 		// MW: this is horribly inefficient, and it runs on every rotate and swap... sooo....
 		for (input in grid.inputs) {
+			// for each input slot, traverse the grid from that input space
 			var tree = grid.traverse(input.gridX, input.gridY, input.enter);
 			var leafs = tree.leafs();
-			var connectedOutputs:Array<OutputSlot> = [];
 			var connectedInputs:Array<InputSlot> = [input];
+			var connectedOutputs:Array<OutputSlot> = [];
 			for (leaf in leafs) {
 				var outlets = leaf.node.getOutlets(leaf.enter);
 
@@ -41,7 +45,11 @@ class CheckForConnectionPlugin implements Plugin {
 				}
 			}
 			if (connectedOutputs.length > 0) {
+				trace("Found connection!");
 				Gameplay.onCompleteDelivery.dispatch(connectedInputs, connectedOutputs, tree);
+			} else {
+				trace('did not find connection in the first column ${tree.toString()}');
+				return;
 			}
 		}
 	}

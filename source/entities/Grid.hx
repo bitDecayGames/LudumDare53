@@ -52,7 +52,8 @@ class Grid extends FlxSprite {
 			nodes.push([]);
 			for (y in 0...numberOfRows) {
 				var chosenType = FlxG.random.getObject(cachedProbabilityTypes, cachedProbabilityValues);
-				var newNode = Node.create(chosenType);
+				// var newNode = Node.create(chosenType);
+				var newNode = Node.create(NodeType.Straight);
 				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
 				nodes[x].push(newNode);
 				FlxG.state.add(newNode);
@@ -111,7 +112,9 @@ class Grid extends FlxSprite {
 
 		// MW holy shit this is absolute spaghetti code.  I'm sorry for whoever is reading this
 		// and thinks they are going to add some logic.  Good luck...
-		do {
+
+		// be done as soon as there are no more nodes to visit
+		while (toVisit.length > 0) {
 			c = toVisit.pop();
 			// get outputs from the currently visting linked node
 			outlets = c.l.node.getOutlets(c.l.enter);
@@ -135,8 +138,7 @@ class Grid extends FlxSprite {
 					}
 				}
 			}
-			// be done as soon as there are no more nodes to visit
-		} while (toVisit.length > 0);
+		}
 
 		return t;
 	}

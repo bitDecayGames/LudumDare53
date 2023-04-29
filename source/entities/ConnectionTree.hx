@@ -37,6 +37,10 @@ class ConnectionTree {
 			visited.push(cur);
 		}
 	}
+
+	public function toString():String {
+		return 'rootLen:${root.exits.length}';
+	}
 }
 
 class LinkedNode {
