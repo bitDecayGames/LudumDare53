@@ -22,6 +22,8 @@ class SimpleController {
 			B => [FlxKey.C, FlxKey.B],
 			START => [FlxKey.ENTER],
 			BACK => [FlxKey.ESCAPE],
+			L => [FlxKey.Q],
+			R => [FlxKey.E, FlxKey.SHIFT],
 		],
 		// PLAYER TWO
 		[
@@ -31,6 +33,7 @@ class SimpleController {
 			RIGHT => [FlxKey.K],
 			A => [FlxKey.PERIOD],
 			B => [FlxKey.SLASH],
+
 		],
 	];
 
@@ -43,6 +46,8 @@ class SimpleController {
 		B => [B, X],
 		START => [START],
 		BACK => [BACK],
+		L => [LEFT_SHOULDER],
+		R => [RIGHT_SHOULDER],
 	];
 
 	public static function pressed(button:Button, player:Int = 0):Bool {
@@ -100,6 +105,8 @@ enum Button {
 	B;
 	START;
 	BACK;
+	L;
+	R;
 }
 
 enum ButtonState {
