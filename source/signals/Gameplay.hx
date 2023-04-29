@@ -1,12 +1,19 @@
 package signals;
 
+import entities.ShapeInputIndicator;
 import flixel.util.FlxSignal;
+
+typedef SpawnSignal = FlxTypedSignal<ShapeInputIndicator->Void>;
 
 class Gameplay {
 	/**
 	 * Startup signals will be called once the game is loaded and Flixel is initialized
 	 */
-	public static var onTurn:FlxSignal = new FlxSignal();
+
+	 /**
+		* Signals when a tile is rotated
+	 */
+	public static var onRotate:FlxSignal = new FlxSignal();
 
 	/**
 	 * Signals when two tiles are swapped with each other
@@ -21,7 +28,7 @@ class Gameplay {
 	/**
 	 * Signals when a new message input has been spawned
 	 */
-	public static var onSpawn:FlxSignal = new FlxSignal();
+	public static var onSpawn:SpawnSignal = new SpawnSignal();
 
 	/**
 	 * Signals when points have been collected
