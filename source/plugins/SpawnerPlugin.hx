@@ -1,3 +1,4 @@
+import signals.Gameplay;
 import entities.ShapeInputIndicator;
 import entities.InputSlot;
 import flixel.FlxG;
@@ -15,8 +16,10 @@ class SpawnerPlugin implements Plugin {
     counter -= delta;
     if (counter < 0) {
       counter = SPAWN_TIME;
+      var newShapeInput = ShapeInputIndicator.newRandom();
       var inputToAdd: InputSlot = FlxG.random.getObject(grid.inputs);
-      inputToAdd.queue.push(ShapeInputIndicator.newRandom());
+      inputToAdd.queue.push(newShapeInput);
+      Gameplay.onSpawn.dispatch(newShapeInput);
     }
   }
 }

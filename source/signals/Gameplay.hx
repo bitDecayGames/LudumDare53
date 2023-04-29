@@ -1,6 +1,9 @@
 package signals;
 
+import entities.ShapeInputIndicator;
 import flixel.util.FlxSignal;
+
+typedef SpawnSignal = FlxTypedSignal<ShapeInputIndicator->Void>;
 
 class Gameplay {
 	/**
@@ -21,7 +24,7 @@ class Gameplay {
 	/**
 	 * Signals when a new message input has been spawned
 	 */
-	public static var onSpawn:FlxSignal = new FlxSignal();
+	public static var onSpawn:SpawnSignal = new SpawnSignal();
 
 	/**
 	 * Signals when points have been collected
