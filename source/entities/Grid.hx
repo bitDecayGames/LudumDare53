@@ -27,13 +27,44 @@ class Grid extends FlxSprite {
 		Plus => 2,
 		OneWay => .5,
 		// Warp;
-		Dead => .5,
+		Dead => 5,
 		DoubleCorner => 2,
 		Crossover => 2,
 	];
 
-	var cachedProbabilityTypes:Array<NodeType> = [];
-	var cachedProbabilityValues:Array<Float> = [];
+
+	private function getRandomNodeTypeForLocation(x:Int, y:Int):NodeType {
+		var probabilitieTypes:Array<NodeType> = [];
+		var probabilityValues:Array<Float> = [];
+
+		var isLocationInOutputOrInput = false;
+		for (i in 0...inputs.length) {
+			var input = inputs[i];
+			if (input.gridX == x && input.gridY == y) {
+				isLocationInOutputOrInput = true;
+				break;
+			}
+		}
+		for (i in 0...outputs.length) {			
+			if (outputs[i].gridX == x && outputs[i].gridY == y) {
+				isLocationInOutputOrInput = true;
+				break;
+			}
+		}
+
+		var probabilitiesForLocation:Map<NodeType, Float> = probabilities.copy();
+		if (isLocationInOutputOrInput) {
+			// Make DEAD nodes probability 0
+			probabilitiesForLocation.set(NodeType.Dead, 0);			
+		}
+
+		for (key in probabilitiesForLocation.keys()) {
+			probabilitieTypes.push(key);
+			probabilityValues.push(probabilitiesForLocation.get(key));
+		}
+
+		return FlxG.random.getObject(probabilitieTypes, probabilityValues);
+	}
 
 	public function new(gridCellSize:Int, topCorner:FlxPoint, numberOfColumns:Int, numberOfRows:Int, plugins:Array<Plugin>) {
 		super();
@@ -42,17 +73,17 @@ class Grid extends FlxSprite {
 		this.numberOfColumns = numberOfColumns;
 		this.numberOfRows = numberOfRows;
 
-		if (cachedProbabilityValues.length == 0) {
-			for (key => value in probabilities) {
-				cachedProbabilityTypes.push(key);
-				cachedProbabilityValues.push(value);
-			}
+		// TODO: MW: we could move this logic into a plugin so that we could configure the inputs and outputs separately
+		for (x in 0...numberOfColumns) {
+			inputs.push(new InputSlot(x, numberOfRows - 1, Cardinal.S));
+			outputs.push(new OutputSlot(x, 0, Cardinal.N));
 		}
 
 		for (x in 0...numberOfColumns) {
 			nodes.push([]);
 			for (y in 0...numberOfRows) {
-				var chosenType = FlxG.random.getObject(cachedProbabilityTypes, cachedProbabilityValues);
+
+				var chosenType = getRandomNodeTypeForLocation(x, y);
 				var newNode = Node.create(chosenType);
 				//var newNode = Node.create(NodeType.Straight);
 				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
@@ -60,11 +91,6 @@ class Grid extends FlxSprite {
 			}
 		}
 
-		// TODO: MW: we could move this logic into a plugin so that we could configure the inputs and outputs separately
-		for (x in 0...numberOfColumns) {
-			inputs.push(new InputSlot(x, numberOfRows - 1, Cardinal.S));
-			outputs.push(new OutputSlot(x, 0, Cardinal.N));
-		}
 
 		this.plugins = plugins;
 		for (i in 0...plugins.length) {
