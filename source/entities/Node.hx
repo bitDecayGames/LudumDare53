@@ -50,18 +50,18 @@ class Node extends FlxSprite {
 	 * Given an input direction (when you pass North, you are saying you are COMING from
 	 * the top, not that you are heading towards the top), get the corresponding outlets
 	 * in cardinal directions.  The return array will contain 0, 1, 2, or 3 elements.
-	 * @param from the direction you are coming from
-	 * @return Array<Cardinal> the directions you can now head to
+	 * @param enter the direction you are entering the tile from
+	 * @return Array<Cardinal> the directions you can now exit the tile from
 	 */
-	public function getOutlets(from:Cardinal):Array<Cardinal> {
-		var fromIndex = (cardinalToIndex(from) + rotationOffset) % 4;
-		var path = connectionsEnter[fromIndex];
+	public function getOutlets(enter:Cardinal):Array<Cardinal> {
+		var enterIndex = (cardinalToIndex(enter) + rotationOffset) % 4;
+		var path = connectionsEnter[enterIndex];
 		if (path == 0)
 			return [];
 		var outlets:Array<Cardinal> = [];
 		for (i in 0...4) {
 			var iRot = (i + rotationOffset) % 4;
-			if (iRot != fromIndex && connectionsExit[iRot] == path) {
+			if (iRot != enterIndex && connectionsExit[iRot] == path) {
 				outlets.push(indexToCardinal(iRot));
 			}
 		}
