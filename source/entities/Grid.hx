@@ -17,6 +17,8 @@ class Grid extends FlxSprite {
 	private var numberOfColumns:Int;
 	private var numberOfRows:Int;
 
+	public var topCorner:FlxPoint;
+
 	var probabilities:Map<NodeType, Float> = [
 		Corner => 2,
 		Tee => 2,
@@ -34,6 +36,7 @@ class Grid extends FlxSprite {
 
 	public function new(gridCellSize:Int, topCorner:FlxPoint, numberOfColumns:Int, numberOfRows:Int, plugins:Array<Plugin>) {
 		super();
+		this.topCorner = topCorner;
 		this.gridCellSize = gridCellSize;
 		this.numberOfColumns = numberOfColumns;
 		this.numberOfRows = numberOfRows;
@@ -45,13 +48,13 @@ class Grid extends FlxSprite {
 			}
 		}
 
-		for (y in 0...numberOfRows) {
+		for (x in 0...numberOfColumns) {
 			nodes.push([]);
-			for (x in 0...numberOfColumns) {
+			for (y in 0...numberOfRows) {
 				var chosenType = FlxG.random.getObject(cachedProbabilityTypes, cachedProbabilityValues);
 				var newNode = Node.create(chosenType);
 				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
-				nodes[y].push(newNode);
+				nodes[x].push(newNode);
 				FlxG.state.add(newNode);
 			}
 		}
@@ -84,7 +87,7 @@ class Grid extends FlxSprite {
 		if (y < 0 || y >= numberOfRows) {
 			throw 'y is out of bounds, must be between 0 and ${numberOfRows}';
 		}
-		return nodes[y][x];
+		return nodes[x][y];
 	}
 
 	/**

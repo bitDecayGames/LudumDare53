@@ -1,5 +1,6 @@
 package entities;
 
+import flixel.tweens.FlxTween;
 import misc.Macros;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.FlxG;
@@ -54,8 +55,13 @@ class Node extends FlxSprite {
 	 * @param dir a non-zero number that represents the number of 90 degree turns to make
 	 */
 	public function rotate(dir:Int) {
-		rotationOffset = dir % 4;
-		angle = rotationOffset * 90;
+		rotationOffset += dir;
+		FlxTween.angle(this, angle, rotationOffset * 90, 0.12, {
+			onComplete: (t) -> {
+				rotationOffset = rotationOffset % 4;
+				angle = rotationOffset * 90;
+			}
+		});
 	}
 
 	/**

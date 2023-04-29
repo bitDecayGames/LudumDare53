@@ -1,5 +1,7 @@
 package states;
 
+import entities.Cursor;
+import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import entities.Grid;
 import ui.font.BitmapText.CyberRed;
@@ -12,6 +14,9 @@ import signals.Lifecycle;
 using states.FlxStateExt;
 
 class PlayState extends FlxTransitionableState {
+
+	var cursor:FlxSprite;
+
 	override public function create() {
 		super.create();
 		Lifecycle.startup.dispatch();
@@ -32,6 +37,9 @@ class PlayState extends FlxTransitionableState {
 
 		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, []);
 		add(grid);
+
+		cursor = new Cursor(grid);
+		add(cursor);
 
 		add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
 	}
