@@ -32,6 +32,7 @@ class Cursor extends FlxSprite {
 			if (SimpleController.pressed(R)) {
 				// swap with the tile above if there is one
 				grid.swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x), Std.int(gridCell.y) - 1);
+				Gameplay.onSwap.dispatch(grid);
 			} else if (gridCell.y > 0) {
 				// good!
 				gridCell.y--;
@@ -44,6 +45,7 @@ class Cursor extends FlxSprite {
 			if (SimpleController.pressed(R)) {
 				// swap with the tile below if there is one
 				grid.swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x), Std.int(gridCell.y) + 1);
+				Gameplay.onSwap.dispatch(grid);
 			} else if (gridCell.y < grid.nodes.length - 1) {
 				// good!
 				gridCell.y++;
@@ -56,6 +58,7 @@ class Cursor extends FlxSprite {
 			if (SimpleController.pressed(R)) {
 				// swap with the tile to the left if there is one
 				grid.swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x) - 1, Std.int(gridCell.y));
+				Gameplay.onSwap.dispatch(grid);
 			} else if (gridCell.x > 0) {
 				// good!
 				gridCell.x--;
@@ -68,6 +71,7 @@ class Cursor extends FlxSprite {
 			if (SimpleController.pressed(R)) {
 				// swap with the tile to the right if there is one
 				grid.swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x) + 1, Std.int(gridCell.y));
+				Gameplay.onSwap.dispatch(grid);
 			} else if (gridCell.x < grid.nodes[0].length - 1) {
 				// good!
 				gridCell.x++;
@@ -80,10 +84,12 @@ class Cursor extends FlxSprite {
 		if (SimpleController.just_pressed(A) && allowRotate) {
 			allowRotate = false;
 			grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)].rotate(1, restoreControl);
+			Gameplay.onRotate.dispatch(grid);
 		}
 		if (SimpleController.just_pressed(B) && allowRotate) {
 			allowRotate = false;
 			grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)].rotate(-1, restoreControl);
+			Gameplay.onRotate.dispatch(grid);
 		}
 
 		x = grid.topCorner.x + gridCell.x * 32;
