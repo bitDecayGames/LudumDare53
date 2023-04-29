@@ -3,7 +3,7 @@ package entities;
 import flixel.FlxSprite;
 
 class InputSlot extends FlxSprite {
-	var queue:Array<ShapeInputIndicator> = [];
+	public var queue:Array<ShapeInputIndicator> = [];
 
 	public function new() {
 		super();
