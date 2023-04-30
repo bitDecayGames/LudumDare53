@@ -1,6 +1,7 @@
 package entities;
 
 import signals.Gameplay;
+import entities.IOEnums.IOColor;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxPoint;
 import flixel.FlxG;
@@ -76,7 +77,9 @@ class Grid extends FlxSprite {
 		// TODO: MW: we could move this logic into a plugin so that we could configure the inputs and outputs separately
 		for (x in 0...numberOfColumns) {
 			inputs.push(new InputSlot(x, numberOfRows - 1, Cardinal.S));
-			outputs.push(new OutputSlot(x, 0, Cardinal.N));
+			var outputSlot = new OutputSlot(x, 0, Cardinal.N);
+			outputSlot.addShape(this, new ShapeOutputIndicator(x, FlxG.random.getObject(Type.allEnums(IOColor))));
+			outputs.push(outputSlot);
 		}
 
 		for (x in 0...numberOfColumns) {
