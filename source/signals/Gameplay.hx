@@ -1,5 +1,6 @@
 package signals;
 
+import entities.Node;
 import entities.ConnectionTree;
 import entities.InputSlot;
 import entities.OutputSlot;
@@ -8,6 +9,7 @@ import entities.ShapeInputIndicator;
 import flixel.util.FlxSignal;
 
 typedef SpawnSignal = FlxTypedSignal<ShapeInputIndicator->Void>;
+typedef NodeSpawnSignal = FlxTypedSignal<Node->Void>;
 typedef GridSignal = FlxTypedSignal<Grid->Void>;
 typedef InputOutputsSignal = FlxTypedSignal<Array<InputSlot>->Array<OutputSlot>->ConnectionTree->Void>;
 
@@ -33,7 +35,12 @@ class Gameplay {
 	/**
 	 * Signals when a new message input has been spawned
 	 */
-	public static var onSpawn:SpawnSignal = new SpawnSignal();
+	public static var onMessageSpawn:SpawnSignal = new SpawnSignal();
+
+	/**
+	 * Signals when a new node has been spawned
+	 */
+	 public static var onNodeSpawn:NodeSpawnSignal = new NodeSpawnSignal();
 
 	/**
 	 * Signals when points have been collected

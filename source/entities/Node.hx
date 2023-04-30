@@ -58,7 +58,7 @@ class Node extends FlxSprite {
 		this.gridCellSize = gridCellSize;
 		this.nodeType = nodeType;
 		loadGraphic(asset);
-		rotate(rot);
+		rotate(rot, true);
 	}
 
 	override public function update(delta:Float) {
@@ -69,8 +69,15 @@ class Node extends FlxSprite {
 	 * Rotate the node/tile by 90 degrees in the given direction (positive == clockwise)
 	 * @param dir a non-zero number that represents the number of 90 degree turns to make
 	 */
-	public function rotate(dir:Int, ?cb:() -> Void) {
+	public function rotate(dir:Int, instant:Bool = false, ?cb:() -> Void) {
 		rotationOffset += dir;
+
+		if (instant) {
+			rotationOffset = FlxMath.wrap(rotationOffset, 0, 3);
+			angle = rotationOffset * 90;
+			return;
+		}
+
 		FlxTween.angle(this, angle, rotationOffset * 90, 0.12, {
 			onComplete: (t) -> {
 				rotationOffset = FlxMath.wrap(rotationOffset, 0, 3);
@@ -170,12 +177,15 @@ class Node extends FlxSprite {
 		}
 	}
 
-	public function startBlowupSequence() {
+	public function startBlowupSequence(callback:Node->Void) {
 		if (!blowingUp) {
 			blowingUp = true;
 			FlxTween.shake(this, 0.1, 0.5, FlxAxes.XY, {
 				onComplete: (t) -> {
 					kill();
+					if (callback != null) {
+						callback(this);
+					}
 				}
 			});
 		}

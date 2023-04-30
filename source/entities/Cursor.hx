@@ -105,7 +105,7 @@ class Cursor extends FlxSprite {
                 shake(FlxAxes.XY);
             } else {
                 allowInteraction = false;
-                currentNode.rotate(-1, restoreControl);
+                currentNode.rotate(1, restoreControl);
                 Gameplay.onRotate.dispatch(grid);
             }
         }

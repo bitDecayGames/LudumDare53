@@ -1,5 +1,7 @@
 package entities;
 
+import signals.Gameplay;
+import entities.IOEnums.IOColor;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxPoint;
 import flixel.FlxG;
@@ -22,7 +24,7 @@ class Grid extends FlxSprite {
 
 	var probabilities:Map<NodeType, Float> = [
 		Corner => 2,
-		// Tee => 2,
+		Tee => 2,
 		Straight => 4,
 		Plus => 2,
 		OneWay => .5,
@@ -32,7 +34,7 @@ class Grid extends FlxSprite {
 		Crossover => 2,
 	];
 
-	private function getRandomNodeTypeForLocation(x:Int, y:Int):NodeType {
+	private function getRandomNodeTypeForLocation(x:Int, y:Int, avoidTypes:Array<NodeType>):NodeType {
 		var probabilitieTypes:Array<NodeType> = [];
 		var probabilityValues:Array<Float> = [];
 
@@ -75,16 +77,15 @@ class Grid extends FlxSprite {
 		// TODO: MW: we could move this logic into a plugin so that we could configure the inputs and outputs separately
 		for (x in 0...numberOfColumns) {
 			inputs.push(new InputSlot(x, numberOfRows - 1, Cardinal.S));
-			outputs.push(new OutputSlot(x, 0, Cardinal.N));
+			var outputSlot = new OutputSlot(x, 0, Cardinal.N);
+			outputSlot.addShape(this, new ShapeOutputIndicator(x, FlxG.random.getObject(Type.allEnums(IOColor))));
+			outputs.push(outputSlot);
 		}
 
 		for (x in 0...numberOfColumns) {
 			nodes.push([]);
 			for (y in 0...numberOfRows) {
-				var chosenType = getRandomNodeTypeForLocation(x, y);
-				var newNode = Node.create(chosenType);
-				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
-				nodes[x].push(newNode);
+				nodes[x].push(spawnNewNodeAtPosition(x, y, []));
 			}
 		}
 
@@ -94,6 +95,27 @@ class Grid extends FlxSprite {
 		}
 
 		// TODO: MW set up animation object to handle maybe some subtle grid/background animations
+	}
+
+	public function spawnNewNodeAtPosition(x:Int, y:Int, avoidTypes:Array<NodeType>):Node {
+		var chosenType = getRandomNodeTypeForLocation(x, y, avoidTypes);
+		var newNode = Node.create(chosenType);
+		newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
+		Gameplay.onNodeSpawn.dispatch(newNode);
+		return newNode;
+	}
+
+	public function spawnNewNodeAtNode(n:Node):Node {
+		for (x in 0...numberOfColumns) {
+			for (y in 0...numberOfRows) {
+				if (nodes[x][y] == n) {
+					var newNode = spawnNewNodeAtPosition(x, y, [NodeType.Dead]);
+					nodes[x][y] = newNode;
+					return newNode;
+				}
+			}
+		}
+		return null;
 	}
 
 	override public function update(delta:Float) {
@@ -158,11 +180,11 @@ class Grid extends FlxSprite {
 		});
 	}
 
-	public function getNumberOfColumns(): Int {
+	public function getNumberOfColumns():Int {
 		return numberOfColumns;
 	}
 
-	public function getNumberOfRows(): Int {
+	public function getNumberOfRows():Int {
 		return numberOfRows;
 	}
 

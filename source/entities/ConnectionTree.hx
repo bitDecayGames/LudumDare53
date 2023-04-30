@@ -13,6 +13,12 @@ class ConnectionTree {
 		return root.leafs();
 	}
 
+	public function allNodes():Array<LinkedNode> {
+		if (root == null)
+			return [];
+		return root.allNodes([]);
+	}
+
 	public function add(node:Node, enter:Cardinal):LinkedNode {
 		if (root == null) {
 			root = new LinkedNode(node, enter);
@@ -82,5 +88,13 @@ class LinkedNode {
 			}
 		}
 		return v;
+	}
+
+	public function allNodes(a:Array<LinkedNode>):Array<LinkedNode> {
+		a.push(this);
+		for (node in this.exits) {
+			node.allNodes(a);
+		}
+		return a;
 	}
 }

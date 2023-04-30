@@ -26,7 +26,7 @@ class CheckForConnectionPlugin implements Plugin {
 		for (input in grid.inputs) {
 			// for each input slot, traverse the grid from that input space
 			var tree = grid.traverse(input.gridX, input.gridY, input.enter);
-			var leafs = tree.leafs();
+			var leafs = tree.allNodes(); // this isn't just leafs because we found edge cases that a leaf wouldn't be the actual node that touches the input or output
 			var connectedInputs:Array<InputSlot> = [input];
 			var connectedOutputs:Array<OutputSlot> = [];
 			for (leaf in leafs) {
