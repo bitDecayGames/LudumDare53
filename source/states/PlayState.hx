@@ -1,11 +1,13 @@
 package states;
 
+import entities.ScoreUI;
 import signals.Gameplay.NodeSpawnSignal;
 import flixel.group.FlxGroup;
 import entities.ShapeInputIndicator;
 import signals.Gameplay;
 import plugins.HandleDeliveryPlugin;
 import plugins.CheckForConnectionPlugin;
+import plugins.ScoreModifierPlugin;
 import plugins.SpawnerPlugin;
 import flixel.math.FlxRect;
 import flixel.addons.display.FlxSliceSprite;
@@ -27,6 +29,7 @@ class PlayState extends FlxTransitionableState {
 
 	var scoreboardPos = FlxPoint.get(10 * 32, 32);
 	var scoreboardSize = FlxPoint.get(4 * 32, 32 * 13);
+	var scoreboardArea = FlxRect.get(10 * 32, 32, 4 * 32, 32 * 13);
 
 	var inputsPos = FlxPoint.get(32, 32 + 9 * 32);
 	var inputsSize = FlxPoint.get(8 * 32, 4 * 32);
@@ -76,18 +79,6 @@ class PlayState extends FlxTransitionableState {
 		outputBackground.setPosition(outputsPos.x, outputsPos.y);
 		bgGroup.add(outputBackground);
 
-		var scoreLabel = new CyberRed(10 * 32, 32, "score");
-		uiGroup.add(scoreLabel);
-
-		var scoreValue = new CyberRed(10 * 32, scoreLabel.y + 16, "00000123");
-		uiGroup.add(scoreValue);
-
-		var levelLabel = new CyberRed(10 * 32, scoreValue.y + 32, "network");
-		uiGroup.add(levelLabel);
-
-		var levelValue = new CyberRed(10 * 32, levelLabel.y + 16, "       1");
-		uiGroup.add(levelValue);
-
 		bgGroup.add(boardBackground);
 		Gameplay.onNodeSpawn.add((n) -> {
 			piecesGroup.add(n);
@@ -98,7 +89,12 @@ class PlayState extends FlxTransitionableState {
 			inputOutputGroup.add(shape);
 		});
 
-		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(), new SpawnerPlugin()]);
+		var scoreUI = new ScoreUI(scoreboardArea);
+		for (uiElement in scoreUI.members) {
+			uiGroup.add(uiElement);
+		}
+
+		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(), new SpawnerPlugin(), new ScoreModifierPlugin(scoreUI)]);
 		add(grid);
 
 		cursor = new Cursor(grid);

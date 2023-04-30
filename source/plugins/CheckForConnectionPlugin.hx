@@ -16,6 +16,10 @@ class CheckForConnectionPlugin implements Plugin {
 	}
 
 	public function check(grid:Grid) {
+		if (grid == null) {
+			return;
+		}
+		
 		// TODO: filter out inputs that don't have anything in the queue
 		var inputs = grid.inputs.map(s -> new InputNode(s, grid.get(s.gridX, s.gridY)));
 		var outputs = grid.outputs.map(s -> new OutputNode(s, grid.get(s.gridX, s.gridY)));
