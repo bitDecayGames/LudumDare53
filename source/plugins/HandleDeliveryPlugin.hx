@@ -1,5 +1,6 @@
 package plugins;
 
+import flixel.FlxG;
 import entities.ConnectionTree;
 import entities.InputSlot;
 import entities.Grid;
@@ -8,9 +9,12 @@ import entities.OutputSlot;
 import signals.Gameplay;
 
 class HandleDeliveryPlugin implements Plugin {
+	var grid:Grid;
+
 	public function new() {}
 
 	public function init(grid:Grid) {
+		this.grid = grid;
 		Gameplay.onCompleteDelivery.add(this.handleDelivery);
 	}
 
@@ -22,7 +26,10 @@ class HandleDeliveryPlugin implements Plugin {
 
 		// for each node, mark it as shouldBlowUp so that something else can blow it up when it is time
 		tree.foreach((l) -> {
-			l.node.startBlowupSequence();
+			l.node.startBlowupSequence((n) -> {
+				var newNode = grid.spawnNewNodeAtNode(n);
+				FlxG.state.add(newNode);
+			});
 		});
 	}
 

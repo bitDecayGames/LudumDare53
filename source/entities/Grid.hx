@@ -81,10 +81,7 @@ class Grid extends FlxSprite {
 		for (x in 0...numberOfColumns) {
 			nodes.push([]);
 			for (y in 0...numberOfRows) {
-				var chosenType = getRandomNodeTypeForLocation(x, y);
-				var newNode = Node.create(chosenType);
-				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
-				nodes[x].push(newNode);
+				nodes[x].push(spawnNewNodeAtPosition(x, y));
 			}
 		}
 
@@ -94,6 +91,26 @@ class Grid extends FlxSprite {
 		}
 
 		// TODO: MW set up animation object to handle maybe some subtle grid/background animations
+	}
+
+	public function spawnNewNodeAtPosition(x:Int, y:Int):Node {
+		var chosenType = getRandomNodeTypeForLocation(x, y);
+		var newNode = Node.create(chosenType);
+		newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
+		return newNode;
+	}
+
+	public function spawnNewNodeAtNode(n:Node):Node {
+		for (x in 0...numberOfColumns) {
+			for (y in 0...numberOfRows) {
+				if (nodes[x][y] == n) {
+					var newNode = spawnNewNodeAtPosition(x, y);
+					nodes[x][y] = newNode;
+					return newNode;
+				}
+			}
+		}
+		return null;
 	}
 
 	override public function update(delta:Float) {
@@ -158,11 +175,11 @@ class Grid extends FlxSprite {
 		});
 	}
 
-	public function getNumberOfColumns(): Int {
+	public function getNumberOfColumns():Int {
 		return numberOfColumns;
 	}
 
-	public function getNumberOfRows(): Int {
+	public function getNumberOfRows():Int {
 		return numberOfRows;
 	}
 
