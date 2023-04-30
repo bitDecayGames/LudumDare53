@@ -21,15 +21,15 @@ class Grid extends FlxSprite {
 	public var topCorner:FlxPoint;
 
 	var probabilities:Map<NodeType, Float> = [
-		// Corner => 2,
-		Tee => 2,
-		// Straight => 4,
-		// Plus => 2,
-		// OneWay => .5,
+		Corner => 2,
+		// Tee => 2,
+		Straight => 4,
+		Plus => 2,
+		OneWay => .5,
 		// Warp;
-		// Dead => 1,
-		// DoubleCorner => 2,
-		// Crossover => 2,
+		Dead => 1,
+		DoubleCorner => 2,
+		Crossover => 2,
 	];
 
 	private function getRandomNodeTypeForLocation(x:Int, y:Int):NodeType {
