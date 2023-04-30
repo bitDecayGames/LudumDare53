@@ -32,6 +32,7 @@ class Grid extends FlxSprite {
 		Dead => 1,
 		DoubleCorner => 2,
 		Crossover => 2,
+		Empty => 0.5
 	];
 
 	private function getRandomNodeTypeForLocation(x:Int, y:Int, avoidTypes:Array<NodeType>):NodeType {
@@ -88,10 +89,29 @@ class Grid extends FlxSprite {
 			outputs.push(outputSlot);
 		}
 
-		for (x in 0...numberOfColumns) {
-			nodes.push([]);
-			for (y in 0...numberOfRows) {
-				nodes[x].push(spawnNewNodeAtPosition(x, y, []));
+		#if !staticboard
+			for (x in 0...numberOfColumns) {
+				nodes.push([]);
+				for (y in 0...numberOfRows) {
+					nodes[x].push(spawnNewNodeAtPosition(x, y, []));
+				}
+			}
+		#else
+			for (x in 0...numberOfColumns) {
+				nodes.push([]);
+				for (y in 0...numberOfRows) {
+					if (y == 0 || y == numberOfRows-1) {
+						nodes[x].push(spawnNewNodeOfTypeAtPosition(x, y, StraightStatic));
+					} else {
+						nodes[x].push(spawnNewNodeOfTypeAtPosition(x, y, Plus));
+					}
+				}
+			}
+		#end
+
+		for (nodesX in nodes) {
+			for (node in nodesX) {
+				trace(node.nodeType, node.x, node.y);
 			}
 		}
 
@@ -105,6 +125,13 @@ class Grid extends FlxSprite {
 
 	public function spawnNewNodeAtPosition(x:Int, y:Int, avoidTypes:Array<NodeType>):Node {
 		var chosenType = getRandomNodeTypeForLocation(x, y, avoidTypes);
+		var newNode = Node.create(chosenType);
+		newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
+		Gameplay.onNodeSpawn.dispatch(newNode);
+		return newNode;
+	}
+
+	public function spawnNewNodeOfTypeAtPosition(x:Int, y:Int, chosenType:NodeType):Node {
 		var newNode = Node.create(chosenType);
 		newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
 		Gameplay.onNodeSpawn.dispatch(newNode);
@@ -150,9 +177,11 @@ class Grid extends FlxSprite {
 	public function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int, ?cb:() -> Void):Bool {
 		// return immmediately if the coordinates are out of bounds
 		if (x1 < 0 || x1 >= numberOfColumns || x2 < 0 || x2 >= numberOfColumns) {
+            FmodManager.PlaySoundOneShot(FmodSFX.TileCannotRotate);
 			return false;
 		}
 		if (y1 < 0 || y1 >= numberOfRows || y2 < 0 || y2 >= numberOfRows) {
+            FmodManager.PlaySoundOneShot(FmodSFX.TileCannotRotate);
 			return false;
 		}
 
@@ -161,6 +190,7 @@ class Grid extends FlxSprite {
 
 		// only allow swap if the node is mobile
 		if (!firstNode.isMobile() || !secondNode.isMobile()) {
+            FmodManager.PlaySoundOneShot(FmodSFX.TileCannotRotate);
 			return false;
 		}
 

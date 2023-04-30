@@ -20,10 +20,10 @@ class Node extends FlxSprite {
 	var gridCellSize:Float = 0;
 
 	var blowingUp:Bool = false;
-	var nodeType:NodeType = null;
+	public var nodeType:NodeType = null;
 
 	public static function create(type:NodeType):Node {
-		trace('creating node with type: ${type}');
+		// trace('creating node with type: ${type}');
 		switch type {
 			case Corner:
 				return new Node(32, AssetPaths.bend__png, [0, 0, 1, 1], [0, 0, 1, 1], FlxG.random.int(0, 3), type);
@@ -31,6 +31,8 @@ class Node extends FlxSprite {
 				return new Node(32, AssetPaths.tee__png, [0, 1, 1, 1], [0, 1, 1, 1], FlxG.random.int(0, 3), type);
 			case Straight:
 				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], FlxG.random.int(0, 3), type);
+			case StraightStatic:
+				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], 1, type);
 			case Plus:
 				return new Node(32, AssetPaths.plus__png, [1, 1, 1, 1], [1, 1, 1, 1], FlxG.random.int(0, 3), type);
 			case OneWay:
@@ -43,6 +45,9 @@ class Node extends FlxSprite {
 				return new Node(32, AssetPaths.double_bend__png, [1, 1, 2, 2], [1, 1, 2, 2], FlxG.random.int(0, 3), type);
 			case Crossover:
 				return new Node(32, AssetPaths.plus_overlapping__png, [1, 2, 1, 2], [1, 2, 1, 2], FlxG.random.int(0, 3), type);
+			case Empty:
+				// TODO: This may be causing crashes?
+				return new Node(32, AssetPaths.empty__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type);
 		}
 		return null;
 	}
@@ -180,6 +185,7 @@ class Node extends FlxSprite {
 	public function startBlowupSequence(callback:Node->Void) {
 		if (!blowingUp) {
 			blowingUp = true;
+            FmodManager.PlaySoundOneShot(FmodSFX.TileClear);
 			FlxTween.shake(this, 0.1, 0.5, FlxAxes.XY, {
 				onComplete: (t) -> {
 					kill();
@@ -189,5 +195,9 @@ class Node extends FlxSprite {
 				}
 			});
 		}
+	}
+
+	public function startBadConnectionSequence() {
+		FlxTween.shake(this, 0.025, 0.5, FlxAxes.XY);
 	}
 }

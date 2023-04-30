@@ -22,7 +22,6 @@ class HandleDeliveryPlugin implements Plugin {
 
 	public function handleDelivery(inputs:Array<InputSlot>, outputs:Array<OutputSlot>, tree:ConnectionTree) {
 		for (slot in inputs) {
-			// TODO: MW for each input, we need to decide if it was successful or not
 			var v = slot.queue.pop();
 			if (v != null) {
 				v.kill();
@@ -33,7 +32,7 @@ class HandleDeliveryPlugin implements Plugin {
 		tree.foreach((l) -> {
 			l.node.startBlowupSequence((n) -> {
 				new FlxTimer().start(0.5, (t) -> {
-					var newNode = grid.spawnNewNodeAtNode(n);
+					grid.spawnNewNodeAtNode(n);
 				});
 			});
 		});
