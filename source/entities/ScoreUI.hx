@@ -30,9 +30,7 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 		scoreBackground.setPosition(scoreArea.x, scoreArea.y);
 		add(scoreBackground);
 
-        gal = new FlxSprite();
-        gal.loadGraphic(AssetPaths.secretary_preview__png);
-        gal.setPosition(scoreArea.x + 16, scoreArea.y);
+        gal = new Woman(scoreArea.x + 16, scoreArea.y);
         add(gal);
 
         scoreLabel = new CyberRed(10 * 32, gal.y + gal.height + 16, "score");
