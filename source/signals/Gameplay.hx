@@ -11,7 +11,7 @@ import flixel.util.FlxSignal;
 typedef SpawnSignal = FlxTypedSignal<ShapeInputIndicator->Void>;
 typedef NodeSpawnSignal = FlxTypedSignal<Node->Void>;
 typedef GridSignal = FlxTypedSignal<Grid->Void>;
-typedef InputOutputsSignal = FlxTypedSignal<Array<InputSlot>->Array<OutputSlot>->ConnectionTree->Void>;
+typedef InputOutputSignal = FlxTypedSignal<Array<InputSlot>->Array<OutputSlot>->ConnectionTree->Void>;
 
 class Gameplay {
 	/**
@@ -48,9 +48,14 @@ class Gameplay {
 	public static var onCollectPoints:FlxSignal = new FlxSignal();
 
 	/**
-	 * Signals when a dilivery has been completed
+	 * Signals when a delivery has been completed
 	 */
-	public static var onCompleteDelivery:InputOutputsSignal = new InputOutputsSignal();
+	public static var onCompleteDelivery:InputOutputSignal = new InputOutputSignal();
+
+	/**
+	  * Signals when a bad connection has happened
+	 */
+	public static var onBadConnection: InputOutputSignal = new InputOutputSignal();
 
 	/**
 	 * Signals when a Task has been completed
