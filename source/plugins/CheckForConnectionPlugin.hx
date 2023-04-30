@@ -71,7 +71,6 @@ class CheckForConnectionPlugin implements Plugin {
 					break;
 				}
 			}
-
 			if (duplicateConnectionFound) {
 				continue;
 			}
@@ -82,10 +81,16 @@ class CheckForConnectionPlugin implements Plugin {
 				trace("Found a connection!");
 
 				var brokenConnection = false;
+				var numberOfNullConnections = 0;
 				for (input in connectedInputs) {
+					if (input.queue.length == 0) {
+						numberOfNullConnections ++;
+						continue;
+					}
+
 					var connectionMatched = false;
 					for (output in connectedOutputs) {
-						if (input.queue.length > 0 && input.queue[0].shape == output.shapeList[0].shape) {
+						if (input.queue[0].shape == output.shapeList[0].shape) {
 							connectionMatched = true;
 							break;
 						}
@@ -99,7 +104,7 @@ class CheckForConnectionPlugin implements Plugin {
 				if (brokenConnection) {
 					trace("BAD CONNECTION!!!");
 					Gameplay.onBadConnection.dispatch(connectedInputs, connectedOutputs, tree);
-				} else {
+				} else if (numberOfNullConnections < connectedInputs.length) {
 					Gameplay.onCompleteDelivery.dispatch(connectedInputs, connectedOutputs, tree);
 				}
 			}
