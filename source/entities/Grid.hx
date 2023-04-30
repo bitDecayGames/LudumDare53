@@ -158,6 +158,14 @@ class Grid extends FlxSprite {
 		});
 	}
 
+	public function getNumberOfColumns(): Int {
+		return numberOfColumns;
+	}
+
+	public function getNumberOfRows(): Int {
+		return numberOfRows;
+	}
+
 	/**
 	 * Given a start x and y (a node) and the direction you are entering that node from,
 	 * return a connection tree of all the connected nodes

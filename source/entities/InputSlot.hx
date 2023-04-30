@@ -20,7 +20,6 @@ class InputSlot extends FlxSprite {
 
 	override public function update(delta:Float) {
 		super.update(delta);
-
 		// TODO: maybe track some kind of timer here to indicate when the input indicated should fail
 	}
 }

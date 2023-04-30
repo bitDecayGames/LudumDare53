@@ -1,37 +1,21 @@
 package entities;
 
+import entities.IOEnums.IOColor;
+import entities.IOEnums.IOShape;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
-enum Shape {
-	Circle;
-	Triangle;
-	Square;
-	Pentagon;
-	Hexagon;
-	Heptagon;
-	Octogon;
-	Nonagon;
-	Decagon;
-}
-
-enum Color {
-	Green;
-	Blue;
-	Yellow;
-	Pink;
-	White;
-}
-
 class ShapeInputIndicator extends FlxSprite {
-	public var shape: Shape;
-	public var colorEnum: Color;
+	public var shape: IOShape;
+	public var colorEnum: IOColor;
 
-	public function new(shape: Shape, color: Color) {
+	public function new(shape: IOShape, color: IOColor) {
 		super();
 		this.shape = shape;
 		colorEnum = color;
 		// TODO: MW these shapes should maybe bounce around and spin in anticipation?
+		loadGraphic(AssetPaths.shapes__png, true, 32, 32);
+		animation.frameIndex = shape;
 	}
 
 	override public function update(delta:Float) {
@@ -39,8 +23,8 @@ class ShapeInputIndicator extends FlxSprite {
 	}
 
 	public static function newRandom(): ShapeInputIndicator {
-		var randomShape = FlxG.random.getObject(Type.allEnums(Shape));
-		var randomColorEnum = FlxG.random.getObject(Type.allEnums(Color));
+		var randomShape = FlxG.random.getObject(IOShape.allValues);
+		var randomColorEnum = FlxG.random.getObject(Type.allEnums(IOColor));
 		return new ShapeInputIndicator(randomShape, randomColorEnum);
 	}
 }
