@@ -1,5 +1,7 @@
 package plugins;
 
+import haxe.Timer;
+import flixel.util.FlxTimer;
 import flixel.FlxG;
 import entities.ConnectionTree;
 import entities.InputSlot;
@@ -21,14 +23,19 @@ class HandleDeliveryPlugin implements Plugin {
 	public function handleDelivery(inputs:Array<InputSlot>, outputs:Array<OutputSlot>, tree:ConnectionTree) {
 		for (slot in inputs) {
 			// TODO: MW for each input, we need to decide if it was successful or not
-			slot.queue.pop();
+			var v = slot.queue.pop();
+			if (v != null) {
+				v.kill();
+			}
 		}
 
 		// for each node, mark it as shouldBlowUp so that something else can blow it up when it is time
 		tree.foreach((l) -> {
 			l.node.startBlowupSequence((n) -> {
-				var newNode = grid.spawnNewNodeAtNode(n);
-				FlxG.state.add(newNode);
+				new FlxTimer().start(0.5, (t) -> {
+					var newNode = grid.spawnNewNodeAtNode(n);
+					FlxG.state.add(newNode);
+				});
 			});
 		});
 	}
