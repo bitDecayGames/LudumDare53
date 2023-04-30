@@ -33,6 +33,10 @@ class PlayState extends FlxTransitionableState {
 		super.create();
 		Lifecycle.startup.dispatch();
 
+		#if music
+		FmodManager.PlaySong(FmodSongs.Puzzle);
+		#end
+		
 		FlxG.camera.pixelPerfectRender = true;
 
 		var gridStartPosition = FlxPoint.get(32, 64);
