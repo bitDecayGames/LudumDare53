@@ -16,9 +16,9 @@ class Grid extends FlxSprite {
 	public var inputs:Array<InputSlot> = [];
 	public var outputs:Array<OutputSlot> = [];
 
-	private var gridCellSize:Int;
-	private var numberOfColumns:Int;
-	private var numberOfRows:Int;
+	public var gridCellSize:Int;
+	public var numberOfColumns:Int;
+	public var numberOfRows:Int;
 
 	public var topCorner:FlxPoint;
 
@@ -28,7 +28,7 @@ class Grid extends FlxSprite {
 		Straight => 4,
 		Plus => 2,
 		OneWay => .5,
-		// Warp;
+		// // Warp;
 		Dead => 1,
 		DoubleCorner => 2,
 		Crossover => 2,
@@ -205,6 +205,13 @@ class Grid extends FlxSprite {
 	 */
 	public function traverse(startX:Int, startY:Int, enter:Cardinal):ConnectionTree {
 		var t = new ConnectionTree();
+		// var initialOutletCheck = enter.opposite();
+		var node = get(startX, startY);
+		if (node.getOutlets(enter).length == 0) {
+			// we can't traverse from the start node by entering this direction. There is no tree.
+			return t;
+		}
+
 		var toVisit:Array<Coord> = [new Coord(startX, startY, t.add(get(startX, startY), enter))];
 		var visited:Array<Coord> = [];
 

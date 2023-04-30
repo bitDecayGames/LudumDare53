@@ -8,6 +8,7 @@ import signals.Gameplay;
 import plugins.HandleDeliveryPlugin;
 import plugins.CheckForConnectionPlugin;
 import plugins.ScoreModifierPlugin;
+import plugins.ConnectivityMaskingPlugin;
 import plugins.SpawnerPlugin;
 import flixel.math.FlxRect;
 import flixel.addons.display.FlxSliceSprite;
@@ -98,7 +99,13 @@ class PlayState extends FlxTransitionableState {
 			uiGroup.add(uiElement);
 		}
 
-		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(), new SpawnerPlugin(), new ScoreModifierPlugin(scoreUI)]);
+		var grid = new Grid(32, gridStartPosition, 8, 8, [
+			new CheckForConnectionPlugin(),
+			new HandleDeliveryPlugin(),
+			new SpawnerPlugin(),
+			new ScoreModifierPlugin(scoreUI),
+			new ConnectivityMaskingPlugin(),
+		]);
 		add(grid);
 
 		for (outputSlot in grid.outputs) {

@@ -54,6 +54,16 @@ class Gameplay {
 	public static var onCollectPoints:FlxSignal = new FlxSignal();
 
 	/**
+	 * Signals when a new traversal search has begun
+	**/
+	public static var onNewTreeSearch = new FlxSignal();
+
+	/**
+	 * Signals when a new tree is found. Contains all information of tree's nodes, connected inputs, and connected outputs (if any)
+	**/
+	public static var onTreeResolved = new InputOutputSignal();
+
+	/**
 	 * Signals when a dilivery has been completed. This may not be an 'correct' delivery, just that a message was connected to an output
 	 */
 	public static var onCompleteDelivery:InputOutputSignal = new InputOutputSignal();

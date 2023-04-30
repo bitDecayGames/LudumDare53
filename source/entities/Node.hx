@@ -22,30 +22,33 @@ class Node extends FlxSprite {
 	var blowingUp:Bool = false;
 	public var nodeType:NodeType = null;
 
+	public var masks:Array<FlxSprite> = [];
+
 	public static function create(type:NodeType):Node {
 		// trace('creating node with type: ${type}');
 		switch type {
 			case Corner:
-				return new Node(32, AssetPaths.bend__png, [0, 0, 1, 1], [0, 0, 1, 1], FlxG.random.int(0, 3), type);
+				return new Node(32, AssetPaths.bend__png, [0, 0, 1, 1], [0, 0, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
 			case Tee:
-				return new Node(32, AssetPaths.tee__png, [0, 1, 1, 1], [0, 1, 1, 1], FlxG.random.int(0, 3), type);
+				trace('making tee');
+				return new Node(32, AssetPaths.tee__png, [0, 1, 1, 1], [0, 1, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
 			case Straight:
-				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], FlxG.random.int(0, 3), type);
+				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
 			case Plus:
-				return new Node(32, AssetPaths.plus__png, [1, 1, 1, 1], [1, 1, 1, 1], FlxG.random.int(0, 3), type);
+				return new Node(32, AssetPaths.plus__png, [1, 1, 1, 1], [1, 1, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
 			case OneWay:
-				return new Node(32, AssetPaths.straight_oneway__png, [0, 0, 1, 0], [1, 0, 0, 0], FlxG.random.int(0, 3), type);
+				return new Node(32, AssetPaths.straight_oneway__png, [0, 0, 1, 0], [1, 0, 0, 0], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
 			// case Warp:
 			// 	// TODO: How do we capture this info?
 			case Dead:
-				return new Node(32, AssetPaths.blocker__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type);
+				return new Node(32, AssetPaths.blocker__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type, [AssetPaths.tee_mask__png]);
 			case DoubleCorner:
-				return new Node(32, AssetPaths.double_bend__png, [1, 1, 2, 2], [1, 1, 2, 2], FlxG.random.int(0, 3), type);
+				return new Node(32, AssetPaths.double_bend__png, [1, 1, 2, 2], [1, 1, 2, 2], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png, AssetPaths.tee_mask__png]);
 			case Crossover:
-				return new Node(32, AssetPaths.plus_overlapping__png, [1, 2, 1, 2], [1, 2, 1, 2], FlxG.random.int(0, 3), type);
+				return new Node(32, AssetPaths.plus_overlapping__png, [1, 2, 1, 2], [1, 2, 1, 2], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png, AssetPaths.tee_mask__png]);
 			case Empty:
 				// TODO: This may be causing crashes?
-				return new Node(32, AssetPaths.empty__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type);
+				return new Node(32, AssetPaths.empty__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type, [AssetPaths.tee_mask__png]);
 		}
 		return null;
 	}
@@ -54,13 +57,18 @@ class Node extends FlxSprite {
 		return nodeType != Dead;
 	}
 
-	private function new(gridCellSize:Float, asset:FlxGraphicAsset, entrances:Array<Int>, exits:Array<Int>, rot:Int, nodeType:NodeType) {
+	private function new(gridCellSize:Float, asset:FlxGraphicAsset, entrances:Array<Int>, exits:Array<Int>, rot:Int, nodeType:NodeType, maskAssets:Array<FlxGraphicAsset>) {
 		super();
 		this.connectionsEnter = entrances;
 		this.connectionsExit = exits;
 		this.gridCellSize = gridCellSize;
 		this.nodeType = nodeType;
 		loadGraphic(asset);
+
+		for (maskAsset in maskAssets) {
+			masks.push(new FlxSprite(maskAsset));			
+		}
+
 		rotate(rot, true);
 	}
 
@@ -78,6 +86,9 @@ class Node extends FlxSprite {
 		if (instant) {
 			rotationOffset = FlxMath.wrap(rotationOffset, 0, 3);
 			angle = rotationOffset * 90;
+			for (m in masks) {
+				m.angle = angle;
+			}
 			return;
 		}
 
@@ -85,6 +96,9 @@ class Node extends FlxSprite {
 			onComplete: (t) -> {
 				rotationOffset = FlxMath.wrap(rotationOffset, 0, 3);
 				angle = rotationOffset * 90;
+				for (m in masks) {
+					m.angle = angle;
+				}
 				if (cb != null) {
 					cb();
 				}
@@ -117,7 +131,10 @@ class Node extends FlxSprite {
 	 * @return Int
 	 */
 	public function pathId(enter:Cardinal):Int {
-		var enterIndex = FlxMath.wrap(cardinalToIndex(enter) + rotationOffset, 0, 3);
+		trace('    cardinalToIndex: ${cardinalToIndex(enter)}');
+		trace('    rotationOffset: ${rotationOffset}');
+		
+		var enterIndex = FlxMath.wrap(cardinalToIndex(enter) - rotationOffset, 0, 3);
 		return connectionsEnter[enterIndex];
 	}
 
