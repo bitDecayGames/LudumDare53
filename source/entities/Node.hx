@@ -28,26 +28,26 @@ class Node extends FlxSprite {
 		// trace('creating node with type: ${type}');
 		switch type {
 			case Corner:
-				return new Node(32, AssetPaths.bend__png, [0, 0, 1, 1], [0, 0, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
+				return new Node(32, AssetPaths.bend__png, [0, 0, 1, 1], [0, 0, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.bend_mask__png]);
 			case Tee:
 				trace('making tee');
 				return new Node(32, AssetPaths.tee__png, [0, 1, 1, 1], [0, 1, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
 			case Straight:
-				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
+				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], FlxG.random.int(0, 3), type, [AssetPaths.straight_mask__png]);
 			case StraightStatic:
-				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], 1, type, [AssetPaths.tee_mask__png]);
+				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], 1, type, [AssetPaths.straight_mask__png]);
 			case Plus:
-				return new Node(32, AssetPaths.plus__png, [1, 1, 1, 1], [1, 1, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
+				return new Node(32, AssetPaths.plus__png, [1, 1, 1, 1], [1, 1, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.plus_mask__png]);
 			case OneWay:
-				return new Node(32, AssetPaths.straight_oneway__png, [0, 0, 1, 0], [1, 0, 0, 0], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
+				return new Node(32, AssetPaths.straight_oneway__png, [0, 0, 1, 0], [1, 0, 0, 0], FlxG.random.int(0, 3), type, [AssetPaths.straight_oneway_mask__png]);
 			// case Warp:
 			// 	// TODO: How do we capture this info?
 			case Dead:
-				return new Node(32, AssetPaths.blocker__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type, [AssetPaths.tee_mask__png]);
+				return new Node(32, AssetPaths.blocker__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type, [AssetPaths.plus_mask__png]);
 			case DoubleCorner:
-				return new Node(32, AssetPaths.double_bend__png, [1, 1, 2, 2], [1, 1, 2, 2], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png, AssetPaths.tee_mask__png]);
+				return new Node(32, AssetPaths.double_bend__png, [1, 1, 2, 2], [1, 1, 2, 2], FlxG.random.int(0, 3), type, [AssetPaths.double_bend_mask__png, AssetPaths.bend_mask__png]);
 			case Crossover:
-				return new Node(32, AssetPaths.plus_overlapping__png, [1, 2, 1, 2], [1, 2, 1, 2], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png, AssetPaths.tee_mask__png]);
+				return new Node(32, AssetPaths.plus_overlapping__png, [1, 2, 1, 2], [1, 2, 1, 2], FlxG.random.int(0, 3), type, [AssetPaths.straight_mask__png, AssetPaths.plus_overlapping_mask__png]);
 			case Empty:
 				// TODO: This may be causing crashes?
 				return new Node(32, AssetPaths.empty__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type, [AssetPaths.tee_mask__png]);
