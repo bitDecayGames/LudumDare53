@@ -32,7 +32,6 @@ class Woman extends FlxSprite {
         addAnimForAllLevels(DOWNGRADE_ANIMATION, 33, 6);
 
         animation.finishCallback = (name) -> {
-            trace('anim finished: ${name}');
             playAnimForCurrentLevel(IDLE);
         };
 
