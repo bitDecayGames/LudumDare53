@@ -21,15 +21,15 @@ class Grid extends FlxSprite {
 	public var topCorner:FlxPoint;
 
 	var probabilities:Map<NodeType, Float> = [
-		Corner => 2,
-		Tee => 2,
+		// Corner => 2,
+		// Tee => 2,
 		Straight => 4,
-		Plus => 2,
-		OneWay => .5,
+		// Plus => 2,
+		// OneWay => .5,
 		// Warp;
-		Dead => 5,
-		DoubleCorner => 2,
-		Crossover => 2,
+		// Dead => 1,
+		// DoubleCorner => 2,
+		// Crossover => 2,
 	];
 
 	private function getRandomNodeTypeForLocation(x:Int, y:Int):NodeType {
@@ -81,7 +81,7 @@ class Grid extends FlxSprite {
 		for (x in 0...numberOfColumns) {
 			nodes.push([]);
 			for (y in 0...numberOfRows) {
-				var chosenType = FlxG.random.getObject(cachedProbabilityTypes, cachedProbabilityValues);
+				var chosenType = getRandomNodeTypeForLocation(x, y);
 				var newNode = Node.create(chosenType);
 				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
 				nodes[x].push(newNode);
