@@ -23,7 +23,7 @@ class Node extends FlxSprite {
 	var nodeType:NodeType = null;
 
 	public static function create(type:NodeType):Node {
-		trace('creating node with type: ${type}');
+		// trace('creating node with type: ${type}');
 		switch type {
 			case Corner:
 				return new Node(32, AssetPaths.bend__png, [0, 0, 1, 1], [0, 0, 1, 1], FlxG.random.int(0, 3), type);

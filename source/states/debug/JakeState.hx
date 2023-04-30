@@ -84,6 +84,12 @@ class JakeState extends FlxTransitionableState {
 			}
 		}
 
+		for (outputSlot in grid.outputs) {
+			for (shape in outputSlot.shapeList) {
+				add(shape);
+			}
+		}
+
 		// Initialize the beginning state of the input shapes
 		for (inputSlot in grid.inputs) {
 			for (shape in inputSlot.queue) {

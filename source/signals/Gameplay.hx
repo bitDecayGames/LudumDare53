@@ -12,7 +12,7 @@ import flixel.util.FlxSignal;
 typedef SpawnSignal = FlxTypedSignal<ShapeInputIndicator->Void>;
 typedef NodeSpawnSignal = FlxTypedSignal<Node->Void>;
 typedef GridSignal = FlxTypedSignal<Grid->Void>;
-typedef InputOutputsSignal = FlxTypedSignal<Array<InputSlot>->Array<OutputSlot>->ConnectionTree->Void>;
+typedef InputOutputSignal = FlxTypedSignal<Array<InputSlot>->Array<OutputSlot>->ConnectionTree->Void>;
 
 /**
  * A signal to indicate a successful delivery of a message. Args include the shape delivered, the input column, and the output column
@@ -56,7 +56,12 @@ class Gameplay {
 	/**
 	 * Signals when a dilivery has been completed. This may not be an 'correct' delivery, just that a message was connected to an output
 	 */
-	public static var onCompleteDelivery:InputOutputsSignal = new InputOutputsSignal();
+	public static var onCompleteDelivery:InputOutputSignal = new InputOutputSignal();
+
+	/**
+	  * Signals when a bad connection has happened
+	 */
+	public static var onBadConnection: InputOutputSignal = new InputOutputSignal();
 
 	/**
 	 * Signals that indicate a message of the given type was sent successfully to the proper output

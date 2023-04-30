@@ -1,5 +1,6 @@
 package entities;
 
+import openfl.ui.GameInput;
 import signals.Gameplay;
 import flixel.util.FlxAxes;
 import flixel.tweens.FlxTween;
@@ -23,15 +24,19 @@ class Cursor extends FlxSprite {
 		offset.set(4, 4);
 	}
 
+    private function doneSwapping() {
+        restoreControl();
+		Gameplay.onSwap.dispatch(grid);
+    }
+
 	private function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int):Bool {
 		if (!allowInteraction)
 			return false;
 
-		var wasSwapped = grid.swapTiles(x1, y1, x2, y2, restoreControl);
+		var wasSwapped = grid.swapTiles(x1, y1, x2, y2, doneSwapping);
 		if (!wasSwapped)
 			return false;
 
-		Gameplay.onSwap.dispatch(grid);
 		allowInteraction = false;
 		gridCell.x = x2;
 		gridCell.y = y2;
@@ -105,8 +110,7 @@ class Cursor extends FlxSprite {
                 shake(FlxAxes.XY);
             } else {
                 allowInteraction = false;
-                currentNode.rotate(-1, restoreControl);
-                Gameplay.onRotate.dispatch(grid);
+                currentNode.rotate(1, doneRotating);
             }
         }
 
@@ -115,14 +119,19 @@ class Cursor extends FlxSprite {
                 shake(FlxAxes.XY);
             } else {
                 allowInteraction = false;
-                currentNode.rotate(-1, restoreControl);
-                Gameplay.onRotate.dispatch(grid);
+                currentNode.rotate(-1, doneRotating);
             }
         }
 
 		x = grid.topCorner.x + gridCell.x * 32;
 		y = grid.topCorner.y + gridCell.y * 32;
 	}
+
+    private function doneRotating() {
+        restoreControl();
+        Gameplay.onRotate.dispatch(grid);
+    }
+
 
 	private function restoreControl() {
 		allowInteraction = true;
