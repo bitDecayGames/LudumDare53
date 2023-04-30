@@ -34,6 +34,8 @@ class Node extends FlxSprite {
 				return new Node(32, AssetPaths.tee__png, [0, 1, 1, 1], [0, 1, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
 			case Straight:
 				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
+			case StraightStatic:
+				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], 1, type, [AssetPaths.tee_mask__png]);
 			case Plus:
 				return new Node(32, AssetPaths.plus__png, [1, 1, 1, 1], [1, 1, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
 			case OneWay:
@@ -54,7 +56,7 @@ class Node extends FlxSprite {
 	}
 
 	public function isMobile():Bool {
-		return nodeType != Dead;
+		return nodeType != Dead && !blowingUp;
 	}
 
 	private function new(gridCellSize:Float, asset:FlxGraphicAsset, entrances:Array<Int>, exits:Array<Int>, rot:Int, nodeType:NodeType, maskAssets:Array<FlxGraphicAsset>) {
@@ -200,6 +202,7 @@ class Node extends FlxSprite {
 	public function startBlowupSequence(callback:Node->Void) {
 		if (!blowingUp) {
 			blowingUp = true;
+            FmodManager.PlaySoundOneShot(FmodSFX.TileClear);
 			FlxTween.shake(this, 0.1, 0.5, FlxAxes.XY, {
 				onComplete: (t) -> {
 					kill();

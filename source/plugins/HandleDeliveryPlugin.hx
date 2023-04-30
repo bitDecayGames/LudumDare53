@@ -36,6 +36,10 @@ class HandleDeliveryPlugin implements Plugin {
 				});
 			});
 		});
+		
+		new FlxTimer().start(1.5, (t) -> {
+			FmodManager.PlaySoundOneShot(FmodSFX.AnnouncerGood);
+		});
 	}
 
 	public function update(grid:Grid, delta:Float) {}

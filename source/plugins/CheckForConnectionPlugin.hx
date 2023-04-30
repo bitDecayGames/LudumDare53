@@ -85,10 +85,7 @@ class CheckForConnectionPlugin implements Plugin {
 				for (input in connectedInputs) {
 					var connectionMatched = false;
 					for (output in connectedOutputs) {
-						if (input.queue.length == 0) {
-							trace('connected to an empty queue');
-						}
-						if (input.queue[0].shape == output.shapeList[0].shape) {
+						if (input.queue.length > 0 && input.queue[0].shape == output.shapeList[0].shape) {
 							connectionMatched = true;
 							break;
 						}
