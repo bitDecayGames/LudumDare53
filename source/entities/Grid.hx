@@ -81,7 +81,7 @@ class Grid extends FlxSprite {
 		for (x in 0...numberOfColumns) {
 			nodes.push([]);
 			for (y in 0...numberOfRows) {
-				var chosenType = FlxG.random.getObject(cachedProbabilityTypes, cachedProbabilityValues);
+				var chosenType = getRandomNodeTypeForLocation(x, y);
 				var newNode = Node.create(chosenType);
 				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
 				nodes[x].push(newNode);

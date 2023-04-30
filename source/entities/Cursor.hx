@@ -125,4 +125,9 @@ class Cursor extends FlxSprite {
 	private function restoreControl() {
 		allowInteraction = true;
 	}
+
+    private function shake(axis:FlxAxes) {
+        FlxTween.shake(this, 0.1, .12, axis);
+        // play the can't move SFX
+    }
 }
