@@ -75,9 +75,9 @@ class PlayState extends FlxTransitionableState {
 
 		var levelValue = new CyberRed(10 * 32, levelLabel.y + 16, "       1");
 		add(levelValue);
-
-		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(), new SpawnerPlugin(),]);
 		add(boardBackground);
+
+		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(), new SpawnerPlugin()]);
 		add(grid);
 		for (column in grid.nodes) {
 			for (node in column) {
