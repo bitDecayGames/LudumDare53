@@ -97,4 +97,9 @@ class Gameplay {
 	 * Signals when a the level has been lost
 	 */
 	public static var onLoseLevel:FlxSignal = new FlxSignal();
+
+	/**
+	 * Signals when the game has been started
+	**/
+	public static var onGameStart:GridSignal = new GridSignal();
 }

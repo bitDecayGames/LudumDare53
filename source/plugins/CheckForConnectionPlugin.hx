@@ -13,6 +13,8 @@ class CheckForConnectionPlugin implements Plugin {
 		Gameplay.onRotate.add(this.check);
 		Gameplay.onSwap.add(this.check);
 		Gameplay.onRowSlide.add(this.check);
+		Gameplay.onGameStart.add(this.check);
+
 	}
 
 	public function check(grid:Grid) {
