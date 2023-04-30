@@ -10,4 +10,5 @@ enum NodeType {
     Dead;
     DoubleCorner;
     Crossover;
+    Empty;
 }

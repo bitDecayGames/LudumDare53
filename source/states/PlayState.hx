@@ -97,6 +97,12 @@ class PlayState extends FlxTransitionableState {
 		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(), new SpawnerPlugin(), new ScoreModifierPlugin(scoreUI)]);
 		add(grid);
 
+		for (outputSlot in grid.outputs) {
+			for (shape in outputSlot.shapeList) {
+				add(shape);
+			}
+		}
+
 		cursor = new Cursor(grid);
 		uiGroup.add(cursor);
 

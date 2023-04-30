@@ -29,11 +29,11 @@ class ScoreModifierPlugin implements Plugin {
     }
 
 	public function update(grid:Grid, delta:Float):Void {
-        ui.setIops(rotationsSinceLastMessage);
+        ui.setNetOps(rotationsSinceLastMessage);
         if (totalCompletions == 0) {
-            ui.setAverageIops(0);
+            ui.setAverageNetOps(0);
         } else {
-            ui.setAverageIops(totalRotations / totalCompletions);
+            ui.setAverageNetOps(totalRotations / totalCompletions);
         }
     }
 }
