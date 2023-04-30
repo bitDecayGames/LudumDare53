@@ -20,6 +20,8 @@ class CheckForConnectionPlugin implements Plugin {
 		var inputs = grid.inputs.map(s -> new InputNode(s, grid.get(s.gridX, s.gridY)));
 		var outputs = grid.outputs.map(s -> new OutputNode(s, grid.get(s.gridX, s.gridY)));
 
+		trace("Search for connection");
+
 		// MW: this is horribly inefficient, and it runs on every rotate and swap... sooo....
 		for (input in grid.inputs) {
 			// for each input slot, traverse the grid from that input space
@@ -43,7 +45,10 @@ class CheckForConnectionPlugin implements Plugin {
 				}
 			}
 			if (connectedOutputs.length > 0) {
+				trace("Found a connection!");
 				Gameplay.onCompleteDelivery.dispatch(connectedInputs, connectedOutputs, tree);
+			} else {
+				trace('Failed to get connection: ${tree}');
 			}
 		}
 	}

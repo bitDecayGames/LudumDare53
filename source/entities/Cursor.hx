@@ -106,6 +106,7 @@ class Cursor extends FlxSprite {
             } else {
                 allowInteraction = false;
                 currentNode.rotate(-1, restoreControl);
+                Gameplay.onRotate.dispatch(grid);
             }
         }
 
@@ -115,6 +116,7 @@ class Cursor extends FlxSprite {
             } else {
                 allowInteraction = false;
                 currentNode.rotate(-1, restoreControl);
+                Gameplay.onRotate.dispatch(grid);
             }
         }
 

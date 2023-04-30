@@ -22,7 +22,7 @@ class Grid extends FlxSprite {
 
 	var probabilities:Map<NodeType, Float> = [
 		Corner => 2,
-		Tee => 2,
+		// Tee => 2,
 		Straight => 4,
 		Plus => 2,
 		OneWay => .5,
@@ -156,6 +156,14 @@ class Grid extends FlxSprite {
 				}
 			}
 		});
+	}
+
+	public function getNumberOfColumns(): Int {
+		return numberOfColumns;
+	}
+
+	public function getNumberOfRows(): Int {
+		return numberOfRows;
 	}
 
 	/**

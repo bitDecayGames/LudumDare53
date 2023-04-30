@@ -35,13 +35,13 @@ class PlayState extends FlxTransitionableState {
 
 		FlxG.camera.pixelPerfectRender = true;
 
-		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, []);
+		var gridStartPosition = FlxPoint.get(32, 64);
 
 		var nineSliceBorder = 4;
 		var boardBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), 8 * 32 + 2 * nineSliceBorder,
 			8 * 32 + 2 * nineSliceBorder);
 		boardBackground.offset.set(nineSliceBorder, nineSliceBorder);
-		boardBackground.setPosition(grid.topCorner.x, grid.topCorner.y);
+		boardBackground.setPosition(gridStartPosition.x, gridStartPosition.y);
 
 		var scoreBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), scoreboardSize.x + 2 * nineSliceBorder,
 			scoreboardSize.y + 2 * nineSliceBorder);
@@ -73,7 +73,7 @@ class PlayState extends FlxTransitionableState {
 		var levelValue = new CyberRed(10 * 32, levelLabel.y + 16, "       1");
 		add(levelValue);
 
-		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(),]);
+		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(),]);
 		add(boardBackground);
 		add(grid);
 		for (column in grid.nodes) {
