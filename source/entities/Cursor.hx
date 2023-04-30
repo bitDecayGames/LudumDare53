@@ -40,6 +40,7 @@ class Cursor extends FlxSprite {
 		allowInteraction = false;
 		gridCell.x = x2;
 		gridCell.y = y2;
+        FmodManager.PlaySoundOneShot(FmodSFX.TileSlide);
         return true;
 	}
 
@@ -56,8 +57,10 @@ class Cursor extends FlxSprite {
             } else if (gridCell.y > 0) {
                 // good!
                 gridCell.y--;
+                FmodManager.PlaySoundOneShot(FmodSFX.CursorMove);
             } else {
                 shake(FlxAxes.Y);
+                FmodManager.PlaySoundOneShot(FmodSFX.TileCannotRotate);
             }
         }
         if (SimpleController.just_pressed(DOWN)) {
@@ -70,8 +73,10 @@ class Cursor extends FlxSprite {
             } else if (gridCell.y < grid.nodes.length - 1) {
                 // good!
                 gridCell.y++;
+                FmodManager.PlaySoundOneShot(FmodSFX.CursorMove);
             } else {
                 shake(FlxAxes.Y);
+                FmodManager.PlaySoundOneShot(FmodSFX.TileCannotRotate);
             }
         }
         if (SimpleController.just_pressed(LEFT)) {
@@ -84,8 +89,10 @@ class Cursor extends FlxSprite {
             } else if (gridCell.x > 0) {
                 // good!
                 gridCell.x--;
+                FmodManager.PlaySoundOneShot(FmodSFX.CursorMove);
             } else {
                 shake(FlxAxes.X);
+                FmodManager.PlaySoundOneShot(FmodSFX.TileCannotRotate);
             }
         }
         if (SimpleController.just_pressed(RIGHT)) {
@@ -98,8 +105,10 @@ class Cursor extends FlxSprite {
             } else if (gridCell.x < grid.nodes[0].length - 1) {
                 // good!
                 gridCell.x++;
+                FmodManager.PlaySoundOneShot(FmodSFX.CursorMove);
             } else {
                 shake(FlxAxes.X);
+                FmodManager.PlaySoundOneShot(FmodSFX.TileCannotRotate);
             }
         }
 
@@ -108,7 +117,11 @@ class Cursor extends FlxSprite {
         if (SimpleController.just_pressed(A)) {
             if (!canRotate) {
                 shake(FlxAxes.XY);
+                if (currentNode.nodeType == Dead) {
+                    FmodManager.PlaySoundOneShot(FmodSFX.TileCannotRotate);
+                }
             } else {
+                FmodManager.PlaySoundOneShot(FmodSFX.TileClockwise);
                 allowInteraction = false;
                 currentNode.rotate(1, doneRotating);
             }
@@ -117,7 +130,11 @@ class Cursor extends FlxSprite {
         if (SimpleController.just_pressed(B)) {
             if (!canRotate) {
                 shake(FlxAxes.XY);
+                if (currentNode.nodeType == Dead) {
+                    FmodManager.PlaySoundOneShot(FmodSFX.TileCannotRotate);
+                }
             } else {
+                FmodManager.PlaySoundOneShot(FmodSFX.TileCounterclockwise);
                 allowInteraction = false;
                 currentNode.rotate(-1, doneRotating);
             }
@@ -126,6 +143,13 @@ class Cursor extends FlxSprite {
 		x = grid.topCorner.x + gridCell.x * 32;
 		y = grid.topCorner.y + gridCell.y * 32;
 	}
+
+    // private function selected() {
+    //     var currentNode = grid.nodes[Std.int(gridCell.x)][Std.int(gridCell.y)];
+    //     if (currentNode.nodeType == Dead) {
+
+    //     }
+    // }
 
     private function doneRotating() {
         restoreControl();
