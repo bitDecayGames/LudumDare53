@@ -20,7 +20,7 @@ class Node extends FlxSprite {
 	var gridCellSize:Float = 0;
 
 	var blowingUp:Bool = false;
-	var nodeType:NodeType = null;
+	public var nodeType:NodeType = null;
 
 	public static function create(type:NodeType):Node {
 		trace('creating node with type: ${type}');
