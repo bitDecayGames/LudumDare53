@@ -93,11 +93,13 @@ class Cursor extends FlxSprite {
 		if (SimpleController.just_pressed(A) && allowInteraction && currentNode.isMobile()) {
 			allowInteraction = false;
 			currentNode.rotate(1, restoreControl);
+			Gameplay.onRotate.dispatch(grid);
 		}
 
 		if (SimpleController.just_pressed(B) && allowInteraction && currentNode.isMobile()) {
 			allowInteraction = false;
 			currentNode.rotate(-1, restoreControl);
+			Gameplay.onRotate.dispatch(grid);
 		}
 
 		x = grid.topCorner.x + gridCell.x * 32;
