@@ -27,7 +27,7 @@ class Grid extends FlxSprite {
 		Plus => 2,
 		OneWay => .5,
 		// Warp;
-		Dead => 5,
+		Dead => 1,
 		DoubleCorner => 2,
 		Crossover => 2,
 	];
