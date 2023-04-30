@@ -1,5 +1,6 @@
 package entities;
 
+import signals.Gameplay;
 import bitdecay.flixel.spacial.Cardinal;
 import flixel.FlxSprite;
 
@@ -22,4 +23,13 @@ class InputSlot extends FlxSprite {
 		super.update(delta);
 		// TODO: maybe track some kind of timer here to indicate when the input indicated should fail
 	}
+
+	// TODO: JF make sure the shape we're adding has an output
+	public function addShape(grid: Grid, shape: ShapeInputIndicator) {
+    var newShapeIndex = queue.length;
+    queue.push(shape);
+    shape.setPosition(grid.topCorner.x + gridX * 32,
+                      grid.topCorner.y + (gridY + newShapeIndex + 1) * 32);
+    Gameplay.onMessageSpawn.dispatch(shape);
+  }
 }
