@@ -23,6 +23,7 @@ import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import signals.Lifecycle;
 
+
 using states.FlxStateExt;
 
 class PlayState extends FlxTransitionableState {
@@ -116,6 +117,8 @@ class PlayState extends FlxTransitionableState {
 
 		cursor = new Cursor(grid);
 		uiGroup.add(cursor);
+
+		Gameplay.onGameStart.dispatch(grid);
 
 		// add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
 	}
