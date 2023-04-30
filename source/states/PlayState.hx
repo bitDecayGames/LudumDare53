@@ -1,5 +1,8 @@
 package states;
 
+import signals.Gameplay;
+import signals.Gameplay.NodeSpawnSignal;
+import flixel.group.FlxGroup;
 import plugins.HandleDeliveryPlugin;
 import plugins.CheckForConnectionPlugin;
 import flixel.math.FlxRect;
@@ -29,11 +32,21 @@ class PlayState extends FlxTransitionableState {
 	var outputsPos = FlxPoint.get(32, 32);
 	var outputsSize = FlxPoint.get(8 * 32, 32);
 
+	var bgGroup = new FlxTypedGroup<FlxSprite>();
+	var piecesGroup = new FlxTypedGroup<FlxSprite>();
+	var inputOutputGroup = new FlxTypedGroup<FlxSprite>();
+	var uiGroup = new FlxTypedGroup<FlxSprite>();
+
 	override public function create() {
 		super.create();
 		Lifecycle.startup.dispatch();
 
 		FlxG.camera.pixelPerfectRender = true;
+
+		add(bgGroup);
+		add(piecesGroup);
+		add(inputOutputGroup);
+		add(uiGroup);
 
 		var gridStartPosition = FlxPoint.get(32, 64);
 
@@ -47,43 +60,42 @@ class PlayState extends FlxTransitionableState {
 			scoreboardSize.y + 2 * nineSliceBorder);
 		scoreBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		scoreBackground.setPosition(scoreboardPos.x, scoreboardPos.y);
-		add(scoreBackground);
+		bgGroup.add(scoreBackground);
 
 		var inputsBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), inputsSize.x + 2 * nineSliceBorder,
 			inputsSize.y + 2 * nineSliceBorder);
 		inputsBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		inputsBackground.setPosition(inputsPos.x, inputsPos.y);
-		add(inputsBackground);
+		bgGroup.add(inputsBackground);
 
 		var outputBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), outputsSize.x + 2 * nineSliceBorder,
 			outputsSize.y + 2 * nineSliceBorder);
 		outputBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		outputBackground.setPosition(outputsPos.x, outputsPos.y);
-		add(outputBackground);
+		bgGroup.add(outputBackground);
 
 		var scoreLabel = new CyberRed(10 * 32, 32, "score");
-		add(scoreLabel);
+		uiGroup.add(scoreLabel);
 
 		var scoreValue = new CyberRed(10 * 32, scoreLabel.y + 16, "00000123");
-		add(scoreValue);
+		uiGroup.add(scoreValue);
 
 		var levelLabel = new CyberRed(10 * 32, scoreValue.y + 32, "network");
-		add(levelLabel);
+		uiGroup.add(levelLabel);
 
 		var levelValue = new CyberRed(10 * 32, levelLabel.y + 16, "       1");
-		add(levelValue);
+		uiGroup.add(levelValue);
 
+		Gameplay.onNodeSpawn.add((n) -> {
+			piecesGroup.add(n);
+
+		});
 		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(),]);
-		add(boardBackground);
+		bgGroup.add(boardBackground);
 		add(grid);
-		for (column in grid.nodes) {
-			for (node in column) {
-				add(node);
-			}
-		}
 
 		cursor = new Cursor(grid);
-		add(cursor);
+		uiGroup.add(cursor);
 
 		// add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
 	}

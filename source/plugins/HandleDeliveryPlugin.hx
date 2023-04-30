@@ -27,8 +27,7 @@ class HandleDeliveryPlugin implements Plugin {
 		// for each node, mark it as shouldBlowUp so that something else can blow it up when it is time
 		tree.foreach((l) -> {
 			l.node.startBlowupSequence((n) -> {
-				var newNode = grid.spawnNewNodeAtNode(n);
-				FlxG.state.add(newNode);
+				grid.spawnNewNodeAtNode(n);
 			});
 		});
 	}

@@ -1,5 +1,6 @@
 package entities;
 
+import signals.Gameplay;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxPoint;
 import flixel.FlxG;
@@ -97,6 +98,7 @@ class Grid extends FlxSprite {
 		var chosenType = getRandomNodeTypeForLocation(x, y);
 		var newNode = Node.create(chosenType);
 		newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
+		Gameplay.onNodeSpawn.dispatch(newNode);
 		return newNode;
 	}
 

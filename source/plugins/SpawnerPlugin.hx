@@ -38,6 +38,6 @@ class SpawnerPlugin implements Plugin {
     inputSlot.queue.push(shape);
     shape.setPosition(grid.topCorner.x + inputSlot.gridX * 32,
                       grid.topCorner.y + (inputSlot.gridY + newShapeIndex + 1) * 32);
-    Gameplay.onSpawn.dispatch(shape);
+    Gameplay.onMessageSpawn.dispatch(shape);
   }
 }

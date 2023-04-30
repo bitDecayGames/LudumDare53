@@ -91,7 +91,7 @@ class JakeState extends FlxTransitionableState {
 			}
 		}
 		// Setup signal for future shapes
-		Gameplay.onSpawn.add(function(shape:ShapeInputIndicator) {
+		Gameplay.onMessageSpawn.add(function(shape:ShapeInputIndicator) {
 			add(shape);
 		});
 
