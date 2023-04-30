@@ -10,6 +10,7 @@ import flixel.util.FlxSpriteUtil;
 import signals.Gameplay;
 import flixel.FlxSprite;
 import entities.Grid;
+import entities.IOEnums.IOShape;
 
 class ConnectivityMaskingPlugin implements Plugin {
     // we may need n number of masks, one for each shape that is feeding into the grid
@@ -34,6 +35,8 @@ class ConnectivityMaskingPlugin implements Plugin {
         boardConnectiity.makeGraphic(Std.int(boardMask.width), Std.int(boardMask.height), FlxColor.RED);
 
         result = new FlxSprite(grid.topCorner.x, grid.topCorner.y);
+        result.makeGraphic(grid.numberOfColumns * grid.gridCellSize, grid.numberOfRows * grid.gridCellSize, FlxColor.TRANSPARENT);
+        // result.blend = LIGHTEN;
         // result.alpha = 0.5;
 
         // TODO: add this in a less shitty way
@@ -54,20 +57,32 @@ class ConnectivityMaskingPlugin implements Plugin {
     }
     
     function resetMask() {
-        trace('updating pipe mask');
+        // trace('updating pipe mask');
         FlxSpriteUtil.fill(boardMask, FlxColor.TRANSPARENT);
+        FlxSpriteUtil.fill(result, FlxColor.TRANSPARENT);
     }
 
     function updateMask(inputs:Array<InputSlot>, outputs:Array<OutputSlot>, tree:ConnectionTree) {
         for (node in tree.allNodes()) {
-            trace('node position: (${(node.node.x - maskOffset.x) / 32}, ${(node.node.y - maskOffset.y) / 32})');
-            trace('  node entered from ${node.enter}. node paths: ${node.node.connectionsEnter}');
-            trace('  node rotation: ${node.node.rotationOffset}');
-            trace('  node masks: ${node.node.masks}');
-            trace('  node path num: ${node.node.pathId(node.enter)}');
-            boardMask.stamp(node.node.masks[node.node.pathId(node.enter) - 1], Std.int(node.node.x - maskOffset.x), Std.int(node.node.y - maskOffset.y));
+            // trace('node position: (${(node.node.x - maskOffset.x) / 32}, ${(node.node.y - maskOffset.y) / 32})');
+            // trace('  node entered from ${node.enter}. node paths: ${node.node.connectionsEnter}');
+            // trace('  node rotation: ${node.node.rotationOffset}');
+            // trace('  node masks: ${node.node.masks}');
+            // trace('  node path num: ${node.node.pathId(node.enter)}');
+            // boardMask.stamp(node.node.masks[node.node.pathId(node.enter) - 1], Std.int(node.node.x - maskOffset.x), Std.int(node.node.y - maskOffset.y));
+
+            var mask = node.node.masks[node.node.pathId(node.enter) - 1];
+            for (slot in inputs) {
+                if (slot.queue.length > 0) {
+                    // trace('stamping shape: ${slot.queue[0].shape} with color ${mask.color}');
+                    mask.color = slot.queue[0].shape.getColor();
+                    mask.alpha = 0.5;
+                    result.stamp(mask, Std.int(node.node.x - maskOffset.x), Std.int(node.node.y - maskOffset.y));
+                }
+            }
+            // node.node.masks[node.node.pathId(node.enter) - 1].color = masks.get()
         }
 
-        FlxSpriteUtil.alphaMaskFlxSprite(boardConnectiity, boardMask, result);
+        // FlxSpriteUtil.alphaMaskFlxSprite(boardConnectiity, boardMask, result);
     }
 }

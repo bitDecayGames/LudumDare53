@@ -30,7 +30,6 @@ class Node extends FlxSprite {
 			case Corner:
 				return new Node(32, AssetPaths.bend__png, [0, 0, 1, 1], [0, 0, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.bend_mask__png]);
 			case Tee:
-				trace('making tee');
 				return new Node(32, AssetPaths.tee__png, [0, 1, 1, 1], [0, 1, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
 			case Straight:
 				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], FlxG.random.int(0, 3), type, [AssetPaths.straight_mask__png]);
@@ -133,8 +132,8 @@ class Node extends FlxSprite {
 	 * @return Int
 	 */
 	public function pathId(enter:Cardinal):Int {
-		trace('    cardinalToIndex: ${cardinalToIndex(enter)}');
-		trace('    rotationOffset: ${rotationOffset}');
+		// trace('    cardinalToIndex: ${cardinalToIndex(enter)}');
+		// trace('    rotationOffset: ${rotationOffset}');
 		
 		var enterIndex = FlxMath.wrap(cardinalToIndex(enter) - rotationOffset, 0, 3);
 		return connectionsEnter[enterIndex];
