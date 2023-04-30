@@ -27,13 +27,43 @@ class Grid extends FlxSprite {
 		Plus => 2,
 		OneWay => .5,
 		// Warp;
-		Dead => .5,
+		Dead => 5,
 		DoubleCorner => 2,
 		Crossover => 2,
 	];
 
-	var cachedProbabilityTypes:Array<NodeType> = [];
-	var cachedProbabilityValues:Array<Float> = [];
+	private function getRandomNodeTypeForLocation(x:Int, y:Int):NodeType {
+		var probabilitieTypes:Array<NodeType> = [];
+		var probabilityValues:Array<Float> = [];
+
+		var isLocationInOutputOrInput = false;
+		for (i in 0...inputs.length) {
+			var input = inputs[i];
+			if (input.gridX == x && input.gridY == y) {
+				isLocationInOutputOrInput = true;
+				break;
+			}
+		}
+		for (i in 0...outputs.length) {
+			if (outputs[i].gridX == x && outputs[i].gridY == y) {
+				isLocationInOutputOrInput = true;
+				break;
+			}
+		}
+
+		var probabilitiesForLocation:Map<NodeType, Float> = probabilities.copy();
+		if (isLocationInOutputOrInput) {
+			// Make DEAD nodes probability 0
+			probabilitiesForLocation.set(NodeType.Dead, 0);
+		}
+
+		for (key in probabilitiesForLocation.keys()) {
+			probabilitieTypes.push(key);
+			probabilityValues.push(probabilitiesForLocation.get(key));
+		}
+
+		return FlxG.random.getObject(probabilitieTypes, probabilityValues);
+	}
 
 	public function new(gridCellSize:Int, topCorner:FlxPoint, numberOfColumns:Int, numberOfRows:Int, plugins:Array<Plugin>) {
 		super();
@@ -42,11 +72,10 @@ class Grid extends FlxSprite {
 		this.numberOfColumns = numberOfColumns;
 		this.numberOfRows = numberOfRows;
 
-		if (cachedProbabilityValues.length == 0) {
-			for (key => value in probabilities) {
-				cachedProbabilityTypes.push(key);
-				cachedProbabilityValues.push(value);
-			}
+		// TODO: MW: we could move this logic into a plugin so that we could configure the inputs and outputs separately
+		for (x in 0...numberOfColumns) {
+			inputs.push(new InputSlot(x, numberOfRows - 1, Cardinal.S));
+			outputs.push(new OutputSlot(x, 0, Cardinal.N));
 		}
 
 		for (x in 0...numberOfColumns) {
@@ -57,12 +86,6 @@ class Grid extends FlxSprite {
 				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
 				nodes[x].push(newNode);
 			}
-		}
-
-		// TODO: MW: we could move this logic into a plugin so that we could configure the inputs and outputs separately
-		for (x in 0...numberOfColumns) {
-			inputs.push(new InputSlot(x, numberOfRows - 1, Cardinal.S));
-			outputs.push(new OutputSlot(x, 0, Cardinal.N));
 		}
 
 		this.plugins = plugins;
@@ -95,37 +118,44 @@ class Grid extends FlxSprite {
 
 	/**
 	 * Swap the tiles at the given x and y coordinates
-	 * @param x1
-	 * @param y1
-	 * @param x2
-	 * @param y2
 	 */
-	public function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int) {
+	public function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int, ?cb:() -> Void):Bool {
 		// return immmediately if the coordinates are out of bounds
 		if (x1 < 0 || x1 >= numberOfColumns || x2 < 0 || x2 >= numberOfColumns) {
-			return;
+			return false;
 		}
 		if (y1 < 0 || y1 >= numberOfRows || y2 < 0 || y2 >= numberOfRows) {
-			return;
+			return false;
 		}
 
 		var firstNode = get(x1, y1);
 		var secondNode = get(x2, y2);
 
+		// only allow swap if the node is mobile
+		if (!firstNode.isMobile() || !secondNode.isMobile()) {
+			return false;
+		}
+
 		nodes[x1][y1] = secondNode;
 		nodes[x2][y2] = firstNode;
 
-		// firstNode.setPosition(topCorner.x + x2 * 32, topCorner.y + y2 * 32);
-		// secondNode.setPosition(topCorner.x + x1 * 32, topCorner.y + y1 * 32);
-		// Like above but animated, use a tween
+		tweenTileSwap(firstNode, secondNode, cb);
+		tweenTileSwap(secondNode, firstNode, cb);
+
+		return true;
+	}
+
+	public function tweenTileSwap(firstNode:Node, secondNode:Node, ?cb:() -> Void) {
 		FlxTween.linearPath(firstNode, [
-			FlxPoint.weak(topCorner.x + x1 * 32, topCorner.y + y1 * 32),
-			FlxPoint.weak(topCorner.x + x2 * 32, topCorner.y + y2 * 32)
-		], 0.12);
-		FlxTween.linearPath(secondNode, [
-			FlxPoint.weak(topCorner.x + x2 * 32, topCorner.y + y2 * 32),
-			FlxPoint.weak(topCorner.x + x1 * 32, topCorner.y + y1 * 32)
-		], 0.12);
+			FlxPoint.weak(firstNode.x, firstNode.y),
+			FlxPoint.weak(secondNode.x, secondNode.y)
+		], 0.12, true, {
+			onComplete: (t) -> {
+				if (cb != null) {
+					cb();
+				}
+			}
+		});
 	}
 
 	/**
