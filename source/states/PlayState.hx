@@ -1,10 +1,12 @@
 package states;
 
-import signals.Gameplay;
 import signals.Gameplay.NodeSpawnSignal;
 import flixel.group.FlxGroup;
+import entities.ShapeInputIndicator;
+import signals.Gameplay;
 import plugins.HandleDeliveryPlugin;
 import plugins.CheckForConnectionPlugin;
+import plugins.SpawnerPlugin;
 import flixel.math.FlxRect;
 import flixel.addons.display.FlxSliceSprite;
 import entities.Cursor;
@@ -90,6 +92,12 @@ class PlayState extends FlxTransitionableState {
 			piecesGroup.add(n);
 
 		});
+
+		// Setup signal for future shapes
+		Gameplay.onMessageSpawn.add(function(shape:ShapeInputIndicator) {
+			inputOutputGroup.add(shape);
+		});
+
 		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(),]);
 		bgGroup.add(boardBackground);
 		add(grid);
