@@ -33,7 +33,7 @@ class Grid extends FlxSprite {
 		Crossover => 2,
 	];
 
-	private function getRandomNodeTypeForLocation(x:Int, y:Int):NodeType {
+	private function getRandomNodeTypeForLocation(x:Int, y:Int, avoidTypes:Array<NodeType>):NodeType {
 		var probabilitieTypes:Array<NodeType> = [];
 		var probabilityValues:Array<Float> = [];
 
@@ -82,7 +82,7 @@ class Grid extends FlxSprite {
 		for (x in 0...numberOfColumns) {
 			nodes.push([]);
 			for (y in 0...numberOfRows) {
-				nodes[x].push(spawnNewNodeAtPosition(x, y));
+				nodes[x].push(spawnNewNodeAtPosition(x, y, []));
 			}
 		}
 
@@ -94,8 +94,8 @@ class Grid extends FlxSprite {
 		// TODO: MW set up animation object to handle maybe some subtle grid/background animations
 	}
 
-	public function spawnNewNodeAtPosition(x:Int, y:Int):Node {
-		var chosenType = getRandomNodeTypeForLocation(x, y);
+	public function spawnNewNodeAtPosition(x:Int, y:Int, avoidTypes:Array<NodeType>):Node {
+		var chosenType = getRandomNodeTypeForLocation(x, y, avoidTypes);
 		var newNode = Node.create(chosenType);
 		newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
 		Gameplay.onNodeSpawn.dispatch(newNode);
@@ -106,7 +106,7 @@ class Grid extends FlxSprite {
 		for (x in 0...numberOfColumns) {
 			for (y in 0...numberOfRows) {
 				if (nodes[x][y] == n) {
-					var newNode = spawnNewNodeAtPosition(x, y);
+					var newNode = spawnNewNodeAtPosition(x, y, [NodeType.Dead]);
 					nodes[x][y] = newNode;
 					return newNode;
 				}
