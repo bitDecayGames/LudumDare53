@@ -48,7 +48,7 @@ class Node extends FlxSprite {
 	}
 
 	public function isMobile():Bool {
-		return nodeType != Dead;
+		return nodeType != Dead && !blowingUp;
 	}
 
 	private function new(gridCellSize:Float, asset:FlxGraphicAsset, entrances:Array<Int>, exits:Array<Int>, rot:Int, nodeType:NodeType) {
