@@ -18,7 +18,7 @@ enum abstract IOShape(Int) from Int to Int {
 		Heart,
 		Diamond,
 		Triangle,
-		Spade
+		Spade,
 	];
 }
 

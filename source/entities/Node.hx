@@ -43,6 +43,9 @@ class Node extends FlxSprite {
 				return new Node(32, AssetPaths.double_bend__png, [1, 1, 2, 2], [1, 1, 2, 2], FlxG.random.int(0, 3), type);
 			case Crossover:
 				return new Node(32, AssetPaths.plus_overlapping__png, [1, 2, 1, 2], [1, 2, 1, 2], FlxG.random.int(0, 3), type);
+			case Empty:
+				// TODO: This may be causing crashes?
+				return new Node(32, AssetPaths.empty__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type);
 		}
 		return null;
 	}

@@ -32,6 +32,7 @@ class Grid extends FlxSprite {
 		Dead => 1,
 		DoubleCorner => 2,
 		Crossover => 2,
+		Empty => 0.5
 	];
 
 	private function getRandomNodeTypeForLocation(x:Int, y:Int, avoidTypes:Array<NodeType>):NodeType {
