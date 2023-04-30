@@ -1,8 +1,14 @@
 package states.debug;
 
+import entities.ScoreUI;
+import signals.Gameplay.NodeSpawnSignal;
+import flixel.group.FlxGroup;
+import entities.ShapeInputIndicator;
+import signals.Gameplay;
 import plugins.HandleDeliveryPlugin;
 import plugins.HandleBadConnectionPlugin;
 import plugins.CheckForConnectionPlugin;
+import plugins.ScoreModifierPlugin;
 import plugins.SpawnerPlugin;
 import flixel.math.FlxRect;
 import flixel.addons.display.FlxSliceSprite;
@@ -16,8 +22,6 @@ import bitdecay.flixel.debug.DebugDraw;
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import signals.Lifecycle;
-import signals.Gameplay;
-import entities.ShapeInputIndicator;
 
 using states.FlxStateExt;
 
@@ -26,6 +30,7 @@ class JakeState extends FlxTransitionableState {
 
 	var scoreboardPos = FlxPoint.get(10 * 32, 32);
 	var scoreboardSize = FlxPoint.get(4 * 32, 32 * 13);
+	var scoreboardArea = FlxRect.get(10 * 32, 32, 4 * 32, 32 * 13);
 
 	var inputsPos = FlxPoint.get(32, 32 + 9 * 32);
 	var inputsSize = FlxPoint.get(8 * 32, 4 * 32);
@@ -33,61 +38,74 @@ class JakeState extends FlxTransitionableState {
 	var outputsPos = FlxPoint.get(32, 32);
 	var outputsSize = FlxPoint.get(8 * 32, 32);
 
+	var bgGroup = new FlxTypedGroup<FlxSprite>();
+	var piecesGroup = new FlxTypedGroup<FlxSprite>();
+	var inputOutputGroup = new FlxTypedGroup<FlxSprite>();
+	var uiGroup = new FlxTypedGroup<FlxSprite>();
+
 	override public function create() {
 		super.create();
 		Lifecycle.startup.dispatch();
 
+		#if music
+		FmodManager.PlaySong(FmodSongs.Puzzle);
+		#end
+		
 		FlxG.camera.pixelPerfectRender = true;
 
-		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, [
-			new CheckForConnectionPlugin(),
-			new HandleDeliveryPlugin(),
-			new HandleBadConnectionPlugin(),
-			new SpawnerPlugin()]);
+		add(bgGroup);
+		add(piecesGroup);
+		add(inputOutputGroup);
+		add(uiGroup);
+
+		var gridStartPosition = FlxPoint.get(32, 64);
 
 		var nineSliceBorder = 4;
 		var boardBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), 8 * 32 + 2 * nineSliceBorder,
 			8 * 32 + 2 * nineSliceBorder);
 		boardBackground.offset.set(nineSliceBorder, nineSliceBorder);
-		boardBackground.setPosition(grid.topCorner.x, grid.topCorner.y);
+		boardBackground.setPosition(gridStartPosition.x, gridStartPosition.y);
 
 		var scoreBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), scoreboardSize.x + 2 * nineSliceBorder,
 			scoreboardSize.y + 2 * nineSliceBorder);
 		scoreBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		scoreBackground.setPosition(scoreboardPos.x, scoreboardPos.y);
-		add(scoreBackground);
+		bgGroup.add(scoreBackground);
 
 		var inputsBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), inputsSize.x + 2 * nineSliceBorder,
 			inputsSize.y + 2 * nineSliceBorder);
 		inputsBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		inputsBackground.setPosition(inputsPos.x, inputsPos.y);
-		add(inputsBackground);
+		bgGroup.add(inputsBackground);
 
 		var outputBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), outputsSize.x + 2 * nineSliceBorder,
 			outputsSize.y + 2 * nineSliceBorder);
 		outputBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		outputBackground.setPosition(outputsPos.x, outputsPos.y);
-		add(outputBackground);
+		bgGroup.add(outputBackground);
 
-		var scoreLabel = new CyberRed(10 * 32, 32, "score");
-		add(scoreLabel);
+		bgGroup.add(boardBackground);
+		Gameplay.onNodeSpawn.add((n) -> {
+			piecesGroup.add(n);
+		});
 
-		var scoreValue = new CyberRed(10 * 32, scoreLabel.y + 16, "00000123");
-		add(scoreValue);
+		// Setup signal for future shapes
+		Gameplay.onMessageSpawn.add(function(shape:ShapeInputIndicator) {
+			inputOutputGroup.add(shape);
+		});
 
-		var levelLabel = new CyberRed(10 * 32, scoreValue.y + 32, "network");
-		add(levelLabel);
-
-		var levelValue = new CyberRed(10 * 32, levelLabel.y + 16, "       1");
-		add(levelValue);
-
-		add(boardBackground);
-		add(grid);
-		for (column in grid.nodes) {
-			for (node in column) {
-				add(node);
-			}
+		var scoreUI = new ScoreUI(scoreboardArea);
+		for (uiElement in scoreUI.members) {
+			uiGroup.add(uiElement);
 		}
+
+		var grid = new Grid(32, gridStartPosition, 8, 8, [
+			new CheckForConnectionPlugin(),
+			new HandleDeliveryPlugin(),
+			new HandleBadConnectionPlugin(),
+			new SpawnerPlugin(),
+			new ScoreModifierPlugin(scoreUI)]);
+		add(grid);
 
 		for (outputSlot in grid.outputs) {
 			for (shape in outputSlot.shapeList) {
@@ -95,19 +113,8 @@ class JakeState extends FlxTransitionableState {
 			}
 		}
 
-		// Initialize the beginning state of the input shapes
-		for (inputSlot in grid.inputs) {
-			for (shape in inputSlot.queue) {
-				add(shape);
-			}
-		}
-		// Setup signal for future shapes
-		Gameplay.onMessageSpawn.add(function(shape:ShapeInputIndicator) {
-			add(shape);
-		});
-
 		cursor = new Cursor(grid);
-		add(cursor);
+		uiGroup.add(cursor);
 
 		// add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
 	}

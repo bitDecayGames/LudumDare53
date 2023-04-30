@@ -6,8 +6,7 @@ import flixel.FlxG;
 import entities.Grid;
 
 class SpawnerPlugin implements Plugin {
-	private static inline var SPAWN_TIME:Float = 5;
-
+	private var spawnTime:Float = 30;
 	private var counter:Float = 0;
 
 	public function new() {}
@@ -18,15 +17,21 @@ class SpawnerPlugin implements Plugin {
       inputSlot.addShape(grid, ShapeInputIndicator.newRandom());
 		}
 
-		counter = SPAWN_TIME;
+		counter = spawnTime;
 	}
 
 	public function update(grid:Grid, delta:Float) {
 		counter -= delta;
 		if (counter < 0) {
-			counter = SPAWN_TIME;
+			counter = spawnTime;
 			var inputToAdd:InputSlot = FlxG.random.getObject(grid.inputs);
 			inputToAdd.addShape(grid, ShapeInputIndicator.newRandom());
+		}
+	}
+
+	public function setSpawnTime(newTime: Float) {
+		if (newTime > 0) {
+			spawnTime = newTime;
 		}
 	}
 }
