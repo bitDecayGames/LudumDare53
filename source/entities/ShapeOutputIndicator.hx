@@ -8,13 +8,14 @@ class ShapeOutputIndicator extends FlxSprite {
 	public var shape: IOShape;
 	public var colorEnum: IOColor;
 
-	public function new(shape: IOShape, color: IOColor) {
+	public function new(shape: IOShape, ioColor: IOColor) {
 		super();
 		this.shape = shape;
-		colorEnum = color;
+		colorEnum = ioColor;
 		// TODO: MW these shapes should maybe pulse to the rythm of the music?
 		loadGraphic(AssetPaths.shapes__png, true, 32, 32);
 		animation.frameIndex = shape;
+		color = shape.getColor();
 	}
 
 	override public function update(delta:Float) {

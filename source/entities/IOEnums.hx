@@ -40,7 +40,7 @@ enum abstract IOShape(Int) from Int to Int {
 			case Triangle:
 				return FlxColor.ORANGE;
 			case Spade:
-				return FlxColor.CYAN;
+				return FlxColor.PURPLE;
 			default:
 				return FlxColor.TRANSPARENT;
 		}
@@ -55,5 +55,5 @@ enum IOColor {
 	Red;
 	Magenta;
 	Orange;
-	Cyan;
+	Purple;
 }
