@@ -1,5 +1,7 @@
 package entities;
 
+import flixel.util.FlxColor;
+
 enum abstract IOShape(Int) from Int to Int {
 	var Club = 0;
 	var Star = 1;
@@ -20,6 +22,29 @@ enum abstract IOShape(Int) from Int to Int {
 		Triangle,
 		Spade,
 	];
+
+	public function getColor():FlxColor {
+		switch this {
+			case Club:
+				return FlxColor.GREEN;
+			case Star:
+				return FlxColor.BLUE;
+			case Circle:
+				return FlxColor.YELLOW;
+			case Square:
+				return FlxColor.PINK;
+			case Heart:
+				return FlxColor.RED;
+			case Diamond:
+				return FlxColor.MAGENTA;
+			case Triangle:
+				return FlxColor.ORANGE;
+			case Spade:
+				return FlxColor.CYAN;
+			default:
+				return FlxColor.TRANSPARENT;
+		}
+	}
 }
 
 enum IOColor {
@@ -27,5 +52,8 @@ enum IOColor {
 	Blue;
 	Yellow;
 	Pink;
-	White;
+	Red;
+	Magenta;
+	Orange;
+	Cyan;
 }

@@ -111,7 +111,7 @@ class Grid extends FlxSprite {
 
 		for (nodesX in nodes) {
 			for (node in nodesX) {
-				trace(node.nodeType, node.x, node.y);
+				// trace(node.nodeType, node.x, node.y);
 			}
 		}
 
