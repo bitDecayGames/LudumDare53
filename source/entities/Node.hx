@@ -190,4 +190,8 @@ class Node extends FlxSprite {
 			});
 		}
 	}
+
+	public function startBadConnectionSequence() {
+		FlxTween.shake(this, 0.025, 0.5, FlxAxes.XY);
+	}
 }
