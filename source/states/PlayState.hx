@@ -1,7 +1,10 @@
 package states;
 
+import entities.ShapeInputIndicator;
+import signals.Gameplay;
 import plugins.HandleDeliveryPlugin;
 import plugins.CheckForConnectionPlugin;
+import plugins.SpawnerPlugin;
 import flixel.math.FlxRect;
 import flixel.addons.display.FlxSliceSprite;
 import entities.Cursor;
@@ -73,7 +76,7 @@ class PlayState extends FlxTransitionableState {
 		var levelValue = new CyberRed(10 * 32, levelLabel.y + 16, "       1");
 		add(levelValue);
 
-		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(),]);
+		var grid = new Grid(32, gridStartPosition, 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(), new SpawnerPlugin(),]);
 		add(boardBackground);
 		add(grid);
 		for (column in grid.nodes) {
@@ -81,6 +84,16 @@ class PlayState extends FlxTransitionableState {
 				add(node);
 			}
 		}
+		// Initialize the beginning state of the input shapes
+		for (inputSlot in grid.inputs) {
+			for (shape in inputSlot.queue) {
+				add(shape);
+			}
+		}
+		// Setup signal for future shapes
+		Gameplay.onSpawn.add(function(shape:ShapeInputIndicator) {
+			add(shape);
+		});
 
 		cursor = new Cursor(grid);
 		add(cursor);
