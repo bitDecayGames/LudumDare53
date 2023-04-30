@@ -39,7 +39,11 @@ class ConnectionTree {
 	}
 
 	public function toString():String {
-		return 'rootLen:${root.exits.length}';
+		var count = 0;
+		foreach((n) -> {
+			count++;
+		});
+		return 'treeLen:${count}';
 	}
 }
 

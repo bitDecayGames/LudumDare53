@@ -12,37 +12,34 @@ class Cursor extends FlxSprite {
 	var grid:Grid;
 	var gridCell = FlxPoint.get();
 
-    var allowInteraction = true;
-    
-    public function new(grid:Grid) {
-        super();
-        this.grid = grid;
-        loadGraphic(AssetPaths.cursor_idle__png, true, 40, 40);
-        animation.add('play', [0, 1, 2, 3, 4, 5], 10);
-        animation.play('play');
+	var allowInteraction = true;
+
+	public function new(grid:Grid) {
+		super();
+		this.grid = grid;
+		loadGraphic(AssetPaths.cursor_idle__png, true, 40, 40);
+		animation.add('play', [0, 1, 2, 3, 4, 5], 10);
+		animation.play('play');
 		offset.set(4, 4);
-    }
+	}
 
-    private function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int):Bool {
-        if (!allowInteraction) return false;
+	private function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int):Bool {
+		if (!allowInteraction)
+			return false;
 
-        var wasSwapped = grid.swapTiles(x1, y1, x2, y2, restoreControl);
-        if (!wasSwapped) return false;
+		var wasSwapped = grid.swapTiles(x1, y1, x2, y2, restoreControl);
+		if (!wasSwapped)
+			return false;
 
-        Gameplay.onSwap.dispatch(grid);
-        allowInteraction = false;
-        gridCell.x = x2;
-        gridCell.y = y2;
+		Gameplay.onSwap.dispatch(grid);
+		allowInteraction = false;
+		gridCell.x = x2;
+		gridCell.y = y2;
         return true;
-    }
+	}
 
-    private function shake(axis:FlxAxes) {
-        FlxTween.shake(this, 0.1, .12, axis);
-        // play the can't move SFX
-    }
-
-    override function update(elapsed:Float) {
-        super.update(elapsed);
+	override function update(elapsed:Float) {
+		super.update(elapsed);
 
         if (SimpleController.just_pressed(UP)) {
             if (SimpleController.pressed(R)) {
@@ -121,11 +118,11 @@ class Cursor extends FlxSprite {
             }
         }
 
-        x = grid.topCorner.x + gridCell.x * 32;
-        y = grid.topCorner.y + gridCell.y * 32;
-    }
+		x = grid.topCorner.x + gridCell.x * 32;
+		y = grid.topCorner.y + gridCell.y * 32;
+	}
 
-    private function restoreControl() {
-        allowInteraction = true;
-    }
+	private function restoreControl() {
+		allowInteraction = true;
+	}
 }

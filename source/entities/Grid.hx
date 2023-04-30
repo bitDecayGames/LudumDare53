@@ -32,7 +32,6 @@ class Grid extends FlxSprite {
 		Crossover => 2,
 	];
 
-
 	private function getRandomNodeTypeForLocation(x:Int, y:Int):NodeType {
 		var probabilitieTypes:Array<NodeType> = [];
 		var probabilityValues:Array<Float> = [];
@@ -45,7 +44,7 @@ class Grid extends FlxSprite {
 				break;
 			}
 		}
-		for (i in 0...outputs.length) {			
+		for (i in 0...outputs.length) {
 			if (outputs[i].gridX == x && outputs[i].gridY == y) {
 				isLocationInOutputOrInput = true;
 				break;
@@ -55,7 +54,7 @@ class Grid extends FlxSprite {
 		var probabilitiesForLocation:Map<NodeType, Float> = probabilities.copy();
 		if (isLocationInOutputOrInput) {
 			// Make DEAD nodes probability 0
-			probabilitiesForLocation.set(NodeType.Dead, 0);			
+			probabilitiesForLocation.set(NodeType.Dead, 0);
 		}
 
 		for (key in probabilitiesForLocation.keys()) {
@@ -82,15 +81,12 @@ class Grid extends FlxSprite {
 		for (x in 0...numberOfColumns) {
 			nodes.push([]);
 			for (y in 0...numberOfRows) {
-
-				var chosenType = getRandomNodeTypeForLocation(x, y);
+				var chosenType = FlxG.random.getObject(cachedProbabilityTypes, cachedProbabilityValues);
 				var newNode = Node.create(chosenType);
-				//var newNode = Node.create(NodeType.Straight);
 				newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
 				nodes[x].push(newNode);
 			}
 		}
-
 
 		this.plugins = plugins;
 		for (i in 0...plugins.length) {
@@ -99,7 +95,6 @@ class Grid extends FlxSprite {
 
 		// TODO: MW set up animation object to handle maybe some subtle grid/background animations
 	}
-
 
 	override public function update(delta:Float) {
 		super.update(delta);
@@ -111,19 +106,20 @@ class Grid extends FlxSprite {
 
 	public function get(x:Int, y:Int):Node {
 		if (x < 0 || x >= numberOfColumns) {
-			throw 'x is out of bounds, must be between 0 and ${numberOfColumns}';
+			return null;
+			// throw 'x is out of bounds, must be between 0 and ${numberOfColumns - 1}: ${x}';
 		}
 		if (y < 0 || y >= numberOfRows) {
-			throw 'y is out of bounds, must be between 0 and ${numberOfRows}';
+			return null;
+			// throw 'y is out of bounds, must be between 0 and ${numberOfRows - 1}: ${y}';
 		}
 		return nodes[x][y];
 	}
 
-
 	/**
 	 * Swap the tiles at the given x and y coordinates
 	 */
-	public function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int, ?cb:()->Void):Bool {
+	public function swapTiles(x1:Int, y1:Int, x2:Int, y2:Int, ?cb:() -> Void):Bool {
 		// return immmediately if the coordinates are out of bounds
 		if (x1 < 0 || x1 >= numberOfColumns || x2 < 0 || x2 >= numberOfColumns) {
 			return false;
@@ -143,31 +139,25 @@ class Grid extends FlxSprite {
 		nodes[x1][y1] = secondNode;
 		nodes[x2][y2] = firstNode;
 
-		
 		tweenTileSwap(firstNode, secondNode, cb);
 		tweenTileSwap(secondNode, firstNode, cb);
 
 		return true;
 	}
 
-	public function tweenTileSwap(firstNode:Node, secondNode:Node,  ?cb:()->Void) {
-		FlxTween.linearPath(
-			firstNode, 
-			[
-				FlxPoint.weak(firstNode.x, firstNode.y),	
-				FlxPoint.weak(secondNode.x, secondNode.y)
-			], 
-			0.12,
-			true,			
-			{
-				onComplete: (t) -> {
-					if (cb != null) {
-						cb();
-					}
+	public function tweenTileSwap(firstNode:Node, secondNode:Node, ?cb:() -> Void) {
+		FlxTween.linearPath(firstNode, [
+			FlxPoint.weak(firstNode.x, firstNode.y),
+			FlxPoint.weak(secondNode.x, secondNode.y)
+		], 0.12, true, {
+			onComplete: (t) -> {
+				if (cb != null) {
+					cb();
 				}
 			}
-		);
-	} 
+		});
+	}
+
 	/**
 	 * Given a start x and y (a node) and the direction you are entering that node from,
 	 * return a connection tree of all the connected nodes
@@ -192,6 +182,7 @@ class Grid extends FlxSprite {
 		// be done as soon as there are no more nodes to visit
 		while (toVisit.length > 0) {
 			c = toVisit.pop();
+			visited.push(c);
 			// get outputs from the currently visting linked node
 			outlets = c.l.node.getOutlets(c.l.enter);
 			for (outlet in outlets) {
@@ -201,13 +192,17 @@ class Grid extends FlxSprite {
 				var curY = c.y + Std.int(v.y);
 				// get the node at that coordinate
 				var node = get(curX, curY);
+				if (node == null) {
+					continue; // not exactly sure what causes this to happen
+				}
 				// get the opposite of the exit of the last node since this is now the new enter
 				var e = outlet.opposite();
+
 				// if the node that we are traveling to is facing the wrong way, we don't want to add it
 				if (node.getOutlets(e).length > 0) {
 					// create the next coord and the linked node to check if it has already been visited
 					var n = new Coord(curX, curY, new LinkedNode(node, e));
-					if (!visited.contains(n)) {
+					if (!Coord.contains(visited, n)) {
 						// only add the next node to toVist if the node has not already been visited
 						c.l.addLinkedNode(n.l);
 						toVisit.push(n);
@@ -234,8 +229,16 @@ class Coord {
 		this.l = l;
 	}
 
-	public function equals(o:Coord):Bool {
-		// check if the x/y coordinates match, then if the nodes are the same object, then if the pathId on the enter is the same, in which case these coords are the "same"
-		return x == o.x && y == o.y && l.node == o.l.node && l.node.pathId(l.enter) == o.l.node.pathId(o.l.enter);
+	public static function contains(array:Array<Coord>, value:Coord):Bool {
+		for (i in 0...array.length) {
+			if (Coord.equals(array[i], value)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static function equals(a:Coord, b:Coord):Bool {
+		return a.x == b.x && a.y == b.y && a.l.node == b.l.node && a.l.node.pathId(a.l.enter) == b.l.node.pathId(b.l.enter);
 	}
 }

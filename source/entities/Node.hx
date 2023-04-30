@@ -1,5 +1,7 @@
 package entities;
 
+import flixel.math.FlxMath;
+import signals.Gameplay;
 import flixel.util.FlxAxes;
 import flixel.tweens.FlxTween;
 import misc.Macros;
@@ -10,9 +12,11 @@ import flixel.FlxSprite;
 
 class Node extends FlxSprite {
 	// These arrays are in the form [top, right, bottom, left]
-	var connectionsEnter:Array<Int> = [0, 0, 0, 0];
-	var connectionsExit:Array<Int> = [0, 0, 0, 0];
-	var rotationOffset:Int = 0;
+	public var connectionsEnter:Array<Int> = [0, 0, 0, 0];
+	public var connectionsExit:Array<Int> = [0, 0, 0, 0];
+
+	public var rotationOffset:Int = 0;
+
 	var gridCellSize:Float = 0;
 
 	var blowingUp:Bool = false;
@@ -49,6 +53,8 @@ class Node extends FlxSprite {
 
 	private function new(gridCellSize:Float, asset:FlxGraphicAsset, entrances:Array<Int>, exits:Array<Int>, rot:Int, nodeType:NodeType) {
 		super();
+		this.connectionsEnter = entrances;
+		this.connectionsExit = exits;
 		this.gridCellSize = gridCellSize;
 		this.nodeType = nodeType;
 		loadGraphic(asset);
@@ -67,7 +73,7 @@ class Node extends FlxSprite {
 		rotationOffset += dir;
 		FlxTween.angle(this, angle, rotationOffset * 90, 0.12, {
 			onComplete: (t) -> {
-				rotationOffset = rotationOffset % 4;
+				rotationOffset = FlxMath.wrap(rotationOffset, 0, 3);
 				angle = rotationOffset * 90;
 				if (cb != null) {
 					cb();
@@ -101,7 +107,7 @@ class Node extends FlxSprite {
 	 * @return Int
 	 */
 	public function pathId(enter:Cardinal):Int {
-		var enterIndex = (cardinalToIndex(enter) + rotationOffset) % 4;
+		var enterIndex = FlxMath.wrap(cardinalToIndex(enter) + rotationOffset, 0, 3);
 		return connectionsEnter[enterIndex];
 	}
 
@@ -113,15 +119,15 @@ class Node extends FlxSprite {
 	 * @return Array<Cardinal> the directions you can now exit the tile from
 	 */
 	public function getOutlets(enter:Cardinal):Array<Cardinal> {
-		var enterIndex = (cardinalToIndex(enter) + rotationOffset) % 4;
+		var unrotated = cardinalToIndex(enter) - rotationOffset;
+		var enterIndex = FlxMath.wrap(unrotated, 0, 3);
 		var path = connectionsEnter[enterIndex];
 		if (path == 0)
 			return [];
 		var outlets:Array<Cardinal> = [];
 		for (i in 0...4) {
-			var iRot = (i + rotationOffset) % 4;
-			if (iRot != enterIndex && connectionsExit[iRot] == path) {
-				outlets.push(indexToCardinal(iRot));
+			if (i != enterIndex && connectionsExit[i] == path) {
+				outlets.push(indexToCardinal(FlxMath.wrap(i + rotationOffset, 0, 3)));
 			}
 		}
 		return outlets;
