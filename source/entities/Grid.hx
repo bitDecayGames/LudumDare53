@@ -54,9 +54,15 @@ class Grid extends FlxSprite {
 		}
 
 		var probabilitiesForLocation:Map<NodeType, Float> = probabilities.copy();
+
+
 		if (isLocationInOutputOrInput) {
 			// Make DEAD nodes probability 0
 			probabilitiesForLocation.set(NodeType.Dead, 0);
+		}
+
+		for (i in 0...avoidTypes.length) {
+			probabilitiesForLocation.set(avoidTypes[i], 0);
 		}
 
 		for (key in probabilitiesForLocation.keys()) {

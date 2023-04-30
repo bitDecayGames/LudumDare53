@@ -16,6 +16,10 @@ class CheckForConnectionPlugin implements Plugin {
 	}
 
 	public function check(grid:Grid) {
+		if (grid == null) {
+			return;
+		}
+		
 		// TODO: filter out inputs that don't have anything in the queue
 		var inputs = grid.inputs.map(s -> new InputNode(s, grid.get(s.gridX, s.gridY)));
 		var outputs = grid.outputs.map(s -> new OutputNode(s, grid.get(s.gridX, s.gridY)));
@@ -23,6 +27,7 @@ class CheckForConnectionPlugin implements Plugin {
 		trace("Search for connection");
 
 		// MW: this is horribly inefficient, and it runs on every rotate and swap... sooo....
+		var connectedInputsDispatched: Array<Array<InputSlot>> = [];
 		for (input in grid.inputs) {
 			// for each input slot, traverse the grid from that input space
 			var tree = grid.traverse(input.gridX, input.gridY, input.enter);
@@ -44,11 +49,53 @@ class CheckForConnectionPlugin implements Plugin {
 					}
 				}
 			}
+
 			if (connectedOutputs.length > 0) {
-				trace("Found a connection!");
-				Gameplay.onCompleteDelivery.dispatch(connectedInputs, connectedOutputs, tree);
-			} else {
-				trace('Failed to get connection: ${tree}');
+				var duplicateConnectionFound = false;
+
+				for (dispatchedInputs in connectedInputsDispatched) {
+					for (dispatchedInput in dispatchedInputs) {
+						for (newConnectedInput in connectedInputs) {
+							if (newConnectedInput.gridX == dispatchedInput.gridX && newConnectedInput.gridY == dispatchedInput.gridY) {
+								duplicateConnectionFound = true;
+								break;
+							}
+						}
+						if (duplicateConnectionFound) {
+							break;
+						}
+					}
+					if (duplicateConnectionFound) {
+						break;
+					}
+				}
+
+				if (!duplicateConnectionFound) {
+					trace("Found a connection!");
+
+					var brokenConnection = false;
+					for (input in connectedInputs) {
+						var connectionMatched = false;
+						for (output in connectedOutputs) {
+							if (input.queue[0].shape == output.shapeList[0].shape) {
+								connectionMatched = true;
+								break;
+							}
+						}
+						if (!connectionMatched) {
+							brokenConnection = true;
+							break;
+						}
+					}
+
+					if (brokenConnection) {
+						trace("BAD CONNECTION!!!");
+						Gameplay.onBadConnection.dispatch(connectedInputs, connectedOutputs, tree);
+					} else {
+						Gameplay.onCompleteDelivery.dispatch(connectedInputs, connectedOutputs, tree);
+					}
+					connectedInputsDispatched.push(connectedInputs);
+				}
 			}
 		}
 	}

@@ -10,31 +10,20 @@ import entities.Node;
 import entities.OutputSlot;
 import signals.Gameplay;
 
-class HandleDeliveryPlugin implements Plugin {
+class HandleBadConnectionPlugin implements Plugin {
 	var grid:Grid;
 
 	public function new() {}
 
 	public function init(grid:Grid) {
 		this.grid = grid;
-		Gameplay.onCompleteDelivery.add(this.handleDelivery);
+		Gameplay.onBadConnection.add(this.handleBadConnection);
 	}
 
-	public function handleDelivery(inputs:Array<InputSlot>, outputs:Array<OutputSlot>, tree:ConnectionTree) {
-		for (slot in inputs) {
-			var v = slot.queue.pop();
-			if (v != null) {
-				v.kill();
-			}
-		}
-
+	public function handleBadConnection(inputs:Array<InputSlot>, outputs:Array<OutputSlot>, tree:ConnectionTree) {
 		// for each node, mark it as shouldBlowUp so that something else can blow it up when it is time
 		tree.foreach((l) -> {
-			l.node.startBlowupSequence((n) -> {
-				new FlxTimer().start(0.5, (t) -> {
-					grid.spawnNewNodeAtNode(n);
-				});
-			});
+			l.node.startBadConnectionSequence();
 		});
 	}
 

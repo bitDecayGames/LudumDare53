@@ -58,6 +58,8 @@ class LinkedNode {
 	public var enter:Cardinal = Cardinal.N;
 	public var exits:Array<LinkedNode> = [];
 
+	private var depth:Int;
+
 	public function new(node:Node, enter:Cardinal) {
 		this.node = node;
 		this.enter = enter;
@@ -96,5 +98,39 @@ class LinkedNode {
 			node.allNodes(a);
 		}
 		return a;
+	}
+
+	public function fastestPathToLinkedNode(target:LinkedNode):Array<LinkedNode> {
+		resetDepth();
+		return searchForShortestPath([], target);
+	}
+
+	/**
+	 * I have no clue if this actually works, I'm barely awake.  Good luck boys.
+	 * @param a
+	 * @param to
+	 * @return Array<LinkedNode>
+	 */
+	private function searchForShortestPath(a:Array<LinkedNode>, to:LinkedNode):Array<LinkedNode> {
+		a.push(this);
+		if (this == to) {
+			return a;
+		}
+		for (node in this.exits) {
+			if (!a.contains(node)) {
+				var b = node.searchForShortestPath(a.copy(), to);
+				if (a.length < b.length) {
+					a = b;
+				}
+			}
+		}
+		return a;
+	}
+
+	private function resetDepth() {
+		depth = -1;
+		for (node in this.exits) {
+			node.resetDepth();
+		}
 	}
 }

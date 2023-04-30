@@ -1,6 +1,7 @@
 package states.debug;
 
 import plugins.HandleDeliveryPlugin;
+import plugins.HandleBadConnectionPlugin;
 import plugins.CheckForConnectionPlugin;
 import plugins.SpawnerPlugin;
 import flixel.math.FlxRect;
@@ -38,7 +39,11 @@ class JakeState extends FlxTransitionableState {
 
 		FlxG.camera.pixelPerfectRender = true;
 
-		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, [new CheckForConnectionPlugin(), new HandleDeliveryPlugin(), new SpawnerPlugin()]);
+		var grid = new Grid(32, FlxPoint.get(32, 64), 8, 8, [
+			new CheckForConnectionPlugin(),
+			new HandleDeliveryPlugin(),
+			new HandleBadConnectionPlugin(),
+			new SpawnerPlugin()]);
 
 		var nineSliceBorder = 4;
 		var boardBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), 8 * 32 + 2 * nineSliceBorder,
