@@ -31,6 +31,8 @@ class Node extends FlxSprite {
 				return new Node(32, AssetPaths.tee__png, [0, 1, 1, 1], [0, 1, 1, 1], FlxG.random.int(0, 3), type);
 			case Straight:
 				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], FlxG.random.int(0, 3), type);
+			case StraightStatic:
+				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], 1, type);
 			case Plus:
 				return new Node(32, AssetPaths.plus__png, [1, 1, 1, 1], [1, 1, 1, 1], FlxG.random.int(0, 3), type);
 			case OneWay:
@@ -183,6 +185,7 @@ class Node extends FlxSprite {
 	public function startBlowupSequence(callback:Node->Void) {
 		if (!blowingUp) {
 			blowingUp = true;
+            FmodManager.PlaySoundOneShot(FmodSFX.TileClear);
 			FlxTween.shake(this, 0.1, 0.5, FlxAxes.XY, {
 				onComplete: (t) -> {
 					kill();

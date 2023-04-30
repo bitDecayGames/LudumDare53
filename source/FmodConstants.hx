@@ -15,6 +15,7 @@ class FmodSFX {
     public static inline var MenuHover:String = "event:/SFX/Menu/MenuHover";
     public static inline var MenuSelect:String = "event:/SFX/Menu/MenuSelect";
     public static inline var TileCannotRotate:String = "event:/SFX/Tiles/TileCannotRotate";
+    public static inline var TileClear:String = "event:/SFX/Tiles/TileClear";
     public static inline var TileClockwise:String = "event:/SFX/Tiles/TileClockwise";
     public static inline var TileCounterclockwise:String = "event:/SFX/Tiles/TileCounterclockwise";
     public static inline var TileSlide:String = "event:/SFX/Tiles/TileSlide";
