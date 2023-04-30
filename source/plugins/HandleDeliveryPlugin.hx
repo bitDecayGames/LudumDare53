@@ -33,7 +33,7 @@ class HandleDeliveryPlugin implements Plugin {
 		tree.foreach((l) -> {
 			l.node.startBlowupSequence((n) -> {
 				new FlxTimer().start(0.5, (t) -> {
-					var newNode = grid.spawnNewNodeAtNode(n);
+					grid.spawnNewNodeAtNode(n);
 				});
 			});
 		});
