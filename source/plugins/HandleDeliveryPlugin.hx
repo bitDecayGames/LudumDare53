@@ -24,10 +24,10 @@ class HandleDeliveryPlugin implements Plugin {
 		var messageSuccessfullySent = false;
 		for (inSlot in inputs) {
 			var inSlotNode = grid.get(inSlot.gridX, inSlot.gridY);
+			var shapeRemoved = false;
 			tree.foreach((l) -> {
 				// Find the linked node associated with the input slot
 				if (l.node == inSlotNode) {
-					var shapeRemoved = false;
 					// Search through all output slots
 					for (outSlot in outputs) {
 						var outSlotNode = grid.get(outSlot.gridX, outSlot.gridY);
@@ -35,7 +35,7 @@ class HandleDeliveryPlugin implements Plugin {
 							inSlot.queue[0].shape == outSlot.shapeList[0].shape) {
 								// First time we match inputslot and outputslot shapes remove the input slot shape
 								if (!shapeRemoved) {
-									var v = inSlot.queue.pop();
+									var v = inSlot.queue.shift();
 									if (v != null) {
 										v.kill();
 									}
@@ -65,6 +65,7 @@ class HandleDeliveryPlugin implements Plugin {
 			}
 
 			if (messageSuccessfullySent) {
+				Gameplay.onInputQueueCleaned.dispatch();
 				Gameplay.onMessageSuccessfullySent.dispatch(Lambda.array(completeInputXs), Lambda.array(completeOutputXs));
 			}
 		

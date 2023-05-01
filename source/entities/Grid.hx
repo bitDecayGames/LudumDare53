@@ -241,7 +241,7 @@ class Grid extends FlxBasic {
 
 		// be done as soon as there are no more nodes to visit
 		while (toVisit.length > 0) {
-			c = toVisit.pop();
+			c = toVisit.shift();
 			visited.push(c);
 			// get outputs from the currently visting linked node
 			outlets = c.l.node.getOutlets(c.l.enter);

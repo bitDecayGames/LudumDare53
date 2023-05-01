@@ -11,6 +11,7 @@ import plugins.CheckForConnectionPlugin;
 import plugins.HandleBadConnectionPlugin;
 import plugins.ScoreModifierPlugin;
 import plugins.ConnectivityMaskingPlugin;
+import plugins.LosePlugin;
 import plugins.SpawnerPlugin;
 import flixel.math.FlxRect;
 import flixel.addons.display.FlxSliceSprite;
@@ -112,6 +113,7 @@ class PlayState extends FlxTransitionableState {
 			new SpawnerPlugin(),
 			new ScoreModifierPlugin(scoreUI),
 			new ConnectivityMaskingPlugin(),
+			new LosePlugin()
 		]);
 		add(grid);
 
