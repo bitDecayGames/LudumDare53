@@ -102,4 +102,9 @@ class Gameplay {
 	 * Signals when the game has been started
 	**/
 	public static var onGameStart:GridSignal = new GridSignal();
+
+	/***
+	 * Signals when tiles are done blowing up after delivery
+	**/
+	public static var onFinishedBlowingUp:GridSignal = new GridSignal();
 }

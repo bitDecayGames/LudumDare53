@@ -44,7 +44,7 @@ class ConnectivityMaskingPlugin implements Plugin {
 
         Gameplay.onNewTreeSearch.add(resetMask);
         Gameplay.onTreeResolved.add(updateMask);
-
+        
         #if maskdebug
         // FlxG.state.add(boardMask);
         #end
