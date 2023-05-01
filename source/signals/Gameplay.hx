@@ -7,9 +7,11 @@ import entities.InputSlot;
 import entities.OutputSlot;
 import entities.Grid;
 import entities.ShapeInputIndicator;
+import entities.ShapeOutputIndicator;
+import entities.ShapeIndicator;
 import flixel.util.FlxSignal;
 
-typedef SpawnSignal = FlxTypedSignal<ShapeInputIndicator->Void>;
+typedef SpawnSignal = FlxTypedSignal<ShapeIndicator->Void>;
 typedef NodeSpawnSignal = FlxTypedSignal<Node->Void>;
 typedef GridSignal = FlxTypedSignal<Grid->Void>;
 typedef InputOutputSignal = FlxTypedSignal<Array<InputSlot>->Array<OutputSlot>->ConnectionTree->Void>;

@@ -44,13 +44,13 @@ class CheckForConnectionPlugin implements Plugin {
 				var outlets = leaf.node.getOutlets(leaf.enter);
 
 				for (i in inputs) {
-					if (leaf.node == i.node && outlets.contains(i.slot.enter) && !connectedInputs.contains(i.slot)) {
+					if (leaf.node == i.node && outlets.contains(i.slot.enter) && i.slot.queue.length > 0 && !connectedInputs.contains(i.slot)) {
 						connectedInputs.push(i.slot);
 					}
 				}
 
 				for (output in outputs) {
-					if (leaf.node == output.node && outlets.contains(output.slot.exit) && !connectedOutputs.contains(output.slot)) {
+					if (leaf.node == output.node && outlets.contains(output.slot.exit) && output.slot.shapeList.length > 0 && !connectedOutputs.contains(output.slot)) {
 						connectedOutputs.push(output.slot);
 					}
 				}
@@ -84,16 +84,9 @@ class CheckForConnectionPlugin implements Plugin {
 				trace("Found a connection!");
 
 				var connectionMatched = false;
-				var numberOfNullConnections = 0;
 				for (input in connectedInputs) {
-					trace('input ${input.gridX} queue length ${input.queue.length}');
-					if (input.queue.length == 0) {
-						numberOfNullConnections ++;
-						continue;
-					}
-
 					for (output in connectedOutputs) {
-						if (input.queue[0].shape == output.shapeList[0].shape) {
+						if (input.queue.length > 0 && output.shapeList.length > 0 && input.queue[0].shape == output.shapeList[0].shape) {
 							connectionMatched = true;
 							break;
 						}
@@ -103,15 +96,13 @@ class CheckForConnectionPlugin implements Plugin {
 					}
 				}
 
-				if (numberOfNullConnections < connectedInputs.length) {
-					if (!connectionMatched) {
-						trace("BAD CONNECTION!!!");
-						Gameplay.onBadConnection.dispatch(connectedInputs, connectedOutputs, tree);
-					} else {
-						Gameplay.onCompleteDelivery.dispatch(connectedInputs, connectedOutputs, tree);
-						// XXX - check the grid again to trigger masks to redraw. There is most certainly a better way to do this
-						check(grid);
-					}
+				if (!connectionMatched) {
+					trace("BAD CONNECTION!!!");
+					Gameplay.onBadConnection.dispatch(connectedInputs, connectedOutputs, tree);
+				} else {
+					Gameplay.onCompleteDelivery.dispatch(connectedInputs, connectedOutputs, tree);
+					// XXX - check the grid again to trigger masks to redraw. There is most certainly a better way to do this
+					check(grid);
 				}
 			}
 			connectedInputsDispatched.push(connectedInputs);

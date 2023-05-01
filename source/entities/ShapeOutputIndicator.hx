@@ -2,9 +2,9 @@ package entities;
 
 import entities.IOEnums.IOColor;
 import entities.IOEnums.IOShape;
-import flixel.FlxSprite;
+import entities.ShapeIndicator;
 
-class ShapeOutputIndicator extends FlxSprite {
+class ShapeOutputIndicator extends ShapeIndicator {
 	public var shape: IOShape;
 	public var colorEnum: IOColor;
 

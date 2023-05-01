@@ -4,6 +4,7 @@ import flixel.addons.display.FlxTiledSprite;
 import entities.ScoreUI;
 import flixel.group.FlxGroup;
 import entities.ShapeInputIndicator;
+import entities.ShapeIndicator;
 import signals.Gameplay;
 import plugins.HandleDeliveryPlugin;
 import plugins.CheckForConnectionPlugin;
@@ -96,7 +97,7 @@ class JakeState extends FlxTransitionableState {
 		});
 
 		// Setup signal for future shapes
-		Gameplay.onMessageSpawn.add(function(shape:ShapeInputIndicator) {
+		Gameplay.onMessageSpawn.add(function(shape:ShapeIndicator) {
 			inputOutputGroup.add(shape);
 		});
 
@@ -112,12 +113,6 @@ class JakeState extends FlxTransitionableState {
 			new ConnectivityMaskingPlugin(),
 		]);
 		add(grid);
-
-		for (outputSlot in grid.outputs) {
-			for (shape in outputSlot.shapeList) {
-				add(shape);
-			}
-		}
 
 		cursor = new Cursor(grid);
 		uiGroup.add(cursor);

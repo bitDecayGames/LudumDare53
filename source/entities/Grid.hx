@@ -73,10 +73,7 @@ class Grid extends FlxBasic {
 		// TODO: MW: we could move this logic into a plugin so that we could configure the inputs and outputs separately
 		for (x in 0...numberOfColumns) {
 			inputs.push(new InputSlot(x, numberOfRows - 1, Cardinal.S));
-			var outputSlot = new OutputSlot(x, 0, Cardinal.N);
-			// TODO: Only make ones valid for the level?
-			outputSlot.addShape(this, new ShapeOutputIndicator(x));
-			outputs.push(outputSlot);
+			outputs.push(new OutputSlot(x, 0, Cardinal.N));
 		}
 
 		#if !staticboard

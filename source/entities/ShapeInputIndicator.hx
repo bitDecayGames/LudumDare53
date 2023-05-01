@@ -4,10 +4,10 @@ import levels.LevelConfig;
 import levels.LevelConfig;
 import entities.IOEnums.IOColor;
 import entities.IOEnums.IOShape;
+import entities.ShapeIndicator;
 import flixel.FlxG;
-import flixel.FlxSprite;
 
-class ShapeInputIndicator extends FlxSprite {
+class ShapeInputIndicator extends ShapeIndicator {
 	public var shape: IOShape;
 
 	public function new(shape: IOShape) {

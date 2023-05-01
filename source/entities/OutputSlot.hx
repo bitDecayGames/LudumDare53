@@ -2,6 +2,7 @@ package entities;
 
 import bitdecay.flixel.spacial.Cardinal;
 import flixel.FlxSprite;
+import signals.Gameplay;
 
 class OutputSlot extends FlxSprite {
 	public var shapeList:Array<ShapeOutputIndicator> = [];
@@ -28,5 +29,6 @@ class OutputSlot extends FlxSprite {
 		shapeList.push(shape);
 		shape.setPosition(grid.topCorner.x + gridX * 32,
 											grid.topCorner.y + (gridY - 1) * 32);
+		Gameplay.onMessageSpawn.dispatch(shape);
 	}
 }

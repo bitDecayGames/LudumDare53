@@ -138,7 +138,8 @@ class LevelConfig {
     }
 
     public static function nextLevel() {
-        currentLevel = Std.int(FlxMath.bound(currentLevel + 1, 0, levels.length - 1));
+        var nextLevelNum: Int = currentLevel + 1;
+        currentLevel = Std.int(FlxMath.bound(nextLevelNum, 0, levels.length - 1));
         Gameplay.onLevelChange.dispatch();
     }
 }
