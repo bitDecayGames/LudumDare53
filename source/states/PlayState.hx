@@ -2,7 +2,6 @@ package states;
 
 import flixel.addons.display.FlxTiledSprite;
 import entities.ScoreUI;
-import signals.Gameplay.NodeSpawnSignal;
 import flixel.group.FlxGroup;
 import entities.ShapeInputIndicator;
 import signals.Gameplay;
@@ -18,9 +17,6 @@ import entities.Cursor;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import entities.Grid;
-import ui.font.BitmapText.CyberRed;
-import achievements.Achievements;
-import bitdecay.flixel.debug.DebugDraw;
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import signals.Lifecycle;

@@ -1,14 +1,9 @@
 package plugins;
 
-import js.lib.Set;
-import entities.IOEnums.IOShape;
-import haxe.Timer;
 import flixel.util.FlxTimer;
-import flixel.FlxG;
 import entities.ConnectionTree;
 import entities.InputSlot;
 import entities.Grid;
-import entities.Node;
 import entities.OutputSlot;
 import signals.Gameplay;
 
@@ -24,8 +19,8 @@ class HandleDeliveryPlugin implements Plugin {
 
 	public function handleDelivery(inputs:Array<InputSlot>, outputs:Array<OutputSlot>, tree:ConnectionTree) {
 		// DON'T LOOK AT ME! I'M HIDEOUS!
-		var completeInputXs: Set<Int> = new Set<Int>();
-		var completeOutputXs: Set<Int> = new Set<Int>();
+		var completeInputXs: Map<Int, Int> = [];
+		var completeOutputXs: Map<Int, Int> = [];
 		var messageSuccessfullySent = false;
 		for (inSlot in inputs) {
 			var inSlotNode = grid.get(inSlot.gridX, inSlot.gridY);
@@ -59,18 +54,18 @@ class HandleDeliveryPlugin implements Plugin {
 											});
 										}
 										messageSuccessfullySent = true;
-										completeInputXs.add(inSlot.gridX);
-										completeOutputXs.add(outSlot.gridX);
+										completeInputXs[inSlot.gridX] = 0;
+										completeOutputXs[outSlot.gridX] = 0;
 									}
 								});
 							}
 						}
 					}
 				});
-			
 			}
+
 			if (messageSuccessfullySent) {
-				Gameplay.onMessageSuccessfullySent.dispatch(completeInputXs, completeOutputXs);
+				Gameplay.onMessageSuccessfullySent.dispatch(Lambda.array(completeInputXs), Lambda.array(completeOutputXs));
 			}
 		
 		new FlxTimer().start(1.5, (t) -> {

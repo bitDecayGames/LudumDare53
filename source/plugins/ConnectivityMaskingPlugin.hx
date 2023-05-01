@@ -26,6 +26,8 @@ class ConnectivityMaskingPlugin implements Plugin {
         Gameplay.onNewTreeSearch.add(resetMask);
         Gameplay.onTreeResolved.add(updateMask);
     }
+
+    public function update(grid:Grid, delta:Float) {}
     
     function resetMask() {
         for (x in grid.nodes) {

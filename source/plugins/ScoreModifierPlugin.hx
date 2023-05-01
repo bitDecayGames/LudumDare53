@@ -28,7 +28,6 @@ class ScoreModifierPlugin implements Plugin {
             opsSinceLastMessage++;
         });
         Gameplay.onMessageSuccessfullySent.add((inputs, outputs) -> {
-            trace('inputs: ${inputs.size} outputs: ${outputs.size}');
             totalCompletions++;
             trace('breaks: ${totalCompletions}');
             trace('current level: ${LevelConfig.currentLevel}, needed breaks ${LevelConfig.currentLevelConfig().breaksToFinish}');
@@ -40,15 +39,15 @@ class ScoreModifierPlugin implements Plugin {
             opsSinceLastMessage = 0;
 
             // Score table
-            if (inputs.size > 3 && outputs.size > 3) {
+            if (inputs.length > 3 && outputs.length > 3) {
                 scoreValue += 2000;
-            } else if (inputs.size == 3 && outputs.size == 3) {
+            } else if (inputs.length == 3 && outputs.length == 3) {
                 scoreValue += 1200;
-            } else if (inputs.size == 3 || outputs.size == 3) {
+            } else if (inputs.length == 3 || outputs.length == 3) {
                 scoreValue += 800;
-            } else if (inputs.size == 2 && outputs.size == 2) {
+            } else if (inputs.length == 2 && outputs.length == 2) {
                 scoreValue += 500; 
-            } else if (inputs.size == 2 || outputs.size == 2) {
+            } else if (inputs.length == 2 || outputs.length == 2) {
                 scoreValue += 200;
             } else {
                 scoreValue += 100;

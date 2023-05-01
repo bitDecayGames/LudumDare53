@@ -2,13 +2,12 @@ package states.debug;
 
 import flixel.addons.display.FlxTiledSprite;
 import entities.ScoreUI;
-import signals.Gameplay.NodeSpawnSignal;
 import flixel.group.FlxGroup;
 import entities.ShapeInputIndicator;
 import signals.Gameplay;
 import plugins.HandleDeliveryPlugin;
-import plugins.HandleBadConnectionPlugin;
 import plugins.CheckForConnectionPlugin;
+import plugins.HandleBadConnectionPlugin;
 import plugins.ScoreModifierPlugin;
 import plugins.ConnectivityMaskingPlugin;
 import plugins.SpawnerPlugin;
@@ -18,9 +17,6 @@ import entities.Cursor;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import entities.Grid;
-import ui.font.BitmapText.CyberRed;
-import achievements.Achievements;
-import bitdecay.flixel.debug.DebugDraw;
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import signals.Lifecycle;
@@ -64,6 +60,7 @@ class JakeState extends FlxTransitionableState {
 
 		bgGroup.add(bg);
 
+
 		var gridStartPosition = FlxPoint.get(32, 64);
 
 		var nineSliceBorder = 4;
@@ -93,6 +90,9 @@ class JakeState extends FlxTransitionableState {
 		bgGroup.add(boardBackground);
 		Gameplay.onNodeSpawn.add((n) -> {
 			piecesGroup.add(n);
+			for (mask in n.masks) {
+				piecesGroup.add(mask);			
+			}
 		});
 
 		// Setup signal for future shapes
@@ -101,9 +101,7 @@ class JakeState extends FlxTransitionableState {
 		});
 
 		var scoreUI = new ScoreUI(scoreboardArea, bg);
-		for (uiElement in scoreUI.members) {
-			uiGroup.add(uiElement);
-		}
+		add(scoreUI);
 
 		var grid = new Grid(32, gridStartPosition, 8, 8, [
 			new CheckForConnectionPlugin(),
@@ -132,7 +130,7 @@ class JakeState extends FlxTransitionableState {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
-		var cam = FlxG.camera;
+		#if uidebug
 		// Outputs
 		DebugDraw.ME.drawWorldRect(32, 32, 8 * 32, 32);
 		// Board
@@ -141,6 +139,7 @@ class JakeState extends FlxTransitionableState {
 		DebugDraw.ME.drawWorldRect(32, 32 + 9 * 32, 8 * 32, 4 * 32);
 		// Score board
 		DebugDraw.ME.drawWorldRect(10 * 32, 32, 4 * 32, 32 * 13);
+		#end
 	}
 
 	override public function onFocusLost() {
