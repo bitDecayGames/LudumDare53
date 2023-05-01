@@ -18,12 +18,12 @@ class SimpleController {
 			DOWN => [FlxKey.DOWN, FlxKey.S],
 			LEFT => [FlxKey.LEFT, FlxKey.A],
 			RIGHT => [FlxKey.RIGHT, FlxKey.D],
-			A => [FlxKey.V],
-			B => [FlxKey.C, FlxKey.B],
+			A => [FlxKey.X],
+			B => [FlxKey.Z],
 			START => [FlxKey.ENTER],
 			BACK => [FlxKey.ESCAPE],
 			L => [FlxKey.Q],
-			R => [FlxKey.E, FlxKey.SHIFT],
+			R => [FlxKey.E, FlxKey.SHIFT, FlxKey.SPACE],
 		],
 		// PLAYER TWO
 		[

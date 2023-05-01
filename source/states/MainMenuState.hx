@@ -43,7 +43,7 @@ class MainMenuState extends FlxState {
 
 		super.create();
 
-		FmodManager.PlaySong(FmodSongs.LetsGo);
+		// FmodManager.PlaySong(FmodSongs.LetsGo);
 		bgColor = FlxColor.TRANSPARENT;
 		FlxG.camera.pixelPerfectRender = true;
 
@@ -64,15 +64,18 @@ class MainMenuState extends FlxState {
 			trace("---------- Bitlytics Stopped ----------");
 		}
 
-		if (SimpleController.just_pressed(UP)) {
+		if (SimpleController.just_pressed(UP) && selectedIndex != 0) {
 			selectedIndex = 0;
+			FmodManager.PlaySoundOneShot(FmodSFX.CursorMove);
 		}
 
-		if (SimpleController.just_pressed(DOWN)) {
+		if (SimpleController.just_pressed(DOWN) && selectedIndex != 1) {
 			selectedIndex = 1;
+			FmodManager.PlaySoundOneShot(FmodSFX.CursorMove);
 		}
 
 		if (SimpleController.just_pressed(A)) {
+			// TODO SFX: Menu item selected
 			if (selectedIndex == 0) {
 				clickPlay();
 			} else {
