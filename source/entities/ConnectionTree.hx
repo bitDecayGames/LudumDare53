@@ -102,7 +102,12 @@ class LinkedNode {
 
 	public function fastestPathToLinkedNode(target:Node):Array<LinkedNode> {
 		resetDepth();
-		return searchForShortestPath([], target);
+		var result = searchForShortestPath([], target);
+		if (result.length == 1) {
+			// Something bad happened here... I don't think we should ever have a single node path
+			return allNodes([]);
+		}
+		return result;
 	}
 
 	/**
@@ -133,13 +138,8 @@ class LinkedNode {
 				}
 			}
 		}
-		// trace('returning path with len: ${a.length}');
-		// This is a garbage hacky fix
-		if (bestPath.length == 1) {
-			return this.allNodes([]);
-		} else {
-			return bestPath;
-		}
+
+		return bestPath;
 	}
 
 	private function resetDepth() {

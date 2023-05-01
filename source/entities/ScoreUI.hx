@@ -28,6 +28,9 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 
     var bgOptions:FlxSprite;
     var bg:FlxTiledSprite;
+
+	var sliceRect = FlxRect.get(9, 9, 20, 20);
+
     
     public function new(scoreArea:FlxRect, bgAccess:FlxTiledSprite) {
         super();
@@ -41,11 +44,16 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
         bg.loadFrame(bgOptions.frames.getByIndex(0));
 
         var borderSize = 4;
-        var scoreBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), scoreArea.width + 2 * borderSize,
+        var scoreBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, sliceRect, scoreArea.width + 2 * borderSize + 8,
 			scoreArea.height + 2 * borderSize);
-		scoreBackground.offset.set(borderSize, borderSize);
-		scoreBackground.setPosition(scoreArea.x, scoreArea.y);
-		add(scoreBackground);
+        scoreBackground.offset.set(borderSize, borderSize);
+        scoreBackground.setPosition(scoreArea.x, scoreArea.y);
+        add(scoreBackground);
+        scoreBackground.stretchCenter = true;
+        scoreBackground.stretchBottom = true;
+        scoreBackground.stretchLeft = true;
+        scoreBackground.stretchRight = true;
+        scoreBackground.stretchTop = true;
 
 
         scoreLabel = new CyberRed(10 * 32, scoreArea.y + 8, "score");
