@@ -31,13 +31,13 @@ class PlayState extends FlxTransitionableState {
 
 	var scoreboardPos = FlxPoint.get(10 * 32, 32);
 	var scoreboardSize = FlxPoint.get(4 * 32, 32 * 13);
-	var scoreboardArea = FlxRect.get(10 * 32, 32, 4 * 32, 32 * 13);
+	var scoreboardArea = FlxRect.get(10 * 32, 32, 4 * 32, 13 * 32 + 10);
 
 	var inputsPos = FlxPoint.get(32, 32 + 9 * 32);
 	var inputsSize = FlxPoint.get(8 * 32, 4 * 32);
 
 	var outputsPos = FlxPoint.get(32, 32);
-	var outputsSize = FlxPoint.get(8 * 32, 32);
+	var outputsSize = FlxPoint.get(8 * 32, 13 * 32 + 10);
 
 	var bgGroup = new FlxTypedGroup<FlxSprite>();
 	var piecesGroup = new FlxTypedGroup<FlxSprite>();
@@ -72,31 +72,21 @@ class PlayState extends FlxTransitionableState {
 
 		var gridStartPosition = FlxPoint.get(32, 64);
 
+		var sliceRect = FlxRect.get(9, 9, 20, 20);
+
 		var nineSliceBorder = 4;
-		var boardBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), 8 * 32 + 2 * nineSliceBorder,
-			8 * 32 + 2 * nineSliceBorder);
-		boardBackground.offset.set(nineSliceBorder, nineSliceBorder);
-		boardBackground.setPosition(gridStartPosition.x, gridStartPosition.y);
 
-		var scoreBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), scoreboardSize.x + 2 * nineSliceBorder,
-			scoreboardSize.y + 2 * nineSliceBorder);
-		scoreBackground.offset.set(nineSliceBorder, nineSliceBorder);
-		scoreBackground.setPosition(scoreboardPos.x, scoreboardPos.y);
-		bgGroup.add(scoreBackground);
-
-		var inputsBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), inputsSize.x + 2 * nineSliceBorder,
-			inputsSize.y + 2 * nineSliceBorder);
-		inputsBackground.offset.set(nineSliceBorder, nineSliceBorder);
-		inputsBackground.setPosition(inputsPos.x, inputsPos.y);
-		bgGroup.add(inputsBackground);
-
-		var outputBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), outputsSize.x + 2 * nineSliceBorder,
+		var outputBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, sliceRect, outputsSize.x + 2 * nineSliceBorder + 8,
 			outputsSize.y + 2 * nineSliceBorder);
 		outputBackground.offset.set(nineSliceBorder, nineSliceBorder);
 		outputBackground.setPosition(outputsPos.x, outputsPos.y);
 		bgGroup.add(outputBackground);
+		outputBackground.stretchCenter = true;
+		outputBackground.stretchBottom = true;
+		outputBackground.stretchLeft = true;
+		outputBackground.stretchRight = true;
+		outputBackground.stretchTop = true;
 
-		bgGroup.add(boardBackground);
 		Gameplay.onNodeSpawn.add((n) -> {
 			piecesGroup.add(n);
 			for (mask in n.masks) {
