@@ -1,5 +1,6 @@
 package states;
 
+import flixel.addons.display.FlxTiledSprite;
 import entities.ScoreUI;
 import signals.Gameplay.NodeSpawnSignal;
 import flixel.group.FlxGroup;
@@ -59,6 +60,14 @@ class PlayState extends FlxTransitionableState {
 		add(piecesGroup);
 		add(inputOutputGroup);
 		add(uiGroup);
+
+		var bgOptions = new FlxSprite();
+		bgOptions.loadGraphic(AssetPaths.background_options__png, true, 32, 32);
+		var bg = new FlxTiledSprite(AssetPaths.background_options__png, FlxG.width, FlxG.height);
+		bg.loadFrame(bgOptions.frames.getByIndex(0));
+
+		bgGroup.add(bg);
+
 
 		var gridStartPosition = FlxPoint.get(32, 64);
 

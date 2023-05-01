@@ -11,6 +11,12 @@ class Woman extends FlxSprite {
     public static inline var UPGRADE_ANIMATION = "upgrade";
     public static inline var DOWNGRADE_ANIMATION = "downgrade";
 
+    // Level can range from 1-5 for a multiplier effect
+    // 5 - 5x    multiplier
+    // 4 - 2x    multiplier
+    // 3 - 1x    multiplier
+    // 2 - 0.5x  multiplier
+    // 1 - 0.25x multiplier
     var currentLevel = 3;
 
     var idleTimer = 3.0;
