@@ -63,7 +63,6 @@ class HandleDeliveryPlugin implements Plugin {
 		
 		new FlxTimer().start(1.5, (t) -> {
 			Gameplay.onFinishedBlowingUp.dispatch(grid);
-			FmodManager.PlaySoundOneShot(FmodSFX.AnnouncerGood);
 		});
 	}
 
