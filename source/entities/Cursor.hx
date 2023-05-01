@@ -169,7 +169,7 @@ class Cursor extends FlxSprite {
             wasSwapped = swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(dest.x), Std.int(dest.y));
         } else {
             // no swaps.
-            // TODO SFX: no swaps available
+            FmodManager.PlaySoundOneShot(FmodSFX.TileCannotRotate);
         }
         if (!wasSwapped) {
             shake(direction.horizontal() ? FlxAxes.X : FlxAxes.Y);
