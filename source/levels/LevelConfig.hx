@@ -32,6 +32,7 @@ class LevelConfig {
                 Crossover => 2,
                 Empty => 0
             ],
+            spawnRate: 30
         },
         {
             num: 2,
@@ -54,7 +55,8 @@ class LevelConfig {
                 DoubleCorner => 1,
                 Crossover => 1,
                 Empty => 0.5
-            ]
+            ],
+            spawnRate: 25
         },
         {
             num: 3,
@@ -79,6 +81,7 @@ class LevelConfig {
                 Crossover => 2,
                 Empty => 1
             ],
+            spawnRate: 22.5
         },
         {
             num: 4,
@@ -96,6 +99,7 @@ class LevelConfig {
                 Crossover => 2,
                 Empty => 1
             ],
+            spawnRate: 17.5
         },
         {
             num: 5,
@@ -113,6 +117,7 @@ class LevelConfig {
                 Crossover => 2,
                 Empty => 1.5
             ],
+            spawnRate: 12
         },
         {
             num: 6,
@@ -130,6 +135,7 @@ class LevelConfig {
                 Crossover => 2,
                 Empty => 2
             ],
+            spawnRate: 10
         }
     ];
 
@@ -150,4 +156,5 @@ typedef SingleLevel = {
     var breaksToFinish:Int;
     var shapes: Array<IOShape>;
     var probs: Map<NodeType, Float>;
+    var spawnRate: Float;
 }
