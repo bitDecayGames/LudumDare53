@@ -2,6 +2,8 @@ package plugins;
 
 import entities.Grid;
 import signals.Gameplay;
+import haxefmod.flixel.FmodFlxUtilities;
+import states.FailState;
 
 class LosePlugin implements Plugin {
   var shakeInputShapes = false;
@@ -38,7 +40,7 @@ class LosePlugin implements Plugin {
 
   private function beginTheShaking() {
     if (shakeInputShapes) {
-      trace('YOU LOSE!');
+      FmodFlxUtilities.TransitionToState(new FailState());
     } else {
       shakeInputShapes = true;
     }

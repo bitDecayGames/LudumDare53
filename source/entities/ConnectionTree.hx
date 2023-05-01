@@ -134,7 +134,12 @@ class LinkedNode {
 			}
 		}
 		// trace('returning path with len: ${a.length}');
-		return bestPath;
+		// This is a garbage hacky fix
+		if (bestPath.length == 1) {
+			return this.allNodes([]);
+		} else {
+			return bestPath;
+		}
 	}
 
 	private function resetDepth() {
