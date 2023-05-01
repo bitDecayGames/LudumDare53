@@ -1,5 +1,6 @@
 package entities;
 
+import flixel.FlxBasic;
 import signals.Gameplay;
 import entities.IOEnums.IOColor;
 import flixel.tweens.FlxTween;
@@ -10,7 +11,7 @@ import bitdecay.flixel.spacial.Cardinal;
 import flixel.FlxSprite;
 import plugins.Plugin;
 
-class Grid extends FlxSprite {
+class Grid extends FlxBasic {
 	public var nodes:Array<Array<Node>> = [];
 	public var plugins:Array<Plugin> = [];
 	public var inputs:Array<InputSlot> = [];

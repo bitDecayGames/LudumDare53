@@ -1,5 +1,6 @@
 package entities;
 
+import flixel.addons.display.FlxTiledSprite;
 import ui.font.BitmapText.CyberRed;
 import flixel.addons.display.FlxSliceSprite;
 import flixel.math.FlxRect;
@@ -18,10 +19,20 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
     var netOpsValue:CyberRed;
     var averageNetOpsLabel:CyberRed;
     var averageNetOpsValue:CyberRed;
+
+    var bgOptions:FlxSprite;
+    var bg:FlxTiledSprite;
     
 
-    public function new(scoreArea:FlxRect) {
+    public function new(scoreArea:FlxRect, bgAccess:FlxTiledSprite) {
         super();
+
+        bg = bgAccess;
+
+        bgOptions = new FlxSprite();
+		bgOptions.loadGraphic(AssetPaths.background_options__png, true, 32, 32);
+		
+        bg.loadFrame(bgOptions.frames.getByIndex(0));
 
         var borderSize = 4;
         var scoreBackground = new FlxSliceSprite(AssetPaths.nine_tile__png, FlxRect.get(4, 4, 24, 24), scoreArea.width + 2 * borderSize,

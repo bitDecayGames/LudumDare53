@@ -61,10 +61,7 @@ class PlayState extends FlxTransitionableState {
 		add(inputOutputGroup);
 		add(uiGroup);
 
-		var bgOptions = new FlxSprite();
-		bgOptions.loadGraphic(AssetPaths.background_options__png, true, 32, 32);
 		var bg = new FlxTiledSprite(AssetPaths.background_options__png, FlxG.width, FlxG.height);
-		bg.loadFrame(bgOptions.frames.getByIndex(0));
 
 		bgGroup.add(bg);
 
@@ -105,7 +102,7 @@ class PlayState extends FlxTransitionableState {
 			inputOutputGroup.add(shape);
 		});
 
-		var scoreUI = new ScoreUI(scoreboardArea);
+		var scoreUI = new ScoreUI(scoreboardArea, bg);
 		for (uiElement in scoreUI.members) {
 			uiGroup.add(uiElement);
 		}
