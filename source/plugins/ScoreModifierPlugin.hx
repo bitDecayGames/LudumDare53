@@ -85,10 +85,6 @@ class ScoreModifierPlugin implements Plugin {
     }
 
     function giveScore(value:Int, extraShifts:Int, coord:Float) {
-        // TODO SFX: Score awarded (some message delivered). See above for score ranges
-
-
-
         Gameplay.onScore.dispatch(value);
         var scaled = value * Woman.activeMultiplier;
         scoreValue += Std.int(scaled);
