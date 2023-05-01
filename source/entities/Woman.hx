@@ -32,7 +32,6 @@ class Woman extends FlxSprite {
         addAnimForAllLevels(DOWNGRADE_ANIMATION, 33, 6);
 
         animation.finishCallback = (name) -> {
-            trace('anim finished: ${name}');
             playAnimForCurrentLevel(IDLE);
         };
 
@@ -44,6 +43,12 @@ class Woman extends FlxSprite {
             if (name == DOWNGRADE_ANIMATION && i == 0) {
                 // this on animation is known to be longer
                 addAnim('${name}-${5 - i}', start - 1 + i * 41, len + 1, looped);
+                continue;
+            }
+
+            if (name == CHEER_1_ANIMATION && i == 0) {
+                // this on animation is known to be longer
+                addAnim('${name}-${5 - i}', start + i * 41, len + 2, looped);
                 continue;
             }
             addAnim('${name}-${5 - i}', start + i * 41, len, looped);

@@ -126,7 +126,7 @@ class PlayState extends FlxTransitionableState {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
-		var cam = FlxG.camera;
+		#if uidebug
 		// Outputs
 		DebugDraw.ME.drawWorldRect(32, 32, 8 * 32, 32);
 		// Board
@@ -135,6 +135,7 @@ class PlayState extends FlxTransitionableState {
 		DebugDraw.ME.drawWorldRect(32, 32 + 9 * 32, 8 * 32, 4 * 32);
 		// Score board
 		DebugDraw.ME.drawWorldRect(10 * 32, 32, 4 * 32, 32 * 13);
+		#end
 	}
 
 	override public function onFocusLost() {

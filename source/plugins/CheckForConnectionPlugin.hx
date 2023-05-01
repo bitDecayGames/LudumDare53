@@ -83,7 +83,7 @@ class CheckForConnectionPlugin implements Plugin {
 			if (connectedOutputs.length > 0) {
 				trace("Found a connection!");
 
-				var brokenConnection = false;
+				var connectionMatched = false;
 				var numberOfNullConnections = 0;
 				for (input in connectedInputs) {
 					if (input.queue.length == 0) {
@@ -91,20 +91,18 @@ class CheckForConnectionPlugin implements Plugin {
 						continue;
 					}
 
-					var connectionMatched = false;
 					for (output in connectedOutputs) {
 						if (input.queue[0].shape == output.shapeList[0].shape) {
 							connectionMatched = true;
 							break;
 						}
 					}
-					if (!connectionMatched) {
-						brokenConnection = true;
+					if (connectionMatched) {
 						break;
 					}
 				}
 
-				if (brokenConnection) {
+				if (!connectionMatched) {
 					trace("BAD CONNECTION!!!");
 					Gameplay.onBadConnection.dispatch(connectedInputs, connectedOutputs, tree);
 				} else if (numberOfNullConnections < connectedInputs.length) {

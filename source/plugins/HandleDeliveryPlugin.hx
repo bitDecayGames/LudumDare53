@@ -21,22 +21,46 @@ class HandleDeliveryPlugin implements Plugin {
 	}
 
 	public function handleDelivery(inputs:Array<InputSlot>, outputs:Array<OutputSlot>, tree:ConnectionTree) {
-		for (slot in inputs) {
-			var v = slot.queue.pop();
-			if (v != null) {
-				v.kill();
-			}
-		}
+		// DON'T LOOK AT ME! I'M HIDEOUS!
+		for (inSlot in inputs) {
+			var inSlotNode = grid.get(inSlot.gridX, inSlot.gridY);
+			tree.foreach((l) -> {
+				// Find the linked node associated with the input slot
+				if (l.node == inSlotNode) {
+					var shapeRemoved = false;
+					// Search through all output slots
+					for (outSlot in outputs) {
+						var outSlotNode = grid.get(outSlot.gridX, outSlot.gridY);
+						if (inSlot.queue.length > 0 && outSlot.shapeList.length > 0 &&
+							inSlot.queue[0].shape == outSlot.shapeList[0].shape) {
+								// First time we match inputslot and outputslot shapes remove the input slot shape
+								if (!shapeRemoved) {
+									var v = inSlot.queue.pop();
+									if (v != null) {
+										v.kill();
+									}
+									shapeRemoved = true;
+								}
 
-		// for each node, mark it as shouldBlowUp so that something else can blow it up when it is time
-		tree.foreach((l) -> {
-			l.node.startBlowupSequence((n) -> {
-				new FlxTimer().start(0.5, (t) -> {
-					grid.spawnNewNodeAtNode(n);
+								tree.foreach((m) -> {
+									if (m.node == outSlotNode) {
+										// Find shortest path to each output slot and remove all
+										var linkedNodesToRemove = l.fastestPathToLinkedNode(m.node);
+										for (linkedNode in linkedNodesToRemove) {
+											linkedNode.node.startBlowupSequence((n) -> {
+												new FlxTimer().start(0.5, (t) -> {
+													grid.spawnNewNodeAtNode(n);
+												});
+											});
+										}
+									}
+								});
+							}
+						}
+					}
 				});
-			});
-		});
-
+		}
+		
 		new FlxTimer().start(1.5, (t) -> {
 			Gameplay.onFinishedBlowingUp.dispatch(grid);
 			FmodManager.PlaySoundOneShot(FmodSFX.AnnouncerGood);
