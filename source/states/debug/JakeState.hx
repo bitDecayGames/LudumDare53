@@ -9,6 +9,7 @@ import plugins.HandleDeliveryPlugin;
 import plugins.HandleBadConnectionPlugin;
 import plugins.CheckForConnectionPlugin;
 import plugins.ScoreModifierPlugin;
+import plugins.ConnectivityMaskingPlugin;
 import plugins.SpawnerPlugin;
 import flixel.math.FlxRect;
 import flixel.addons.display.FlxSliceSprite;
@@ -104,7 +105,9 @@ class JakeState extends FlxTransitionableState {
 			new HandleDeliveryPlugin(),
 			new HandleBadConnectionPlugin(),
 			new SpawnerPlugin(),
-			new ScoreModifierPlugin(scoreUI)]);
+			new ScoreModifierPlugin(scoreUI),
+			new ConnectivityMaskingPlugin(),
+		]);
 		add(grid);
 
 		for (outputSlot in grid.outputs) {
@@ -115,6 +118,8 @@ class JakeState extends FlxTransitionableState {
 
 		cursor = new Cursor(grid);
 		uiGroup.add(cursor);
+
+		Gameplay.onGameStart.dispatch(grid);
 
 		// add(Achievements.ACHIEVEMENT_NAME_HERE.toToast(true, true));
 	}
