@@ -222,7 +222,6 @@ class Node extends FlxSprite {
 	public function startBlowupSequence(callback:Node->Void) {
 		if (!blowingUp) {
 			blowingUp = true;
-            FmodManager.PlaySoundOneShot(FmodSFX.TileClear);
 			FlxTween.shake(this, 0.1, 0.5, FlxAxes.XY, {
 				onComplete: (t) -> {
 					kill();
