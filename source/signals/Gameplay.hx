@@ -129,4 +129,28 @@ class Gameplay {
 		Signals when input queues were full but at least 1 input has been cleared
 	**/
 	public static var onInputQueueCleaned:FlxSignal = new FlxSignal();
+
+	public static function reset() {
+		onRotate.removeAll();
+		onSwap.removeAll();
+		onRowSlide.removeAll();
+		onMessageSpawn.removeAll();
+		onNodeSpawn.removeAll();
+		onScore.removeAll();
+		onCollectPoints.removeAll();
+		onNewTreeSearch.removeAll();
+		onTreeResolved.removeAll();
+		onCompleteDelivery.removeAll();
+		onBadConnection.removeAll();
+		onMessageSuccessfullySent.removeAll();
+		onCompleteTask.removeAll();
+		onCompleteLevelGoal.removeAll();
+		onMessageTimeout.removeAll();
+		onLevelChange.removeAll();
+		onLoseLevel.removeAll();
+		onGameStart.removeAll();
+		onFinishedBlowingUp.removeAll();
+		onInputsOverFilled.removeAll();
+		onInputQueueCleaned.removeAll();
+	}
 }

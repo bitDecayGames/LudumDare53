@@ -44,6 +44,12 @@ class PlayState extends FlxTransitionableState {
 	var inputOutputGroup = new FlxTypedGroup<FlxSprite>();
 	var uiGroup = new FlxTypedGroup<FlxSprite>();
 
+	public function new() {
+		super();
+
+		Gameplay.reset();
+	}
+
 	override public function create() {
 		super.create();
 		Lifecycle.startup.dispatch();
