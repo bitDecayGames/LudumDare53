@@ -32,4 +32,15 @@ class InputSlot extends FlxSprite {
                       grid.topCorner.y + (gridY + newShapeIndex + 1) * 32);
     Gameplay.onMessageSpawn.dispatch(shape);
   }
+
+	public function removeShape(grid: Grid) {
+		var v = queue.shift();
+		if (v != null) {
+			v.kill();
+		}
+		for (shapeIndex in 0...queue.length) {
+			queue[shapeIndex].setPosition(grid.topCorner.x + gridX * 32,
+												grid.topCorner.y + (gridY + shapeIndex + 1) * 32);
+		}
+	}
 }

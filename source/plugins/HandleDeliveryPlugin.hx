@@ -35,10 +35,7 @@ class HandleDeliveryPlugin implements Plugin {
 							inSlot.queue[0].shape == outSlot.shapeList[0].shape) {
 								// First time we match inputslot and outputslot shapes remove the input slot shape
 								if (!shapeRemoved) {
-									var v = inSlot.queue.shift();
-									if (v != null) {
-										v.kill();
-									}
+									inSlot.removeShape(grid);
 									shapeRemoved = true;
 								}
 
