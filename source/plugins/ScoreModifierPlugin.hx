@@ -1,5 +1,6 @@
 package plugins;
 
+import entities.Woman;
 import flixel.util.FlxTimer;
 import ui.font.BitmapText.CyberWhite;
 import flixel.tweens.FlxEase;
@@ -78,12 +79,13 @@ class ScoreModifierPlugin implements Plugin {
     }
 
     function giveScore(value:Int, extraShifts:Int, coord:Float) {
-        // TODO SFX: Score awarded (some message delivered)
-        
+        // TODO SFX: Score awarded (some message delivered). See above for score ranges
+
         Gameplay.onScore.dispatch(value);
-        scoreValue += value;
+        var scaled = value * Woman.activeMultiplier;
+        scoreValue += Std.int(scaled);
         // spawn text burst
-        var award = new CyberWhite('${value}');
+        var award = new CyberWhite('${scaled}');
         trace('coord: ${coord}');
         trace('award width: ${award.width}    frameWidth: ${award.frameWidth}  textWidth ${award.textWidth}');
         award.setPosition(grid.topCorner.x + coord * 32 - award.width / 2 + 16, grid.topCorner.y - grid.gridCellSize);

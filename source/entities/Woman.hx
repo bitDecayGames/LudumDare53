@@ -1,5 +1,7 @@
 package entities;
 
+import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
 import signals.Gameplay;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -19,6 +21,8 @@ class Woman extends FlxSprite {
     // 2 - 0.5x  multiplier
     // 1 - 0.25x multiplier
     var currentLevel = 3;
+
+    public static var activeMultiplier:Float = 1;
 
     var idleTimer = 3.0;
 
@@ -132,6 +136,19 @@ class Woman extends FlxSprite {
         FlxG.watch.addQuick("hype: ", hype);
 
         setLevelBasedOnHype(hype);
+
+        switch currentLevel {
+            case 1:
+                activeMultiplier = .25;
+            case 2:
+                activeMultiplier = 0.5;
+            case 3:
+                activeMultiplier = 1;
+            case 4:
+                activeMultiplier = 2;
+            case 5:
+                activeMultiplier = 5;
+        }
     }
     
     function setLevelBasedOnHype(hype:Int) {
@@ -152,11 +169,29 @@ class Woman extends FlxSprite {
             playAnimForCurrentLevel(UPGRADE_ANIMATION);
             // TODO SFX: Hype level up (woman excited)
             currentLevel++;
+            multiplierParticle();
         } else if (hypeLevel < currentLevel) {
             playAnimForCurrentLevel(DOWNGRADE_ANIMATION);
             // TODO SFX: Hype level up (woman unamused)
             currentLevel--;
+            multiplierParticle();
+
         }
+    }
+
+    function multiplierParticle() {
+        var particle = new FlxSprite();
+        particle.loadGraphic(AssetPaths.multipliers__png, true, 52, 21);
+        particle.setPosition(x + width/2 - particle.width/2, y);
+        particle.animation.frameIndex = currentLevel - 1;
+        FlxG.state.add(particle);
+        new FlxTimer().start(0.5, (t) -> {
+            FlxTween.tween(particle, {y: particle.y - 30, alpha: 0}, 0.5, {
+                onComplete: (t) -> {
+                    particle.kill();
+                }
+            });    
+        });
     }
 }
 

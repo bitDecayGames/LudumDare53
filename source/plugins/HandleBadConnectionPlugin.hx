@@ -25,6 +25,8 @@ class HandleBadConnectionPlugin implements Plugin {
 		tree.foreach((l) -> {
 			l.node.startBadConnectionSequence();
 		});
+
+		// TODO SFX: Bad connection was made (no points scored)
 	}
 
 	public function update(grid:Grid, delta:Float) {}
