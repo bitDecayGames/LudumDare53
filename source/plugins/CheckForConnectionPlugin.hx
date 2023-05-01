@@ -86,6 +86,7 @@ class CheckForConnectionPlugin implements Plugin {
 				var connectionMatched = false;
 				var numberOfNullConnections = 0;
 				for (input in connectedInputs) {
+					trace('input ${input.gridX} queue length ${input.queue.length}');
 					if (input.queue.length == 0) {
 						numberOfNullConnections ++;
 						continue;
@@ -102,13 +103,15 @@ class CheckForConnectionPlugin implements Plugin {
 					}
 				}
 
-				if (!connectionMatched) {
-					trace("BAD CONNECTION!!!");
-					Gameplay.onBadConnection.dispatch(connectedInputs, connectedOutputs, tree);
-				} else if (numberOfNullConnections < connectedInputs.length) {
-					Gameplay.onCompleteDelivery.dispatch(connectedInputs, connectedOutputs, tree);
-					// XXX - check the grid again to trigger masks to redraw. There is most certainly a better way to do this
-					check(grid);
+				if (numberOfNullConnections < connectedInputs.length) {
+					if (!connectionMatched) {
+						trace("BAD CONNECTION!!!");
+						Gameplay.onBadConnection.dispatch(connectedInputs, connectedOutputs, tree);
+					} else {
+						Gameplay.onCompleteDelivery.dispatch(connectedInputs, connectedOutputs, tree);
+						// XXX - check the grid again to trigger masks to redraw. There is most certainly a better way to do this
+						check(grid);
+					}
 				}
 			}
 			connectedInputsDispatched.push(connectedInputs);

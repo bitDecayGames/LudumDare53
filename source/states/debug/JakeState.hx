@@ -1,5 +1,6 @@
 package states.debug;
 
+import flixel.addons.display.FlxTiledSprite;
 import entities.ScoreUI;
 import signals.Gameplay.NodeSpawnSignal;
 import flixel.group.FlxGroup;
@@ -59,6 +60,10 @@ class JakeState extends FlxTransitionableState {
 		add(inputOutputGroup);
 		add(uiGroup);
 
+		var bg = new FlxTiledSprite(AssetPaths.background_options__png, FlxG.width, FlxG.height);
+
+		bgGroup.add(bg);
+
 		var gridStartPosition = FlxPoint.get(32, 64);
 
 		var nineSliceBorder = 4;
@@ -95,7 +100,7 @@ class JakeState extends FlxTransitionableState {
 			inputOutputGroup.add(shape);
 		});
 
-		var scoreUI = new ScoreUI(scoreboardArea);
+		var scoreUI = new ScoreUI(scoreboardArea, bg);
 		for (uiElement in scoreUI.members) {
 			uiGroup.add(uiElement);
 		}
