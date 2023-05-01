@@ -12,6 +12,8 @@ import flixel.FlxSprite;
 class Cursor extends FlxSprite {
 	var grid:Grid;
 	var gridCell = FlxPoint.get();
+    var shakeTween:FlxTween;
+    var preshakeLocation:FlxPoint = FlxPoint.get();
 
 	var allowInteraction = true;
 
@@ -162,7 +164,19 @@ class Cursor extends FlxSprite {
 	}
 
     private function shake(axis:FlxAxes) {
-        FlxTween.shake(this, 0.1, .12, axis);
-        // play the can't move SFX
+        if (shakeTween != null) {
+            shakeTween.cancel();
+            x = preshakeLocation.x;
+            y = preshakeLocation.y;
+        }
+        
+        preshakeLocation.x = x;
+        preshakeLocation.y = y;
+
+        shakeTween = FlxTween.shake(this, 0.1, .12, axis, { onComplete: doneShaking });
+    }
+
+    private function doneShaking(t:FlxTween) {
+        shakeTween = null;
     }
 }
