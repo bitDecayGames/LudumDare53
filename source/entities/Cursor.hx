@@ -1,5 +1,8 @@
 package entities;
 
+import plugins.ScoreModifierPlugin;
+import bitdecay.flixel.spacial.Cardinal;
+import flixel.FlxObject;
 import openfl.ui.GameInput;
 import signals.Gameplay;
 import flixel.util.FlxAxes;
@@ -22,6 +25,7 @@ class Cursor extends FlxSprite {
 		this.grid = grid;
 		loadGraphic(AssetPaths.cursor_idle__png, true, 40, 40);
 		animation.add('play', [0, 1, 2, 3, 4, 5], 10);
+        animation.add('grab', [6, 7, 8, 9, 10, 11], 10);
 		animation.play('play');
 		offset.set(4, 4);
 	}
@@ -49,13 +53,15 @@ class Cursor extends FlxSprite {
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
+        if (SimpleController.pressed(R)) {
+            animation.play('grab', animation.frameIndex);
+        } else {
+            animation.play('play', animation.frameIndex);
+        }
+
         if (SimpleController.just_pressed(UP)) {
             if (SimpleController.pressed(R)) {
-                // swap with the tile above if there is one
-                var wasSwapped = swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x), Std.int(gridCell.y) - 1);
-                if (!wasSwapped) {
-                    shake(FlxAxes.Y);
-                }
+                attemptSwap(gridCell, Cardinal.N);
             } else if (gridCell.y > 0) {
                 // good!
                 gridCell.y--;
@@ -67,11 +73,7 @@ class Cursor extends FlxSprite {
         }
         if (SimpleController.just_pressed(DOWN)) {
             if (SimpleController.pressed(R)) {
-                // swap with the tile below if there is one
-                var wasSwapped = swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x), Std.int(gridCell.y) + 1);
-                if (!wasSwapped) {
-                    shake(FlxAxes.Y);
-                }
+                attemptSwap(gridCell, Cardinal.S);
             } else if (gridCell.y < grid.nodes.length - 1) {
                 // good!
                 gridCell.y++;
@@ -83,11 +85,7 @@ class Cursor extends FlxSprite {
         }
         if (SimpleController.just_pressed(LEFT)) {
             if (SimpleController.pressed(R)) {
-                // swap with the tile to the left if there is one
-                var wasSwapped = swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x) - 1, Std.int(gridCell.y));
-                if (!wasSwapped) {
-                    shake(FlxAxes.X);
-                }
+                attemptSwap(gridCell, Cardinal.W);
             } else if (gridCell.x > 0) {
                 // good!
                 gridCell.x--;
@@ -99,11 +97,7 @@ class Cursor extends FlxSprite {
         }
         if (SimpleController.just_pressed(RIGHT)) {
             if (SimpleController.pressed(R)) {
-                // swap with the tile to the right if there is one
-                var wasSwapped = swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(gridCell.x) + 1, Std.int(gridCell.y));
-                if (!wasSwapped) {
-                    shake(FlxAxes.X);
-                }
+                attemptSwap(gridCell, Cardinal.E);
             } else if (gridCell.x < grid.nodes[0].length - 1) {
                 // good!
                 gridCell.x++;
@@ -152,6 +146,35 @@ class Cursor extends FlxSprite {
 
     //     }
     // }
+
+    private function attemptSwap(cell:FlxPoint, direction:Cardinal) {
+        var dest = FlxPoint.get().copyFrom(cell);
+        switch(direction) {
+            case N:
+                dest.y -= 1;
+            case S:
+                dest.y += 1;
+            case E:
+                dest.x += 1;
+            case W:
+                dest.x -= 1;
+            default:
+                trace('attempted to swap in invalid direction: ${direction}');
+        }
+
+        var wasSwapped = false;
+        if (ScoreModifierPlugin.swapCount > 0) {
+            ScoreModifierPlugin.swapCount--;
+            // swap with the tile above if there is one
+            wasSwapped = swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(dest.x), Std.int(dest.y));
+        } else {
+            // no swaps.
+            // TODO SFX: no swaps available
+        }
+        if (!wasSwapped) {
+            shake(direction.horizontal() ? FlxAxes.X : FlxAxes.Y);
+        }
+    }
 
     private function doneRotating() {
         restoreControl();

@@ -5,6 +5,8 @@ import signals.Gameplay;
 import entities.Grid;
 
 class ScoreModifierPlugin implements Plugin {
+    public static var swapCount:Int = 5;
+
     var ui:ScoreUI;
 
     var opsSinceLastMessage = 0;
@@ -38,5 +40,7 @@ class ScoreModifierPlugin implements Plugin {
         } else {
             ui.setAverageNetOps(totalOps / totalCompletions);
         }
+
+        ui.setSwapCount(swapCount);
     }
 }

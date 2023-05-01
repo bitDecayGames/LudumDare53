@@ -20,6 +20,9 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
     var averageNetOpsLabel:CyberRed;
     var averageNetOpsValue:CyberRed;
 
+    var swapLabel:CyberRed;
+    var swapValue:CyberRed;
+
     var bgOptions:FlxSprite;
     var bg:FlxTiledSprite;
     
@@ -69,6 +72,12 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 
 		averageNetOpsValue = new CyberRed(10 * 32, averageNetOpsLabel.y + 16, "       1");
 		add(averageNetOpsValue);
+
+        swapLabel = new CyberRed(10 * 32, averageNetOpsValue.y + 32, "swaps");
+		add(swapLabel);
+
+        swapValue = new CyberRed(10 * 32, swapLabel.y + 16, "0");
+		add(swapValue);
     }
 
     public function setNetOps(count:Int) {
@@ -77,5 +86,9 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 
     public function setAverageNetOps(count:Float) {
         averageNetOpsValue.text = StringTools.lpad('${count}', '0', 8);
+    }
+
+    public function setSwapCount(count:Int) {
+        swapValue.text = StringTools.lpad('${count}', '0', 8);
     }
 }
