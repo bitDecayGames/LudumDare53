@@ -26,7 +26,6 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
     var bgOptions:FlxSprite;
     var bg:FlxTiledSprite;
     
-
     public function new(scoreArea:FlxRect, bgAccess:FlxTiledSprite) {
         super();
 
@@ -52,7 +51,7 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
         scoreLabel = new CyberRed(10 * 32, gal.y + gal.height + 16, "score");
 		add(scoreLabel);
 
-		scoreValue = new CyberRed(10 * 32, scoreLabel.y + 16, "00000123");
+		scoreValue = new CyberRed(10 * 32, scoreLabel.y + 16, "00000000");
 		add(scoreValue);
 
 		levelLabel = new CyberRed(10 * 32, scoreValue.y + 32, "network");
@@ -90,5 +89,9 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 
     public function setSwapCount(count:Int) {
         swapValue.text = StringTools.lpad('${count}', '0', 8);
+    }
+    
+    public function setScore(count:Int) {
+        scoreValue.text = StringTools.lpad('${count}', '0', 8);
     }
 }

@@ -1,5 +1,6 @@
 package signals;
 
+import js.lib.Set;
 import entities.IOEnums.IOShape;
 import entities.Node;
 import entities.ConnectionTree;
@@ -17,7 +18,7 @@ typedef InputOutputSignal = FlxTypedSignal<Array<InputSlot>->Array<OutputSlot>->
 /**
  * A signal to indicate a successful delivery of a message. Args include the shape delivered, the input column, and the output column
 **/
-typedef DeliverySignal = FlxTypedSignal<IOShape->Int->Int->Void>;
+typedef DeliverySignal = FlxTypedSignal<Set<Int>->Set<Int>->Void>;
 
 class Gameplay {
 	/**
