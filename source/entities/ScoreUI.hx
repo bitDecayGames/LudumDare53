@@ -43,12 +43,8 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 		scoreBackground.setPosition(scoreArea.x, scoreArea.y);
 		add(scoreBackground);
 
-        var galBG = new FlxSprite(scoreArea.x + 16 - 3, scoreArea.y, AssetPaths.secretary_bg__png);
-        add(galBG);
-        gal = new Woman(scoreArea.x + 16, scoreArea.y + 3);
-        add(gal);
 
-        scoreLabel = new CyberRed(10 * 32, gal.y + gal.height + 16, "score");
+        scoreLabel = new CyberRed(10 * 32, scoreArea.y + 8, "score");
 		add(scoreLabel);
 
 		scoreValue = new CyberRed(10 * 32, scoreLabel.y + 16, "00000000");
@@ -60,7 +56,12 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 		levelValue = new CyberRed(10 * 32, levelLabel.y + 16, "       1");
 		add(levelValue);
 
-        netOpsLabel = new CyberRed(10 * 32, levelValue.y + 32, "net ops");
+        var galBG = new FlxSprite(scoreArea.x + 16 - 3, levelValue.y + 32, AssetPaths.secretary_bg__png);
+        add(galBG);
+        gal = new Woman(scoreArea.x + 16, galBG.y + 3);
+        add(gal);
+
+        netOpsLabel = new CyberRed(10 * 32, gal.y + gal.height + 16, "net ops");
 		add(netOpsLabel);
 
 		netOpsValue = new CyberRed(10 * 32, netOpsLabel.y + 16, "       1");
@@ -90,7 +91,7 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
     public function setSwapCount(count:Int) {
         swapValue.text = StringTools.lpad('${count}', '0', 8);
     }
-    
+
     public function setScore(count:Int) {
         scoreValue.text = StringTools.lpad('${count}', '0', 8);
     }
