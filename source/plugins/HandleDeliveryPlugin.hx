@@ -1,5 +1,6 @@
 package plugins;
 
+import js.lib.Set;
 import entities.IOEnums.IOShape;
 import haxe.Timer;
 import flixel.util.FlxTimer;
@@ -23,11 +24,10 @@ class HandleDeliveryPlugin implements Plugin {
 
 	public function handleDelivery(inputs:Array<InputSlot>, outputs:Array<OutputSlot>, tree:ConnectionTree) {
 		// DON'T LOOK AT ME! I'M HIDEOUS!
+		var completeInputXs: Set<Int> = new Set<Int>();
+		var completeOutputXs: Set<Int> = new Set<Int>();
+		var messageSuccessfullySent = false;
 		for (inSlot in inputs) {
-			var completeShape: IOShape = Club;
-			var completeInputX: Int = inSlot.gridX;
-			var completeOutputX: Int = -1;
-			var messageSuccessfullySent = false;
 			var inSlotNode = grid.get(inSlot.gridX, inSlot.gridY);
 			tree.foreach((l) -> {
 				// Find the linked node associated with the input slot
@@ -35,7 +35,6 @@ class HandleDeliveryPlugin implements Plugin {
 					var shapeRemoved = false;
 					// Search through all output slots
 					for (outSlot in outputs) {
-						completeOutputX = outSlot.gridX;
 						var outSlotNode = grid.get(outSlot.gridX, outSlot.gridY);
 						if (inSlot.queue.length > 0 && outSlot.shapeList.length > 0 &&
 							inSlot.queue[0].shape == outSlot.shapeList[0].shape) {
@@ -60,6 +59,8 @@ class HandleDeliveryPlugin implements Plugin {
 											});
 										}
 										messageSuccessfullySent = true;
+										completeInputXs.add(inSlot.gridX);
+										completeOutputXs.add(outSlot.gridX);
 									}
 								});
 							}
@@ -67,10 +68,10 @@ class HandleDeliveryPlugin implements Plugin {
 					}
 				});
 			
-			if (messageSuccessfullySent) {
-				Gameplay.onMessageSuccessfullySent.dispatch(completeShape, completeInputX, completeOutputX);
 			}
-		}
+			if (messageSuccessfullySent) {
+				Gameplay.onMessageSuccessfullySent.dispatch(completeInputXs, completeOutputXs);
+			}
 		
 		new FlxTimer().start(1.5, (t) -> {
 			Gameplay.onFinishedBlowingUp.dispatch(grid);
