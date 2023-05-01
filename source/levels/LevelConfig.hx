@@ -32,7 +32,7 @@ class LevelConfig {
                 Crossover => 2,
                 Empty => 0
             ],
-            spawnRate: 20
+            spawnRate: 15
         },
         {
             num: 2,
@@ -56,7 +56,7 @@ class LevelConfig {
                 Crossover => 1,
                 Empty => 0.2
             ],
-            spawnRate: 17
+            spawnRate: 13
         },
         {
             num: 3,
@@ -81,7 +81,7 @@ class LevelConfig {
                 Crossover => 2,
                 Empty => 0.3
             ],
-            spawnRate: 15
+            spawnRate: 11
         },
         {
             num: 4,
@@ -99,7 +99,7 @@ class LevelConfig {
                 Crossover => 2,
                 Empty => 0.4
             ],
-            spawnRate: 13
+            spawnRate: 10
         },
         {
             num: 5,
@@ -117,7 +117,7 @@ class LevelConfig {
                 Crossover => 2,
                 Empty => 0.5
             ],
-            spawnRate: 10
+            spawnRate: 8
         },
         {
             num: 6,
