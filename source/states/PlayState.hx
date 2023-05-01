@@ -95,6 +95,9 @@ class PlayState extends FlxTransitionableState {
 		bgGroup.add(boardBackground);
 		Gameplay.onNodeSpawn.add((n) -> {
 			piecesGroup.add(n);
+			for (mask in n.masks) {
+				piecesGroup.add(mask);			
+			}
 		});
 
 		// Setup signal for future shapes

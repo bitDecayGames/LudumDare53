@@ -70,7 +70,9 @@ class Node extends FlxSprite {
 		loadGraphic(asset);
 
 		for (maskAsset in maskAssets) {
-			masks.push(new FlxSprite(maskAsset));			
+			var mask = new FlxSprite(maskAsset);
+			mask.visible = false;
+			masks.push(mask);			
 		}
 
 		rotate(rot, true);
@@ -78,6 +80,22 @@ class Node extends FlxSprite {
 
 	override public function update(delta:Float) {
 		super.update(delta);
+	}
+
+	override function draw() {
+		for (mask in masks) {
+			mask.setPosition(x, y);
+			mask.angle = angle;
+		}
+
+		super.draw();
+	}
+
+	override function kill() {
+		super.kill();
+		for (mask in masks) {
+			mask.kill();
+		}
 	}
 
 	/**
