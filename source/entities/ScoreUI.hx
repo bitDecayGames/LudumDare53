@@ -110,7 +110,7 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 
         #if debug
         if (FlxG.keys.justPressed.L) {
-            LevelConfig.currentLevel++;
+            LevelConfig.nextLevel();
             Gameplay.onLevelChange.dispatch();
         }
         #end

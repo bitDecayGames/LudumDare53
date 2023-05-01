@@ -1,5 +1,6 @@
 package plugins;
 
+import levels.LevelConfig;
 import entities.ScoreUI;
 import signals.Gameplay;
 import entities.Grid;
@@ -29,6 +30,11 @@ class ScoreModifierPlugin implements Plugin {
         Gameplay.onMessageSuccessfullySent.add((inputs, outputs) -> {
             trace('inputs: ${inputs.size} outputs: ${outputs.size}');
             totalCompletions++;
+            trace('breaks: ${totalCompletions}');
+            trace('current level: ${LevelConfig.currentLevel}, needed breaks ${LevelConfig.currentLevelConfig().breaksToFinish}');
+            if (totalCompletions > LevelConfig.currentLevelConfig().breaksToFinish) {
+                LevelConfig.nextLevel();
+            }
             totalOps += opsSinceLastMessage;
 
             opsSinceLastMessage = 0;

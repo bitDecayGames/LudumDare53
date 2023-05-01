@@ -43,7 +43,7 @@ class Grid extends FlxBasic {
 			}
 		}
 
-		var probabilitiesForLocation:Map<NodeType, Float> = LevelConfig.levels[LevelConfig.currentLevel].probs.copy();
+		var probabilitiesForLocation:Map<NodeType, Float> = LevelConfig.currentLevelConfig().probs.copy();
 
 
 		if (isLocationInOutputOrInput) {

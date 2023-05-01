@@ -1,17 +1,20 @@
 package levels;
 
+import signals.Gameplay;
+import flixel.math.FlxMath;
+import flixel.FlxG;
 import entities.NodeType;
 import entities.IOEnums.IOShape;
 
 class LevelConfig {
-    public static var currentLevel = 0;
+    public static var currentLevel(default, null) = 0;
 
     // level probabilities for tiles
-    public static var levels:Array<SingleLevel> = [
+    private static var levels:Array<SingleLevel> = [
         {
             num: 1,
             bgIndex: 0,
-            breaksToFinish: 10,
+            breaksToFinish: 5,
             shapes: [
                 Spade,
                 Club,
@@ -33,7 +36,7 @@ class LevelConfig {
         {
             num: 2,
             bgIndex: 1,
-            breaksToFinish: 20,
+            breaksToFinish: 10,
             shapes: [
                 Spade,
                 Club,
@@ -56,7 +59,7 @@ class LevelConfig {
         {
             num: 3,
             bgIndex: 2,
-            breaksToFinish: 30,
+            breaksToFinish: 20,
             shapes: [
                 Spade,
                 Club,
@@ -80,7 +83,7 @@ class LevelConfig {
         {
             num: 4,
             bgIndex: 3,
-            breaksToFinish: 40,
+            breaksToFinish: 30,
             shapes: IOShape.allValues,
             probs: [
                 Corner => 2,
@@ -97,7 +100,7 @@ class LevelConfig {
         {
             num: 5,
             bgIndex: 4,
-            breaksToFinish: 50,
+            breaksToFinish: 40,
             shapes: IOShape.allValues,
             probs: [
                 Corner => 2,
@@ -114,7 +117,7 @@ class LevelConfig {
         {
             num: 6,
             bgIndex: 5,
-            breaksToFinish: 50,
+            breaksToFinish: 99999,
             shapes: IOShape.allValues,
             probs: [
                 Corner => 2,
@@ -129,6 +132,15 @@ class LevelConfig {
             ],
         }
     ];
+
+    public static function currentLevelConfig():SingleLevel {
+        return levels[currentLevel];
+    }
+
+    public static function nextLevel() {
+        currentLevel = Std.int(FlxMath.bound(currentLevel + 1, 0, levels.length - 1));
+        Gameplay.onLevelChange.dispatch();
+    }
 }
 
 typedef SingleLevel = {

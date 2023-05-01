@@ -24,7 +24,7 @@ class ShapeInputIndicator extends FlxSprite {
 	}
 
 	public static function newRandom(): ShapeInputIndicator {
-		var possibleShapes = LevelConfig.levels[LevelConfig.currentLevel].shapes;
+		var possibleShapes = LevelConfig.currentLevelConfig().shapes;
 		var randomShape = FlxG.random.getObject(possibleShapes);
 		return new ShapeInputIndicator(randomShape);
 	}
