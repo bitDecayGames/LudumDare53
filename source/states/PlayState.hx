@@ -1,5 +1,6 @@
 package states;
 
+import flixel.addons.display.FlxTiledSprite;
 import entities.ScoreUI;
 import signals.Gameplay.NodeSpawnSignal;
 import flixel.group.FlxGroup;
@@ -7,6 +8,7 @@ import entities.ShapeInputIndicator;
 import signals.Gameplay;
 import plugins.HandleDeliveryPlugin;
 import plugins.CheckForConnectionPlugin;
+import plugins.HandleBadConnectionPlugin;
 import plugins.ScoreModifierPlugin;
 import plugins.ConnectivityMaskingPlugin;
 import plugins.SpawnerPlugin;
@@ -59,6 +61,11 @@ class PlayState extends FlxTransitionableState {
 		add(inputOutputGroup);
 		add(uiGroup);
 
+		var bg = new FlxTiledSprite(AssetPaths.background_options__png, FlxG.width, FlxG.height);
+
+		bgGroup.add(bg);
+
+
 		var gridStartPosition = FlxPoint.get(32, 64);
 
 		var nineSliceBorder = 4;
@@ -95,7 +102,7 @@ class PlayState extends FlxTransitionableState {
 			inputOutputGroup.add(shape);
 		});
 
-		var scoreUI = new ScoreUI(scoreboardArea);
+		var scoreUI = new ScoreUI(scoreboardArea, bg);
 		for (uiElement in scoreUI.members) {
 			uiGroup.add(uiElement);
 		}
@@ -103,6 +110,7 @@ class PlayState extends FlxTransitionableState {
 		var grid = new Grid(32, gridStartPosition, 8, 8, [
 			new CheckForConnectionPlugin(),
 			new HandleDeliveryPlugin(),
+			new HandleBadConnectionPlugin(),
 			new SpawnerPlugin(),
 			new ScoreModifierPlugin(scoreUI),
 			new ConnectivityMaskingPlugin(),
