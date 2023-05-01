@@ -74,7 +74,7 @@ class MainMenuState extends FlxState {
 			FmodManager.PlaySoundOneShot(FmodSFX.CursorMove);
 		}
 
-		if (SimpleController.just_pressed(A)) {
+		if (SimpleController.just_pressed(A) || SimpleController.just_pressed(START) || SimpleController.just_pressed(B) || SimpleController.just_pressed(R)) {
 			// TODO SFX: Menu item selected
 			if (selectedIndex == 0) {
 				FmodManager.PlaySoundOneShot(FmodSFX.TileClear);
