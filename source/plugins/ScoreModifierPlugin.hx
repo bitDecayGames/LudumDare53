@@ -7,9 +7,9 @@ import entities.Grid;
 class ScoreModifierPlugin implements Plugin {
     var ui:ScoreUI;
 
-    var rotationsSinceLastMessage = 0;
+    var opsSinceLastMessage = 0;
 
-    var totalRotations = 0;
+    var totalOps = 0;
     var totalCompletions = 0;
 
     public function new(ui:ScoreUI) {
@@ -18,22 +18,25 @@ class ScoreModifierPlugin implements Plugin {
 
 	public function init(grid:Grid):Void {
         Gameplay.onRotate.add((g) -> {
-            rotationsSinceLastMessage++;
+            opsSinceLastMessage++;
+        });
+        Gameplay.onSwap.add((g) -> {
+            opsSinceLastMessage++;
         });
         Gameplay.onMessageSuccessfullySent.add((shape, input, output) -> {
             totalCompletions++;
-            totalRotations += rotationsSinceLastMessage;
+            totalOps += opsSinceLastMessage;
 
-            rotationsSinceLastMessage = 0;
+            opsSinceLastMessage = 0;
         });
     }
 
 	public function update(grid:Grid, delta:Float):Void {
-        ui.setNetOps(rotationsSinceLastMessage);
+        ui.setNetOps(opsSinceLastMessage);
         if (totalCompletions == 0) {
             ui.setAverageNetOps(0);
         } else {
-            ui.setAverageNetOps(totalRotations / totalCompletions);
+            ui.setAverageNetOps(totalOps / totalCompletions);
         }
     }
 }

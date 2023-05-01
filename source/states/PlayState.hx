@@ -7,6 +7,7 @@ import entities.ShapeInputIndicator;
 import signals.Gameplay;
 import plugins.HandleDeliveryPlugin;
 import plugins.CheckForConnectionPlugin;
+import plugins.HandleBadConnectionPlugin;
 import plugins.ScoreModifierPlugin;
 import plugins.ConnectivityMaskingPlugin;
 import plugins.SpawnerPlugin;
@@ -103,6 +104,7 @@ class PlayState extends FlxTransitionableState {
 		var grid = new Grid(32, gridStartPosition, 8, 8, [
 			new CheckForConnectionPlugin(),
 			new HandleDeliveryPlugin(),
+			new HandleBadConnectionPlugin(),
 			new SpawnerPlugin(),
 			new ScoreModifierPlugin(scoreUI),
 			new ConnectivityMaskingPlugin(),
