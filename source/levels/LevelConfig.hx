@@ -54,7 +54,7 @@ class LevelConfig {
                 Dead => 0.5,
                 DoubleCorner => 1,
                 Crossover => 1,
-                Empty => 0.5
+                Empty => 0.2
             ],
             spawnRate: 17
         },
@@ -79,7 +79,7 @@ class LevelConfig {
                 Dead => 1,
                 DoubleCorner => 2,
                 Crossover => 2,
-                Empty => 1
+                Empty => 0.3
             ],
             spawnRate: 15
         },
@@ -97,7 +97,7 @@ class LevelConfig {
                 Dead => 1,
                 DoubleCorner => 1,
                 Crossover => 2,
-                Empty => 1
+                Empty => 0.4
             ],
             spawnRate: 13
         },
@@ -115,7 +115,7 @@ class LevelConfig {
                 Dead => 1.5,
                 DoubleCorner => 2,
                 Crossover => 2,
-                Empty => 1.5
+                Empty => 0.5
             ],
             spawnRate: 10
         },
@@ -133,7 +133,7 @@ class LevelConfig {
                 Dead => 2,
                 DoubleCorner => 2,
                 Crossover => 2,
-                Empty => 2
+                Empty => 0.7
             ],
             spawnRate: 8
         }
