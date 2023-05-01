@@ -14,6 +14,7 @@ class CheckForConnectionPlugin implements Plugin {
 		Gameplay.onSwap.add(this.check);
 		Gameplay.onRowSlide.add(this.check);
 		Gameplay.onGameStart.add(this.check);
+		Gameplay.onFinishedBlowingUp.add(this.check);
 
 	}
 
@@ -106,6 +107,8 @@ class CheckForConnectionPlugin implements Plugin {
 					Gameplay.onBadConnection.dispatch(connectedInputs, connectedOutputs, tree);
 				} else if (numberOfNullConnections < connectedInputs.length) {
 					Gameplay.onCompleteDelivery.dispatch(connectedInputs, connectedOutputs, tree);
+					// XXX - check the grid again to trigger masks to redraw. There is most certainly a better way to do this
+					check(grid);
 				}
 			}
 			connectedInputsDispatched.push(connectedInputs);
