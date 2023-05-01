@@ -23,6 +23,8 @@ class FmodSFX {
     public static inline var CursorMove:String = "event:/SFX/Cursor/CursorMove";
     public static inline var MenuHover:String = "event:/SFX/Menu/MenuHover";
     public static inline var MenuSelect:String = "event:/SFX/Menu/MenuSelect";
+    public static inline var TileBadConnection:String = "event:/SFX/Tiles/TileBadConnection";
+    public static inline var TileBadConnection2:String = "event:/SFX/Tiles/TileBadConnection2";
     public static inline var TileCannotRotate:String = "event:/SFX/Tiles/TileCannotRotate";
     public static inline var TileClear:String = "event:/SFX/Tiles/TileClear";
     public static inline var TileClockwise:String = "event:/SFX/Tiles/TileClockwise";

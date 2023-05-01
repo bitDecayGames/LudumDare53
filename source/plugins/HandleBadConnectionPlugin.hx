@@ -26,7 +26,7 @@ class HandleBadConnectionPlugin implements Plugin {
 			l.node.startBadConnectionSequence();
 		});
 
-		// TODO SFX: Bad connection was made (no points scored)
+        FmodManager.PlaySoundOneShot(FmodSFX.TileBadConnection2);
 	}
 
 	public function update(grid:Grid, delta:Float) {}
