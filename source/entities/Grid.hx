@@ -28,8 +28,7 @@ class Grid extends FlxBasic {
 		Tee => 2,
 		Straight => 4,
 		Plus => 2,
-		OneWay => .5,
-		// // Warp;
+		OneWay => 0,
 		Dead => 1,
 		DoubleCorner => 2,
 		Crossover => 2,
