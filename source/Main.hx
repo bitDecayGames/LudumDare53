@@ -29,6 +29,8 @@ import states.debug.LoganState;
 import states.debug.TristanState;
 #elseif credits
 import states.CreditsState;
+#elseif endgame
+import states.FailState;
 #end
 
 class Main extends Sprite {
@@ -52,6 +54,8 @@ class Main extends Sprite {
 		startingState = TristanState;
 		#elseif credits
 		startingState = CreditsState;
+		#elseif endgame
+		startingState = FailState;
 		#else
 		if (Macros.isDefined("SKIP_SPLASH")) {
 			startingState = MainMenuState;

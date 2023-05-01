@@ -1,42 +1,98 @@
 package states;
 
+import flixel.util.FlxTimer;
+import flixel.tweens.FlxTween;
+import plugins.ScoreModifierPlugin;
+import input.SimpleController;
+import bitdecay.flixel.debug.DebugDraw;
+import flixel.FlxState;
+import ui.MenuCursor;
+import flixel.math.FlxRect;
+import flixel.FlxSprite;
+import ui.font.BitmapText;
+import bitdecay.flixel.transitions.TransitionDirection;
+import bitdecay.flixel.transitions.SwirlTransition;
+import states.AchievementsState;
+import com.bitdecay.analytics.Bitlytics;
+import config.Configure;
 import flixel.FlxG;
+import flixel.addons.ui.FlxUICursor;
 import flixel.addons.ui.FlxUIState;
+import flixel.addons.ui.FlxUITypedButton;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import haxefmod.flixel.FmodFlxUtilities;
-import helpers.UiHelpers;
-import misc.FlxTextFactory;
 
 using states.FlxStateExt;
 
-class FailState extends FlxUIState {
-	var _btnDone:FlxButton;
+#if windows
+import lime.system.System;
+#end
 
-	var _txtTitle:FlxText;
+class FailState extends FlxState {
+	var gameCursor:MenuCursor;
+	var startArea = FlxRect.get(195, 285 + 43, 95, 28);
+
+	var buttonActive = false;
+	var done = false;
+	var mainMenuItem:FlxSprite;
 
 	override public function create():Void {
+
+		var finalScoreLabel = new CyberRed("Final Score");
+		finalScoreLabel.screenCenter();
+		finalScoreLabel.y -= 16;
+		add(finalScoreLabel);
+
+		var finalScoreValue = new CyberWhite('${ScoreModifierPlugin.scoreValue}');
+		finalScoreValue.screenCenter();
+		finalScoreValue.y += 16;
+		add(finalScoreValue);
+
+		mainMenuItem = new CyberWhite('Main menu');
+		mainMenuItem.screenCenter();
+		mainMenuItem.y = FlxG.height - 50;
+		mainMenuItem.alpha = 0;
+		add(mainMenuItem);
+
+		gameCursor = new MenuCursor();
+		gameCursor.visible = false;
+		add(gameCursor);
+
+		gameCursor.select(FlxRect.get(mainMenuItem.x-14, mainMenuItem.y-3, mainMenuItem.width+28, mainMenuItem.height+4));
+
 		super.create();
+
+		// FmodManager.PlaySong(FmodSongs.LetsGo);
 		bgColor = FlxColor.TRANSPARENT;
+		FlxG.camera.pixelPerfectRender = true;
 
-		_txtTitle = FlxTextFactory.make("Game Over", FlxG.width / 2, FlxG.height / 4, 40, FlxTextAlign.CENTER);
+		// Trigger our focus logic as we are just creating the scene
+		this.handleFocus();
 
-		add(_txtTitle);
+		// we will handle transitions manually
+		// transOut = null;
 
-		_btnDone = UiHelpers.createMenuButton("Main Menu", clickMainMenu);
-		_btnDone.setPosition(FlxG.width / 2 - _btnDone.width / 2, FlxG.height - _btnDone.height - 40);
-		_btnDone.updateHitbox();
-		add(_btnDone);
+		new FlxTimer().start(3, (t) -> {
+
+			FlxTween.tween(mainMenuItem, { alpha: 1 }, {
+				onComplete: (t) -> {
+					gameCursor.visible = true;
+					buttonActive = true;
+				}
+			});
+
+		});
 	}
 
 	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
-		_txtTitle.x = FlxG.width / 2 - _txtTitle.width / 2;
-	}
 
-	function clickMainMenu():Void {
-		FmodFlxUtilities.TransitionToState(new MainMenuState());
+		if (buttonActive && SimpleController.just_pressed(A)) {
+			// TODO SFX: Menu item selected
+			FmodFlxUtilities.TransitionToState(new MainMenuState());
+		}
 	}
 
 	override public function onFocusLost() {

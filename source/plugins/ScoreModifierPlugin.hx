@@ -22,7 +22,7 @@ class ScoreModifierPlugin implements Plugin {
 
     var totalOps = 0;
     var totalCompletions = 0;
-    var scoreValue = 0;
+    public static var scoreValue = 0;
 
     var grid:Grid;
 
