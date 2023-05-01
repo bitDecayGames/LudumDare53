@@ -153,13 +153,13 @@ class Woman extends FlxSprite {
     
     function setLevelBasedOnHype(hype:Int) {
         var hypeLevel = currentLevel;
-        if (hype > 2500) {
+        if (hype > 2000) {
             hypeLevel = 5;
-        } else if (hype > 1500) {
+        } else if (hype > 1200) {
             hypeLevel = 4;
         } else if (hype > 500) {
             hypeLevel = 3;
-        } else if (hype > 100) {
+        } else if (hype > 200) {
             hypeLevel = 2;
         } else {
             hypeLevel = 1;

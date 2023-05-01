@@ -42,7 +42,7 @@ class SpawnerPlugin implements Plugin {
 				}	
 				inputToAdd.addShape(grid, ShapeInputIndicator.newRandom());
 			} else {
-				trace('OH NO WERE OUT OF INPUTS');
+				Gameplay.onInputsOverFilled.dispatch();
 			}
 		}
 	}
@@ -56,7 +56,7 @@ class SpawnerPlugin implements Plugin {
 
 	public function changeLevelSpawner() {
 		for (output in this.grid.outputs) {
-			var shape = output.shapeList.pop();
+			var shape = output.shapeList.shift();
 			if (shape != null) {
 				shape.kill();
 			}

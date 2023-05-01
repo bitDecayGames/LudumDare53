@@ -33,7 +33,7 @@ class ConnectionTree {
 		var toVisit:Array<LinkedNode> = [root];
 		var visited:Array<LinkedNode> = [];
 		while (toVisit.length > 0) {
-			var cur = toVisit.pop();
+			var cur = toVisit.shift();
 			f(cur);
 			for (node in cur.exits) {
 				if (!visited.contains(node)) {

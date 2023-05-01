@@ -119,4 +119,14 @@ class Gameplay {
 	 * Signals when tiles are done blowing up after delivery
 	**/
 	public static var onFinishedBlowingUp:GridSignal = new GridSignal();
+
+	/**
+		Signals when input queues are full and another input has attempted to be added
+	**/
+	public static var onInputsOverFilled:FlxSignal = new FlxSignal();
+
+	/**
+		Signals when input queues were full but at least 1 input has been cleared
+	**/
+	public static var onInputQueueCleaned:FlxSignal = new FlxSignal();
 }
