@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
-	<sprite x="0" y="0" width="100%" height="100%" name="title_image" src="title_image.png"/>
 	<button x="center" name="play_button" label="Play" align="center">
 		<!-- anchor the button at the center of the screen, 'flush' with the center of the button -->
 		<anchor x="center" x-flush="center" />

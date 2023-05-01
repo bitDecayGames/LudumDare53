@@ -1,5 +1,11 @@
 package states;
 
+import input.SimpleController;
+import bitdecay.flixel.debug.DebugDraw;
+import flixel.FlxState;
+import ui.MenuCursor;
+import flixel.math.FlxRect;
+import flixel.FlxSprite;
 import ui.font.BitmapText;
 import bitdecay.flixel.transitions.TransitionDirection;
 import bitdecay.flixel.transitions.SwirlTransition;
@@ -21,79 +27,31 @@ using states.FlxStateExt;
 import lime.system.System;
 #end
 
-class MainMenuState extends FlxUIState {
-	var _btnPlay:FlxButton;
-	var _btnCredits:FlxButton;
-	var _btnExit:FlxButton;
+class MainMenuState extends FlxState {
+	var gameCursor:MenuCursor;
+	var startArea = FlxRect.get(195, 285 + 43, 95, 28);
+	var creditArea = FlxRect.get(175, 318 + 43, 134, 28);
 
-	var _txtTitle:FlxText;
+	var selectedIndex = 0;
 
 	override public function create():Void {
-		_xml_id = "main_menu";
-		if (Configure.config.menus.keyboardNavigation || Configure.config.menus.controllerNavigation) {
-			_makeCursor = true;
-		}
+		var titleImage = new FlxSprite(AssetPaths.title__png);
+		add(titleImage);
+
+		gameCursor = new MenuCursor();
+		add(gameCursor);
 
 		super.create();
-
-		if (_makeCursor) {
-			cursor.loadGraphic(AssetPaths.pointer__png, true, 32, 32);
-			cursor.animation.add("pointing", [0, 1], 3);
-			cursor.animation.play("pointing");
-
-			var keys:Int = 0;
-			if (Configure.config.menus.keyboardNavigation) {
-				keys |= FlxUICursor.KEYS_ARROWS | FlxUICursor.KEYS_WASD;
-			}
-			if (Configure.config.menus.controllerNavigation) {
-				keys |= FlxUICursor.GAMEPAD_DPAD;
-			}
-			cursor.setDefaultKeys(keys);
-		}
 
 		FmodManager.PlaySong(FmodSongs.LetsGo);
 		bgColor = FlxColor.TRANSPARENT;
 		FlxG.camera.pixelPerfectRender = true;
 
-		#if !windows
-		// Hide exit button for non-windows targets
-		var test = _ui.getAsset("exit_button");
-		test.visible = false;
-		#end
-
 		// Trigger our focus logic as we are just creating the scene
 		this.handleFocus();
 
 		// we will handle transitions manually
-		transOut = null;
-
-		var test = new CyberRed("begin");
-		add(test);
-	}
-
-	override public function getEvent(name:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void {
-		if (name == FlxUITypedButton.CLICK_EVENT) {
-			var button_action:String = params[0];
-			trace('Action: "${button_action}"');
-
-			if (button_action == "play") {
-				clickPlay();
-			}
-
-			if (button_action == "credits") {
-				clickCredits();
-			}
-
-			if (button_action == "achievements") {
-				clickAchievements();
-			}
-
-			#if windows
-			if (button_action == "exit") {
-				clickExit();
-			}
-			#end
-		}
+		// transOut = null;
 	}
 
 	override public function update(elapsed:Float):Void {
@@ -105,16 +63,43 @@ class MainMenuState extends FlxUIState {
 			FmodManager.PlaySoundOneShot(FmodSFX.MenuSelect);
 			trace("---------- Bitlytics Stopped ----------");
 		}
+
+		if (SimpleController.just_pressed(UP)) {
+			selectedIndex = 0;
+		}
+
+		if (SimpleController.just_pressed(DOWN)) {
+			selectedIndex = 1;
+		}
+
+		if (SimpleController.just_pressed(A)) {
+			if (selectedIndex == 0) {
+				clickPlay();
+			} else {
+				clickCredits();
+			}
+		}
+
+		if (selectedIndex == 0) {
+			gameCursor.select(startArea);
+		} else {
+			gameCursor.select(creditArea);
+		}
+
+		DebugDraw.ME.drawWorldRect(startArea.x, startArea.y, startArea.width, startArea.height);
+		DebugDraw.ME.drawWorldRect(creditArea.x, creditArea.y, creditArea.width, creditArea.height);
 	}
 
 	function clickPlay():Void {
-		FmodManager.StopSong();
-		var swirlOut = new SwirlTransition(TransitionDirection.OUT, () -> {
-			// make sure our music is stopped;
-			FmodManager.StopSongImmediately();
-			FlxG.switchState(new PlayState());
-		}, FlxColor.GRAY, 0.75);
-		openSubState(swirlOut);
+		FmodFlxUtilities.TransitionToState(new PlayState());
+
+		// FmodManager.StopSong();
+		// var swirlOut = new SwirlTransition(TransitionDirection.OUT, () -> {
+		// 	// make sure our music is stopped;
+		// 	FmodManager.StopSongImmediately();
+		// 	FlxG.switchState(new PlayState());
+		// }, FlxColor.GRAY, 0.75);
+		// openSubState(swirlOut);
 	}
 
 	function clickCredits():Void {
