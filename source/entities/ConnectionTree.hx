@@ -100,7 +100,7 @@ class LinkedNode {
 		return a;
 	}
 
-	public function fastestPathToLinkedNode(target:LinkedNode):Array<LinkedNode> {
+	public function fastestPathToLinkedNode(target:Node):Array<LinkedNode> {
 		resetDepth();
 		return searchForShortestPath([], target);
 	}
@@ -111,20 +111,30 @@ class LinkedNode {
 	 * @param to
 	 * @return Array<LinkedNode>
 	 */
-	private function searchForShortestPath(a:Array<LinkedNode>, to:LinkedNode):Array<LinkedNode> {
+	private function searchForShortestPath(a:Array<LinkedNode>, to:Node):Array<LinkedNode> {
+		// trace('looking at node: ${this}');
+		// trace(' -- trying to find ${to}');
+		// trace(' -- current a len: ${a.length}');
 		a.push(this);
-		if (this == to) {
+		if (this.node == to) {
+			// trace('yo! I found the thing!');
 			return a;
 		}
+		var bestLen = -1;
+		var bestPath = a;
 		for (node in this.exits) {
 			if (!a.contains(node)) {
 				var b = node.searchForShortestPath(a.copy(), to);
-				if (a.length < b.length) {
-					a = b;
+				if ((bestLen == -1 || b.length < bestLen) && b[b.length - 1].node == to) {
+					// trace('updating path');
+					// trace('path len: ${b.length}');
+					bestLen = b.length;
+					bestPath = b;
 				}
 			}
 		}
-		return a;
+		// trace('returning path with len: ${a.length}');
+		return bestPath;
 	}
 
 	private function resetDepth() {
