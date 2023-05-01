@@ -1,5 +1,6 @@
 package entities;
 
+import flixel.math.FlxPoint;
 import flixel.math.FlxMath;
 import signals.Gameplay;
 import flixel.util.FlxAxes;
@@ -23,6 +24,8 @@ class Node extends FlxSprite {
 	public var nodeType:NodeType = null;
 
 	public var masks:Array<FlxSprite> = [];
+
+	var isShaking:Bool = false;
 
 	public static function create(type:NodeType):Node {
 		// trace('creating node with type: ${type}');
@@ -214,6 +217,20 @@ class Node extends FlxSprite {
 	}
 
 	public function startBadConnectionSequence() {
-		FlxTween.shake(this, 0.025, 0.5, FlxAxes.XY);
+		if (isShaking) {
+			// this tile is already shaking, don't start another one
+			return;
+		}
+		
+		isShaking = true;
+		var origianlLocation = FlxPoint.get(x, y);
+		FlxTween.shake(this, 0.025, 0.5, FlxAxes.XY, {
+			onComplete: (t) -> {
+				isShaking = false;
+				x = origianlLocation.x;
+				y = origianlLocation.y;
+			}
+		});
+		
 	}
 }
