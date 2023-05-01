@@ -88,7 +88,17 @@ class Woman extends FlxSprite {
     }
 
     function newScore(points:Int) {
-        momentum.push(new Momentum(points, 30));
+        var hypeTime = 120;
+        if (points > 2000) {
+            hypeTime = 5;
+        } else if (points > 1200) {
+            hypeTime = 10;
+        } else if (points > 500) {
+            hypeTime = 20;
+        } else if (points > 200) {
+            hypeTime = 30;
+        }
+        momentum.push(new Momentum(points, hypeTime));
         playAnimForCurrentLevel(FlxG.random.bool() ? CHEER_1_ANIMATION : CHEER_2_ANIMATION);
     }
 

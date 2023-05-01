@@ -65,10 +65,7 @@ class SpawnerPlugin implements Plugin {
 		var shapesInLevel = LevelConfig.currentLevelConfig().shapes;
 		var outputIndexToGenerate:Array<Int> = [];
 		while (outputIndexToGenerate.length < shapesInLevel.length) {
-				var random:Int = Math.floor(Math.random() * shapesInLevel.length + 1);
-				if (outputIndexToGenerate.indexOf(random) == -1) {
-						outputIndexToGenerate.push(random);
-				}
+			outputIndexToGenerate.push(FlxG.random.int(0, shapesInLevel.length -1, outputIndexToGenerate));
 		}
 
 		var shapeToAdd = 0;
