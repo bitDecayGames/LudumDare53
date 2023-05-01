@@ -48,9 +48,9 @@ class PlayState extends FlxTransitionableState {
 		super.create();
 		Lifecycle.startup.dispatch();
 
-		#if music
+		// #if music
 		FmodManager.PlaySong(FmodSongs.Puzzle);
-		#end
+		// #end
 		
 		FlxG.camera.pixelPerfectRender = true;
 

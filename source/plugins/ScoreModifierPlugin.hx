@@ -64,22 +64,30 @@ class ScoreModifierPlugin implements Plugin {
             if (inputs.length > 3 && outputs.length > 3) {
                 giveScore(2000, 5, avg);
                 scoreValue += 2000;
+                FmodManager.PlaySoundOneShot(FmodSFX.TileClear3);
             } else if (inputs.length == 3 && outputs.length == 3) {
                 giveScore(1200, 5, avg);
+                FmodManager.PlaySoundOneShot(FmodSFX.TileClear3);
             } else if (inputs.length == 3 || outputs.length == 3) {
                 giveScore(800, 2, avg);
+                FmodManager.PlaySoundOneShot(FmodSFX.TileClear3);
             } else if (inputs.length == 2 && outputs.length == 2) {
                 giveScore(500, 2, avg);
+                FmodManager.PlaySoundOneShot(FmodSFX.TileClear2);
             } else if (inputs.length == 2 || outputs.length == 2) {
                 giveScore(200, 1, avg);
+                FmodManager.PlaySoundOneShot(FmodSFX.TileClear2);
             } else {
                 giveScore(100, 1, avg);
+                FmodManager.PlaySoundOneShot(FmodSFX.TileClear);
             } 
         });
     }
 
     function giveScore(value:Int, extraShifts:Int, coord:Float) {
         // TODO SFX: Score awarded (some message delivered). See above for score ranges
+
+
 
         Gameplay.onScore.dispatch(value);
         var scaled = value * Woman.activeMultiplier;
