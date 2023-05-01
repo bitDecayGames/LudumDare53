@@ -23,6 +23,23 @@ abstract CyberRed(BitmapText) to BitmapText {
 	}
 }
 
+@:forward
+abstract CyberWhite(BitmapText) to BitmapText {
+	static public var font(get, null):FlxBitmapFont = null;
+
+	inline public function new(x = 0.0, y = 0.0, text = "") {
+		this = new BitmapText(x, y, text.toLowerCase(), font);
+	}
+
+	inline static function get_font() {
+		if (font == null) {
+			@:privateAccess
+			font = BitmapText.createMonospace("abcdefghijklmnopqrstuvwxyz.,!?1234567890_+", AssetPaths.font_white__png, 0, 18);
+		}
+		return font;
+	}
+}
+
 class BitmapText extends flixel.text.FlxBitmapText {
 	static var mainFont:FlxBitmapFont = null;
 

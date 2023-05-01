@@ -1,5 +1,6 @@
 package entities;
 
+import signals.Gameplay;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
@@ -21,8 +22,12 @@ class Woman extends FlxSprite {
 
     var idleTimer = 3.0;
 
+    var momentum = new Array<Momentum>();
+
     public function new(X:Float, Y:Float) {
         super(X, Y);
+
+        Gameplay.onScore.add(newScore);
 
         loadGraphic(AssetPaths.secretary_sheet__png, true, 96, 160);
         // first block are idle animations
@@ -42,6 +47,11 @@ class Woman extends FlxSprite {
         };
 
         playAnimForCurrentLevel(IDLE);
+
+        // start player out with some initial momentum
+        momentum.push(new Momentum(300, 15));
+        momentum.push(new Momentum(300, 20));
+        momentum.push(new Momentum(300, 25));
     }
 
     private function addAnimForAllLevels(name:String, start:Int, len:Int, looped:Bool = false) {
@@ -73,6 +83,11 @@ class Woman extends FlxSprite {
         playAnimForLevel(baseName, currentLevel);
     }
 
+    function newScore(points:Int) {
+        momentum.push(new Momentum(points, 30));
+        playAnimForCurrentLevel(FlxG.random.bool() ? CHEER_1_ANIMATION : CHEER_2_ANIMATION);
+    }
+
     override function update(elapsed:Float) {
         super.update(elapsed);
 
@@ -102,5 +117,55 @@ class Woman extends FlxSprite {
                 playAnimForCurrentLevel(IDLE_ANIMATION);
             }
         }
+
+        var hype = 0;
+        for (m in momentum) {
+            m.duration -= elapsed;
+
+            if (m.duration <= 0) {
+                momentum.remove(m);
+            } else {
+                hype += m.score;
+            }
+        }
+
+        FlxG.watch.addQuick("hype: ", hype);
+
+        setLevelBasedOnHype(hype);
+    }
+    
+    function setLevelBasedOnHype(hype:Int) {
+        var hypeLevel = currentLevel;
+        if (hype > 2500) {
+            hypeLevel = 5;
+        } else if (hype > 1500) {
+            hypeLevel = 4;
+        } else if (hype > 500) {
+            hypeLevel = 3;
+        } else if (hype > 100) {
+            hypeLevel = 2;
+        } else {
+            hypeLevel = 1;
+        }
+
+        if (hypeLevel > currentLevel) {
+            playAnimForCurrentLevel(UPGRADE_ANIMATION);
+            // TODO SFX: Hype level up (woman excited)
+            currentLevel++;
+        } else if (hypeLevel < currentLevel) {
+            playAnimForCurrentLevel(DOWNGRADE_ANIMATION);
+            // TODO SFX: Hype level up (woman unamused)
+            currentLevel--;
+        }
+    }
+}
+
+class Momentum {
+    public var score:Int;
+    public var duration:Float;
+
+    public function new(s:Int, d:Float) {
+        score = s;
+        duration = d;
     }
 }

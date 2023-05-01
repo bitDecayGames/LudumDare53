@@ -24,7 +24,7 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
     var averageNetOpsValue:CyberRed;
 
     var swapLabel:CyberRed;
-    var swapValue:CyberRed;
+    public var swapValue:CyberRed;
 
     var bgOptions:FlxSprite;
     var bg:FlxTiledSprite;

@@ -54,8 +54,8 @@ class HandleDeliveryPlugin implements Plugin {
 											});
 										}
 										messageSuccessfullySent = true;
-										completeInputXs[inSlot.gridX] = 0;
-										completeOutputXs[outSlot.gridX] = 0;
+										completeInputXs[inSlot.gridX] = inSlot.gridX;
+										completeOutputXs[outSlot.gridX] = outSlot.gridX;
 									}
 								});
 							}

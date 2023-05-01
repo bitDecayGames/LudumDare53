@@ -48,7 +48,12 @@ class Gameplay {
 	/**
 	 * Signals when a new node has been spawned
 	 */
-	 public static var onNodeSpawn:NodeSpawnSignal = new NodeSpawnSignal();
+	public static var onNodeSpawn:NodeSpawnSignal = new NodeSpawnSignal();
+
+	/**
+	 * Signals when points are earned	
+	**/
+	public static var onScore = new FlxTypedSignal<Int->Void>();
 
 	/**
 	 * Signals when points have been collected
