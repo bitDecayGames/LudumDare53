@@ -10,7 +10,7 @@ class MenuCursor extends FlxSprite {
     public function new() {
         super();
         loadGraphic(AssetPaths.cursor_idle__png, true, frameSize, frameSize);
-        animation.add('play', [for (i in 0...6) i], 10);
+        animation.add('play', [for (i in 0...5) i], 10);
         animation.play('play');
     }
 

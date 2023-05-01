@@ -24,8 +24,8 @@ class Cursor extends FlxSprite {
 		super();
 		this.grid = grid;
 		loadGraphic(AssetPaths.cursor_idle__png, true, 40, 40);
-		animation.add('play', [0, 1, 2, 3, 4, 5], 10);
-        animation.add('grab', [6, 7, 8, 9, 10, 11], 10);
+		animation.add('play', [0, 1, 2, 3, 4], 10);
+        animation.add('grab', [6, 7, 8, 9, 10], 10);
 		animation.play('play');
 		offset.set(4, 4);
 	}
