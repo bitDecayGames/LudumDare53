@@ -18,12 +18,6 @@ class SpawnerPlugin implements Plugin {
 
 	public function init(grid:Grid) {
 		this.grid = grid;
-    for (inputSlot in grid.inputs) {
-      // Initialize every column with a shape
-      inputSlot.addShape(grid, ShapeInputIndicator.newRandom());
-		}
-
-		counter = spawnTime;
 
 		changeLevelSpawner();
 		Gameplay.onLevelChange.add(this.changeLevelSpawner);
@@ -33,14 +27,30 @@ class SpawnerPlugin implements Plugin {
 		counter -= delta;
 		if (counter < 0) {
 			counter = spawnTime;
-			var inputToAdd:InputSlot = FlxG.random.getObject(grid.inputs);
-			inputToAdd.addShape(grid, ShapeInputIndicator.newRandom());
+
+			var spawnsLeft = false;
+			for(input in grid.inputs) {
+				if (input.queue.length < 4) {
+					spawnsLeft = true;
+				}
+			}
+
+			if (spawnsLeft) {
+				var inputToAdd:InputSlot = FlxG.random.getObject(grid.inputs);
+				while (inputToAdd.queue.length >= 4) {
+					inputToAdd = FlxG.random.getObject(grid.inputs);
+				}	
+				inputToAdd.addShape(grid, ShapeInputIndicator.newRandom());
+			} else {
+				trace('OH NO WERE OUT OF INPUTS');
+			}
 		}
 	}
 
-	public function setSpawnTime(newTime: Float) {
+	private function setSpawnTime(newTime: Float) {
 		if (newTime > 0) {
 			spawnTime = newTime;
+			counter = spawnTime;
 		}
 	}
 
@@ -66,5 +76,14 @@ class SpawnerPlugin implements Plugin {
 			this.grid.outputs[gridX].addShape(this.grid, new ShapeOutputIndicator(shapesInLevel[shapeToAdd]));
 			shapeToAdd++;
 		}
+
+		for (inputSlot in grid.inputs) {
+      // Initialize every column with a shape
+			if (inputSlot.queue.length == 0) {
+				inputSlot.addShape(grid, ShapeInputIndicator.newRandom());
+			}
+		}
+
+		setSpawnTime(LevelConfig.currentLevelConfig().spawnRate);
 	}
 }
