@@ -1,5 +1,8 @@
 package entities;
 
+import flixel.FlxG;
+import levels.LevelConfig;
+import signals.Gameplay;
 import flixel.addons.display.FlxTiledSprite;
 import ui.font.BitmapText.CyberRed;
 import flixel.addons.display.FlxSliceSprite;
@@ -33,7 +36,8 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 
         bgOptions = new FlxSprite();
 		bgOptions.loadGraphic(AssetPaths.background_options__png, true, 32, 32);
-		
+
+
         bg.loadFrame(bgOptions.frames.getByIndex(0));
 
         var borderSize = 4;
@@ -78,6 +82,11 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 
         swapValue = new CyberRed(10 * 32, swapLabel.y + 16, "0");
 		add(swapValue);
+
+        Gameplay.onLevelChange.add(() -> {
+            bg.loadFrame(bgOptions.frames.getByIndex(LevelConfig.currentLevel));
+            levelValue.text = StringTools.lpad('${LevelConfig.currentLevel + 1}', ' ', 8);
+        });
     }
 
     public function setNetOps(count:Int) {
@@ -94,5 +103,16 @@ class ScoreUI extends FlxTypedGroup<FlxSprite> {
 
     public function setScore(count:Int) {
         scoreValue.text = StringTools.lpad('${count}', '0', 8);
+    }
+
+    override function update(elapsed:Float) {
+        super.update(elapsed);
+
+        #if debug
+        if (FlxG.keys.justPressed.L) {
+            LevelConfig.currentLevel++;
+            Gameplay.onLevelChange.dispatch();
+        }
+        #end
     }
 }

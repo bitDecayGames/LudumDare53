@@ -1,5 +1,7 @@
 package entities;
 
+import levels.LevelConfig;
+import levels.LevelConfig;
 import entities.IOEnums.IOColor;
 import entities.IOEnums.IOShape;
 import flixel.FlxG;
@@ -22,7 +24,8 @@ class ShapeInputIndicator extends FlxSprite {
 	}
 
 	public static function newRandom(): ShapeInputIndicator {
-		var randomShape = FlxG.random.getObject(IOShape.allValues);
+		var possibleShapes = LevelConfig.levels[LevelConfig.currentLevel].shapes;
+		var randomShape = FlxG.random.getObject(possibleShapes);
 		return new ShapeInputIndicator(randomShape);
 	}
 }

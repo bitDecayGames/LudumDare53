@@ -10,6 +10,7 @@ import entities.ConnectionTree.LinkedNode;
 import bitdecay.flixel.spacial.Cardinal;
 import flixel.FlxSprite;
 import plugins.Plugin;
+import levels.LevelConfig;
 
 class Grid extends FlxBasic {
 	public var nodes:Array<Array<Node>> = [];
@@ -22,18 +23,6 @@ class Grid extends FlxBasic {
 	public var numberOfRows:Int;
 
 	public var topCorner:FlxPoint;
-
-	var probabilities:Map<NodeType, Float> = [
-		Corner => 2,
-		Tee => 2,
-		Straight => 4,
-		Plus => 2,
-		OneWay => 0,
-		Dead => 1,
-		DoubleCorner => 2,
-		Crossover => 2,
-		Empty => 0.5
-	];
 
 	private function getRandomNodeTypeForLocation(x:Int, y:Int, avoidTypes:Array<NodeType>):NodeType {
 		var probabilitieTypes:Array<NodeType> = [];
@@ -54,7 +43,7 @@ class Grid extends FlxBasic {
 			}
 		}
 
-		var probabilitiesForLocation:Map<NodeType, Float> = probabilities.copy();
+		var probabilitiesForLocation:Map<NodeType, Float> = LevelConfig.levels[LevelConfig.currentLevel].probs.copy();
 
 
 		if (isLocationInOutputOrInput) {
@@ -85,7 +74,8 @@ class Grid extends FlxBasic {
 		for (x in 0...numberOfColumns) {
 			inputs.push(new InputSlot(x, numberOfRows - 1, Cardinal.S));
 			var outputSlot = new OutputSlot(x, 0, Cardinal.N);
-			outputSlot.addShape(this, new ShapeOutputIndicator(x, FlxG.random.getObject(Type.allEnums(IOColor))));
+			// TODO: Only make ones valid for the level?
+			outputSlot.addShape(this, new ShapeOutputIndicator(x));
 			outputs.push(outputSlot);
 		}
 

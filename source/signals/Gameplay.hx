@@ -95,6 +95,11 @@ class Gameplay {
 	public static var onMessageTimeout:FlxSignal = new FlxSignal();
 
 	/**
+	 *
+	**/
+	public static var onLevelChange:FlxSignal = new FlxSignal();
+
+	/**
 	 * Signals when a the level has been lost
 	 */
 	public static var onLoseLevel:FlxSignal = new FlxSignal();

@@ -103,9 +103,7 @@ class PlayState extends FlxTransitionableState {
 		});
 
 		var scoreUI = new ScoreUI(scoreboardArea, bg);
-		for (uiElement in scoreUI.members) {
-			uiGroup.add(uiElement);
-		}
+		add(scoreUI);
 
 		var grid = new Grid(32, gridStartPosition, 8, 8, [
 			new CheckForConnectionPlugin(),
