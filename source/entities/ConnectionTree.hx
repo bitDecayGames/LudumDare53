@@ -1,5 +1,7 @@
 package entities;
 
+import flixel.util.FlxColor;
+import bitdecay.flixel.debug.DebugDraw;
 import bitdecay.flixel.spacial.Cardinal;
 
 class ConnectionTree {
@@ -44,6 +46,46 @@ class ConnectionTree {
 		}
 	}
 
+	public function degugDraw(colorOverride:Int = 0) {
+		if (root == null || root.node == null) {
+			trace('no root to debug');
+			return;
+		}
+		var visited:Array<LinkedNode> = [];
+		DebugDraw.ME.drawWorldRect(root.node.x + 3, root.node.y + 3, root.node.width - 6, root.node.height - 6, true);
+		debugDrawNode(visited, root, colorOverride);
+
+		for (leaf in leafs()) {
+			debugDrawNode(visited, leaf, 0x000001);
+		}
+	}
+
+	private function debugDrawNode(visited:Array<LinkedNode>, ln:LinkedNode, colorOverride:Int = 0) {
+		if (!visited.contains(ln)) {
+			visited.push(ln);
+		}
+
+		var nodeColor = colorOverride != 0 ? colorOverride : ln.node.masks[ln.node.pathId(ln.enter) - 1].color;
+		DebugDraw.ME.drawWorldRect(ln.node.x + 6, ln.node.y + 6, ln.node.width - 12, ln.node.height - 12, nodeColor, true);
+		DebugDraw.ME.drawWorldRect(ln.node.x + 12, ln.node.y + 12, ln.node.width - 24, ln.node.height - 24, ln.color, true);
+		if (ln.partOfBreak) {
+			DebugDraw.ME.drawWorldRect(ln.node.x + 14, ln.node.y + 14, ln.node.width - 28, ln.node.height - 28, 0xCB491A, true);
+
+		}
+		var startCenter = ln.node.getMidpoint();
+		for (exitNode in ln.exits) {
+			// var linkColor = exitNode.node.masks[exitNode.node.pathId(exitNode.enter)].color;
+			// Render link color and then recursively call for all exit nodes
+			if (!visited.contains(exitNode)) {
+				var endCenter = exitNode.node.getMidpoint();
+				DebugDraw.ME.drawWorldLine(startCenter.x, startCenter.y, endCenter.x, endCenter.y, 0xFFFFFF, true);
+				endCenter.put();
+				debugDrawNode(visited, exitNode, colorOverride);
+			}
+		}
+		startCenter.put();
+	}
+
 	public function toString():String {
 		var count = 0;
 		foreach((n) -> {
@@ -59,6 +101,10 @@ class LinkedNode {
 	public var exits:Array<LinkedNode> = [];
 
 	private var depth:Int;
+	public var partOfBreak:Bool = false;
+	public var color:FlxColor = 0xFFFFFF;
+
+
 
 	public function new(node:Node, enter:Cardinal) {
 		this.node = node;
@@ -77,7 +123,7 @@ class LinkedNode {
 	}
 
 	public function leafs():Array<LinkedNode> {
-		if (exits.length == 0) {
+		if (exits.length  <= 1) {
 			return [this];
 		}
 		var v:Array<LinkedNode> = [];
@@ -95,7 +141,9 @@ class LinkedNode {
 	public function allNodes(a:Array<LinkedNode>):Array<LinkedNode> {
 		a.push(this);
 		for (node in this.exits) {
-			node.allNodes(a);
+			if (!a.contains(node)) {
+				node.allNodes(a);
+			}
 		}
 		return a;
 	}
@@ -144,8 +192,8 @@ class LinkedNode {
 
 	private function resetDepth() {
 		depth = -1;
-		for (node in this.exits) {
-			node.resetDepth();
-		}
+		// for (node in this.exits) {
+		// 	node.resetDepth();
+		// }
 	}
 }

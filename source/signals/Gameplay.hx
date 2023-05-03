@@ -1,5 +1,6 @@
 package signals;
 
+import levels.LevelConfig;
 import entities.IOEnums.IOShape;
 import entities.Node;
 import entities.ConnectionTree;
@@ -51,7 +52,7 @@ class Gameplay {
 	public static var onNodeSpawn:NodeSpawnSignal = new NodeSpawnSignal();
 
 	/**
-	 * Signals when points are earned	
+	 * Signals when points are earned
 	**/
 	public static var onScore = new FlxTypedSignal<Int->Void>();
 
@@ -152,5 +153,7 @@ class Gameplay {
 		onFinishedBlowingUp.removeAll();
 		onInputsOverFilled.removeAll();
 		onInputQueueCleaned.removeAll();
+
+		LevelConfig.reset();
 	}
 }

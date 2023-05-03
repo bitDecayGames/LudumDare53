@@ -1,5 +1,8 @@
 package plugins;
 
+import entities.ConnectionTree;
+import flixel.FlxG;
+import bitdecay.flixel.debug.DebugDraw;
 import entities.InputSlot;
 import entities.Grid;
 import entities.Node;
@@ -18,8 +21,18 @@ class CheckForConnectionPlugin implements Plugin {
 
 	}
 
+	#if debug
+	var debugTrees:Array<ConnectionTree> = [];
+	var forceRefresh = false;
+	#end
+
 	public function check(grid:Grid) {
 		Gameplay.onNewTreeSearch.dispatch();
+
+		#if debug
+		forceRefresh = true;
+		debugTrees = [];
+		#end
 
 		if (grid == null) {
 			return;
@@ -37,21 +50,33 @@ class CheckForConnectionPlugin implements Plugin {
 			// for each input slot, traverse the grid from that input space
 			var tree = grid.traverse(input.gridX, input.gridY, input.enter);
 
+			// tree.root.color = input.queue[0].shape.getColor();
+
+			#if debug
+			debugTrees.push(tree);
+			#end
+
 			var leafs = tree.allNodes(); // this isn't just leafs because we found edge cases that a leaf wouldn't be the actual node that touches the input or output
 			var connectedInputs:Array<InputSlot> = [input];
 			var connectedOutputs:Array<OutputSlot> = [];
 			for (leaf in leafs) {
-				var outlets = leaf.node.getOutlets(leaf.enter);
+				var outlets = leaf.node.getOutletsForEntrance(leaf.enter);
 
 				for (i in inputs) {
 					if (leaf.node == i.node && outlets.contains(i.slot.enter) && i.slot.queue.length > 0 && !connectedInputs.contains(i.slot)) {
 						connectedInputs.push(i.slot);
+						if (i.slot.queue.length > 0) {
+							leaf.color = i.slot.queue[0].shape.getColor();
+						}
 					}
 				}
 
 				for (output in outputs) {
 					if (leaf.node == output.node && outlets.contains(output.slot.exit) && output.slot.shapeList.length > 0 && !connectedOutputs.contains(output.slot)) {
 						connectedOutputs.push(output.slot);
+						if (output.slot.shapeList.length > 0) {
+							leaf.color = output.slot.shapeList[0].shape.getColor();
+						}
 					}
 				}
 			}
@@ -117,7 +142,43 @@ class CheckForConnectionPlugin implements Plugin {
 		}
 	}
 
-	public function update(grid:Grid, delta:Float) {}
+	#if debug
+	var activeTree = 0;
+	#end
+
+	public function update(grid:Grid, delta:Float) {
+
+		#if debug
+		var showTree = activeTree;
+		if (FlxG.keys.justPressed.ONE) {
+			showTree = 0;
+		} else if (FlxG.keys.justPressed.TWO) {
+			showTree = 1;
+		} else if (FlxG.keys.justPressed.THREE) {
+			showTree = 2;
+		} else if (FlxG.keys.justPressed.FOUR) {
+			showTree = 3;
+		} else if (FlxG.keys.justPressed.FIVE) {
+			showTree = 4;
+		} else if (FlxG.keys.justPressed.SIX) {
+			showTree = 5;
+		} else if (FlxG.keys.justPressed.SEVEN) {
+			showTree = 6;
+		} else if (FlxG.keys.justPressed.EIGHT) {
+			showTree = 7;
+		} else if (FlxG.keys.justPressed.NINE) {
+			DebugDraw.ME.clearPersistentCalls();
+		}
+
+		if (activeTree != showTree || forceRefresh) {
+			forceRefresh = false;
+			trace('drawing tree ${showTree}');
+			activeTree = showTree;
+			DebugDraw.ME.clearPersistentCalls();
+			debugTrees[activeTree].degugDraw();
+		}
+		#end
+	}
 }
 
 class InputNode {

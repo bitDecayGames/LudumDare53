@@ -39,7 +39,7 @@ class SpawnerPlugin implements Plugin {
 				var inputToAdd:InputSlot = FlxG.random.getObject(grid.inputs);
 				while (inputToAdd.queue.length >= 4) {
 					inputToAdd = FlxG.random.getObject(grid.inputs);
-				}	
+				}
 				inputToAdd.addShape(grid, ShapeInputIndicator.newRandom());
 			} else {
 				Gameplay.onInputsOverFilled.dispatch();

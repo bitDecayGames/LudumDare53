@@ -148,6 +148,10 @@ class LevelConfig {
         currentLevel = Std.int(FlxMath.bound(nextLevelNum, 0, levels.length - 1));
         Gameplay.onLevelChange.dispatch();
     }
+
+	public static function reset() {
+        currentLevel = 0;
+    }
 }
 
 typedef SingleLevel = {

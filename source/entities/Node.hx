@@ -27,29 +27,35 @@ class Node extends FlxSprite {
 
 	var isShaking:Bool = false;
 
-	public static function create(type:NodeType):Node {
+	public var gridX:Int = -1;
+	public var gridY:Int = -1;
+
+	public static function create(type:NodeType, rotation:Int = -1):Node {
 		// trace('creating node with type: ${type}');
+		if (rotation == -1) {
+			rotation = FlxG.random.int(0, 3);
+		}
 		switch type {
 			case Corner:
-				return new Node(32, AssetPaths.bend__png, [0, 0, 1, 1], [0, 0, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.bend_mask__png]);
+				return new Node(32, AssetPaths.bend__png, [0, 0, 1, 1], [0, 0, 1, 1], rotation, type, [AssetPaths.bend_mask__png]);
 			case Tee:
-				return new Node(32, AssetPaths.tee__png, [0, 1, 1, 1], [0, 1, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.tee_mask__png]);
+				return new Node(32, AssetPaths.tee__png, [0, 1, 1, 1], [0, 1, 1, 1], rotation, type, [AssetPaths.tee_mask__png]);
 			case Straight:
-				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], FlxG.random.int(0, 3), type, [AssetPaths.straight_mask__png]);
+				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], rotation, type, [AssetPaths.straight_mask__png]);
 			case StraightStatic:
 				return new Node(32, AssetPaths.straight__png, [1, 0, 1, 0], [1, 0, 1, 0], 1, type, [AssetPaths.straight_mask__png]);
 			case Plus:
-				return new Node(32, AssetPaths.plus__png, [1, 1, 1, 1], [1, 1, 1, 1], FlxG.random.int(0, 3), type, [AssetPaths.plus_mask__png]);
+				return new Node(32, AssetPaths.plus__png, [1, 1, 1, 1], [1, 1, 1, 1], rotation, type, [AssetPaths.plus_mask__png]);
 			case OneWay:
-				return new Node(32, AssetPaths.straight_oneway__png, [0, 0, 1, 0], [1, 0, 0, 0], FlxG.random.int(0, 3), type, [AssetPaths.straight_oneway_mask__png]);
+				return new Node(32, AssetPaths.straight_oneway__png, [0, 0, 1, 0], [1, 0, 0, 0], rotation, type, [AssetPaths.straight_oneway_mask__png]);
 			// case Warp:
 			// 	// TODO: How do we capture this info?
 			case Dead:
 				return new Node(32, AssetPaths.blocker__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type, [AssetPaths.plus_mask__png]);
 			case DoubleCorner:
-				return new Node(32, AssetPaths.double_bend__png, [1, 1, 2, 2], [1, 1, 2, 2], FlxG.random.int(0, 3), type, [AssetPaths.double_bend_mask__png, AssetPaths.bend_mask__png]);
+				return new Node(32, AssetPaths.double_bend__png, [1, 1, 2, 2], [1, 1, 2, 2], rotation, type, [AssetPaths.double_bend_mask__png, AssetPaths.bend_mask__png]);
 			case Crossover:
-				return new Node(32, AssetPaths.plus_overlapping__png, [1, 2, 1, 2], [1, 2, 1, 2], FlxG.random.int(0, 3), type, [AssetPaths.straight_mask__png, AssetPaths.plus_overlapping_mask__png]);
+				return new Node(32, AssetPaths.plus_overlapping__png, [1, 2, 1, 2], [1, 2, 1, 2], rotation, type, [AssetPaths.straight_mask__png, AssetPaths.plus_overlapping_mask__png]);
 			case Empty:
 				// TODO: This may be causing crashes?
 				return new Node(32, AssetPaths.empty__png, [0, 0, 0, 0], [0, 0, 0, 0], 0, type, [AssetPaths.tee_mask__png]);
@@ -72,7 +78,7 @@ class Node extends FlxSprite {
 		for (maskAsset in maskAssets) {
 			var mask = new FlxSprite(maskAsset);
 			mask.visible = false;
-			masks.push(mask);			
+			masks.push(mask);
 		}
 
 		rotate(rot, true);
@@ -155,7 +161,7 @@ class Node extends FlxSprite {
 	public function pathId(enter:Cardinal):Int {
 		// trace('    cardinalToIndex: ${cardinalToIndex(enter)}');
 		// trace('    rotationOffset: ${rotationOffset}');
-		
+
 		var enterIndex = FlxMath.wrap(cardinalToIndex(enter) - rotationOffset, 0, 3);
 		return connectionsEnter[enterIndex];
 	}
@@ -167,7 +173,7 @@ class Node extends FlxSprite {
 	 * @param enter the direction you are entering the tile from
 	 * @return Array<Cardinal> the directions you can now exit the tile from
 	 */
-	public function getOutlets(enter:Cardinal):Array<Cardinal> {
+	public function getOutletsForEntrance(enter:Cardinal):Array<Cardinal> {
 		var unrotated = cardinalToIndex(enter) - rotationOffset;
 		var enterIndex = FlxMath.wrap(unrotated, 0, 3);
 		var path = connectionsEnter[enterIndex];
@@ -238,7 +244,7 @@ class Node extends FlxSprite {
 			// this tile is already shaking, don't start another one
 			return;
 		}
-		
+
 		isShaking = true;
 		var origianlLocation = FlxPoint.get(x, y);
 		FlxTween.shake(this, 0.025, 0.5, FlxAxes.XY, {
@@ -248,6 +254,6 @@ class Node extends FlxSprite {
 				y = origianlLocation.y;
 			}
 		});
-		
+
 	}
 }

@@ -1,5 +1,6 @@
 package states;
 
+import levels.LevelConfig;
 import flixel.addons.display.FlxTiledSprite;
 import entities.ScoreUI;
 import flixel.group.FlxGroup;
@@ -57,7 +58,7 @@ class PlayState extends FlxTransitionableState {
 		// #if music
 		FmodManager.PlaySong(FmodSongs.Puzzle);
 		// #end
-		
+
 		FlxG.camera.pixelPerfectRender = true;
 
 		add(bgGroup);
@@ -90,7 +91,7 @@ class PlayState extends FlxTransitionableState {
 		Gameplay.onNodeSpawn.add((n) -> {
 			piecesGroup.add(n);
 			for (mask in n.masks) {
-				piecesGroup.add(mask);			
+				piecesGroup.add(mask);
 			}
 		});
 
