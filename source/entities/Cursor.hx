@@ -164,7 +164,6 @@ class Cursor extends FlxSprite {
 
         var wasSwapped = false;
         if (ScoreModifierPlugin.swapCount > 0) {
-            ScoreModifierPlugin.swapCount--;
             // swap with the tile above if there is one
             wasSwapped = swapTiles(Std.int(gridCell.x), Std.int(gridCell.y), Std.int(dest.x), Std.int(dest.y));
         } else {
@@ -173,6 +172,8 @@ class Cursor extends FlxSprite {
         }
         if (!wasSwapped) {
             shake(direction.horizontal() ? FlxAxes.X : FlxAxes.Y);
+        } else {
+            ScoreModifierPlugin.swapCount--;
         }
     }
 
@@ -192,7 +193,7 @@ class Cursor extends FlxSprite {
             x = preshakeLocation.x;
             y = preshakeLocation.y;
         }
-        
+
         preshakeLocation.x = x;
         preshakeLocation.y = y;
 

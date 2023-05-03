@@ -27,6 +27,7 @@ class Node extends FlxSprite {
 
 	var isShaking:Bool = false;
 
+	public var originalOffset = FlxPoint.get();
 	public var gridX:Int = -1;
 	public var gridY:Int = -1;
 
@@ -86,6 +87,12 @@ class Node extends FlxSprite {
 
 	override public function update(delta:Float) {
 		super.update(delta);
+	}
+
+	override function destroy() {
+		super.destroy();
+
+		originalOffset.put();
 	}
 
 	override function draw() {
@@ -246,12 +253,14 @@ class Node extends FlxSprite {
 		}
 
 		isShaking = true;
-		var origianlLocation = FlxPoint.get(x, y);
+		// var origianlLocation = FlxPoint.get(x, y);
 		FlxTween.shake(this, 0.025, 0.5, FlxAxes.XY, {
 			onComplete: (t) -> {
 				isShaking = false;
-				x = origianlLocation.x;
-				y = origianlLocation.y;
+				x = originalOffset.x + gridX * 32;
+				y = originalOffset.y + gridY * 32;
+				// x = origianlLocation.x;
+				// y = origianlLocation.y;
 			}
 		});
 

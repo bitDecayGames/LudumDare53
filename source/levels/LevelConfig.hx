@@ -51,7 +51,7 @@ class LevelConfig {
                 Straight => 4,
                 Plus => 2,
                 OneWay => 0,
-                Dead => 0.5,
+                Dead => 0,
                 DoubleCorner => 1,
                 Crossover => 1,
                 Empty => 0.2

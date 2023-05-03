@@ -155,6 +155,7 @@ class Grid extends FlxBasic {
 	public function spawnNewNodeAtPosition(x:Int, y:Int, avoidTypes:Array<NodeType>):Node {
 		var chosenType = getRandomNodeTypeForLocation(x, y, avoidTypes);
 		var newNode = Node.create(chosenType);
+		newNode.originalOffset.copyFrom(topCorner);
 		newNode.gridX = x;
 		newNode.gridY = y;
 		newNode.setPosition(topCorner.x + x * 32, topCorner.y + y * 32);
@@ -230,7 +231,13 @@ class Grid extends FlxBasic {
 		nodes[x1][y1] = secondNode;
 		nodes[x2][y2] = firstNode;
 
-		tweenTileSwap(firstNode, secondNode, cb);
+		tweenTileSwap(firstNode, secondNode, () -> {
+			firstNode.gridX = x2;
+			firstNode.gridY = y2;
+			secondNode.gridX = x1;
+			secondNode.gridY = y1;
+			cb();
+		});
 		tweenTileSwap(secondNode, firstNode, cb);
 
 		return true;
