@@ -46,6 +46,7 @@ class ConnectionTree {
 		}
 	}
 
+	#if debug
 	public function degugDraw(colorOverride:Int = 0) {
 		if (root == null || root.node == null) {
 			trace('no root to debug');
@@ -85,6 +86,7 @@ class ConnectionTree {
 		}
 		startCenter.put();
 	}
+	#end
 
 	public function toString():String {
 		var count = 0;
