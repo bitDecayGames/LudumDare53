@@ -61,7 +61,8 @@ class ScoreModifierPlugin implements Plugin {
             trace('avg: ${avg}');
 
             // Score table
-            if (inputs.length > 3 && outputs.length > 3) {
+            trace('SCORE - inputs: ${inputs.length}  outputs: ${outputs.length}');
+            if (inputs.length > 3 || outputs.length > 3) {
                 giveScore(2000, 5, avg);
                 scoreValue += 2000;
                 FmodManager.PlaySoundOneShot(FmodSFX.TileClear3);
@@ -80,7 +81,7 @@ class ScoreModifierPlugin implements Plugin {
             } else {
                 giveScore(100, 1, avg);
                 FmodManager.PlaySoundOneShot(FmodSFX.TileClear);
-            } 
+            }
         });
     }
 
@@ -100,7 +101,7 @@ class ScoreModifierPlugin implements Plugin {
                 onComplete: (t) -> {
                     award.kill();
                 }
-            });    
+            });
         });
 
         // spawn shift gift

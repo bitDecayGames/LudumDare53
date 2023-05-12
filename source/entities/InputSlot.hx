@@ -1,5 +1,7 @@
 package entities;
 
+import flixel.math.FlxPoint;
+import flixel.tweens.FlxTween;
 import signals.Gameplay;
 import bitdecay.flixel.spacial.Cardinal;
 import flixel.FlxSprite;
@@ -33,14 +35,13 @@ class InputSlot extends FlxSprite {
     Gameplay.onMessageSpawn.dispatch(shape);
   }
 
-	public function removeShape(grid: Grid) {
+	public function removeShape(grid: Grid):ShapeInputIndicator {
 		var v = queue.shift();
-		if (v != null) {
-			v.kill();
-		}
 		for (shapeIndex in 0...queue.length) {
-			queue[shapeIndex].setPosition(grid.topCorner.x + gridX * 32,
-												grid.topCorner.y + (gridY + shapeIndex + 1) * 32);
+			var shape = queue[shapeIndex];
+			var nextPosition = FlxPoint.get(grid.topCorner.x + gridX * 32, grid.topCorner.y + (gridY + shapeIndex + 1) * 32);
+			FlxTween.linearPath(shape, [shape.getPosition(), nextPosition]);
 		}
+		return v;
 	}
 }

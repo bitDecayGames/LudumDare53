@@ -1,5 +1,9 @@
 package plugins;
 
+import flixel.math.FlxPoint;
+import flixel.tweens.FlxTween;
+import flixel.FlxSprite;
+import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import bitdecay.flixel.debug.DebugDraw;
 import input.SimpleController;
@@ -41,11 +45,10 @@ class HandleDeliveryPlugin implements Plugin {
 						if (inSlot.queue.length > 0 && outSlot.shapeList.length > 0 &&
 							inSlot.queue[0].shape == outSlot.shapeList[0].shape) {
 								// First time we match inputslot and outputslot shapes remove the input slot shape
+								var shapeSprite:FlxSprite = null;
 								if (!shapeRemoved) {
 									var slotToRemoveFrom = inSlot;
-									// new FlxTimer().start(0.5, (t) -> {
-										slotToRemoveFrom.removeShape(grid);
-									// });
+									shapeSprite = slotToRemoveFrom.removeShape(grid);
 									shapeRemoved = true;
 								}
 
@@ -57,14 +60,45 @@ class HandleDeliveryPlugin implements Plugin {
 									if (m.node == outSlotNode) {
 										// Find shortest path to each output slot and remove all
 										var linkedNodesToRemove = l.fastestPathToLinkedNode(m.node);
+										var path:Array<FlxPoint> = [];
+
+										if (shapeSprite != null) {
+											path.push(shapeSprite.getPosition());
+										}
+
 										for (linkedNode in linkedNodesToRemove) {
+											if (shapeSprite != null) {
+												// TODO: Build these based on the actual node pipe configurations
+												var point = linkedNode.node.getMidpoint();
+												point.subtract(shapeSprite.width/2, shapeSprite.height/2);
+												path.push(point);
+											}
 											linkedNode.partOfBreak = true;
-											linkedNode.node.startBlowupSequence((n) -> {
-												new FlxTimer().start(0.5, (t) -> {
-													grid.spawnNewNodeAtNode(n);
-												});
+											linkedNode.node.locked = true;
+											linkedNode.node.color = FlxColor.GRAY;
+										}
+										path.push(outSlotNode.getPosition());
+										if (shapeSprite != null) {
+											path[path.length-1].add(16, -16);
+											path[path.length-1].subtract(shapeSprite.width/2, shapeSprite.height/2);
+										}
+
+										if (shapeSprite != null) {
+											FlxTween.linearPath(shapeSprite, path, linkedNodesToRemove.length * 0.2, {
+												onComplete: (t) -> {
+													// TODO: Some sort of effect?
+													shapeSprite.kill();
+													for (node in linkedNodesToRemove) {
+														// TODO: We only want to blow up nodes that don't have more pieces on their way.
+														// OR we can just wait to blow up the pipes until ALL pieces are done, regardless
+														node.node.startBlowupSequence((n) -> {
+															grid.spawnNewNodeAtNode(n);
+														});
+													}
+												}
 											});
 										}
+
 										messageSuccessfullySent = true;
 										completeInputXs[inSlot.gridX] = inSlot.gridX;
 										completeOutputXs[outSlot.gridX] = outSlot.gridX;

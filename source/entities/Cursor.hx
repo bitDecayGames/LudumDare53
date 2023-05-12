@@ -173,7 +173,9 @@ class Cursor extends FlxSprite {
         if (!wasSwapped) {
             shake(direction.horizontal() ? FlxAxes.X : FlxAxes.Y);
         } else {
+            #if !freeswap
             ScoreModifierPlugin.swapCount--;
+            #end
         }
     }
 

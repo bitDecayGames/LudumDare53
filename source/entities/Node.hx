@@ -21,6 +21,7 @@ class Node extends FlxSprite {
 	var gridCellSize:Float = 0;
 
 	var blowingUp:Bool = false;
+	public var locked = false;
 	public var nodeType:NodeType = null;
 
 	public var masks:Array<FlxSprite> = [];
@@ -65,7 +66,7 @@ class Node extends FlxSprite {
 	}
 
 	public function isMobile():Bool {
-		return nodeType != Dead && !blowingUp;
+		return !locked && nodeType != Dead && !blowingUp;
 	}
 
 	private function new(gridCellSize:Float, asset:FlxGraphicAsset, entrances:Array<Int>, exits:Array<Int>, rot:Int, nodeType:NodeType, maskAssets:Array<FlxGraphicAsset>) {
@@ -232,10 +233,10 @@ class Node extends FlxSprite {
 		}
 	}
 
-	public function startBlowupSequence(callback:Node->Void) {
+	public function startBlowupSequence(duration:Float = 0.5, callback:Node->Void) {
 		if (!blowingUp) {
 			blowingUp = true;
-			FlxTween.shake(this, 0.1, 0.5, FlxAxes.XY, {
+			FlxTween.shake(this, 0.01, duration, FlxAxes.XY, {
 				onComplete: (t) -> {
 					kill();
 					if (callback != null) {

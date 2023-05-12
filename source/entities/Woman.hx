@@ -38,7 +38,7 @@ class Woman extends FlxSprite {
         // second and third blocks are celebration animations
         // fourth block is transition up animation
         // fifth block is the transition down animation
-        
+
         addAnimForAllLevels(IDLE, 0, 1, true);
         addAnimForAllLevels(IDLE_ANIMATION, 0, 6);
         addAnimForAllLevels(CHEER_1_ANIMATION, 7, 6);
@@ -89,13 +89,13 @@ class Woman extends FlxSprite {
 
     function newScore(points:Int) {
         var hypeTime = 120;
-        if (points > 2000) {
+        if (points <= 150) {
             hypeTime = 5;
-        } else if (points > 1200) {
+        } else if (points <= 250) {
             hypeTime = 10;
-        } else if (points > 500) {
+        } else if (points <= 1000) {
             hypeTime = 20;
-        } else if (points > 200) {
+        } else if (points <= 2000) {
             hypeTime = 30;
         }
         momentum.push(new Momentum(points, hypeTime));
@@ -160,7 +160,7 @@ class Woman extends FlxSprite {
                 activeMultiplier = 5;
         }
     }
-    
+
     function setLevelBasedOnHype(hype:Int) {
         var hypeLevel = currentLevel;
         if (hype > 2000) {
@@ -200,7 +200,7 @@ class Woman extends FlxSprite {
                 onComplete: (t) -> {
                     particle.kill();
                 }
-            });    
+            });
         });
     }
 }
